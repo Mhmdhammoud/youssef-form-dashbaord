@@ -523,6 +523,13 @@ export type GetCompanyQueryVariables = Exact<{
 
 export type GetCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, createdAt: any, updatedAt: any, manufacturers: Array<string>, employees?: Array<{ __typename?: 'User', _id: string, fname: string, lname: string, fullName: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } | null } | null };
 
+export type GetOrderQueryVariables = Exact<{
+  orderId: Scalars['ID'];
+}>;
+
+
+export type GetOrderQuery = { __typename?: 'Query', getOrder?: { __typename?: 'Order', _id: string, material: string, bioporShore?: string | null, createdAt: any, updatedAt: any, orderId?: string | null, remake: boolean, orderType: OrderType, reason?: string | null, status: OrderStatus, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber?: string | null }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string } }, logs?: Array<{ __typename?: 'Logs', message: string, createdAt: any }> | null } | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1007,6 +1014,116 @@ export function useGetCompanyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetCompanyQueryHookResult = ReturnType<typeof useGetCompanyQuery>;
 export type GetCompanyLazyQueryHookResult = ReturnType<typeof useGetCompanyLazyQuery>;
 export type GetCompanyQueryResult = Apollo.QueryResult<GetCompanyQuery, GetCompanyQueryVariables>;
+export const GetOrderDocument = gql`
+    query GetOrder($orderId: ID!) {
+  getOrder(orderId: $orderId) {
+    _id
+    material
+    bioporShore
+    createdAt
+    updatedAt
+    orderId
+    remake
+    orderType
+    reason
+    status
+    impressions {
+      left
+      right
+    }
+    product {
+      left {
+        haModel
+        serialNumber
+        style
+        canalLength
+        cymbaLength
+        ventSize
+        quantity
+        canal
+        soundTube
+        surface
+        color
+        shellId
+        manufacturer
+        markingDots
+      }
+      right {
+        haModel
+        serialNumber
+        style
+        canalLength
+        cymbaLength
+        ventSize
+        quantity
+        canal
+        soundTube
+        surface
+        color
+        shellId
+        manufacturer
+        markingDots
+      }
+    }
+    deliveryDetails {
+      urgent
+      standard
+      invoiceNumber
+    }
+    extraDetails {
+      comment
+      accessories
+    }
+    company {
+      _id
+      title
+      companyId
+      createdAt
+      updatedAt
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+      }
+      street
+      postCode
+      country
+    }
+    logs {
+      message
+      createdAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrderQuery__
+ *
+ * To run a query within a React component, call `useGetOrderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderQuery({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useGetOrderQuery(baseOptions: Apollo.QueryHookOptions<GetOrderQuery, GetOrderQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, options);
+      }
+export function useGetOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderQuery, GetOrderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, options);
+        }
+export type GetOrderQueryHookResult = ReturnType<typeof useGetOrderQuery>;
+export type GetOrderLazyQueryHookResult = ReturnType<typeof useGetOrderLazyQuery>;
+export type GetOrderQueryResult = Apollo.QueryResult<GetOrderQuery, GetOrderQueryVariables>;
 export const MeDocument = gql`
     query me {
   me {

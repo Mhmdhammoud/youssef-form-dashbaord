@@ -1,0 +1,85 @@
+query GetOrder($orderId: ID!) {
+  getOrder(orderId: $orderId) {
+    _id
+    material
+    bioporShore
+    createdAt
+    updatedAt
+    orderId
+    remake
+    orderType
+    reason
+    status
+
+    impressions {
+      left
+      right
+    }
+
+    product {
+      left {
+        haModel
+        serialNumber
+        style
+        canalLength
+        cymbaLength
+        ventSize
+        quantity
+        canal
+        soundTube
+        surface
+        color
+        shellId
+        manufacturer
+        markingDots
+      }
+      right {
+        haModel
+        serialNumber
+        style
+        canalLength
+        cymbaLength
+        ventSize
+        quantity
+        canal
+        soundTube
+        surface
+        color
+        shellId
+        manufacturer
+        markingDots
+      }
+    }
+
+    deliveryDetails {
+      urgent
+      standard
+      invoiceNumber
+    }
+    extraDetails {
+      comment
+      accessories
+    }
+
+    company {
+      _id
+      title
+      companyId
+      createdAt
+      updatedAt
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+      }
+      street
+      postCode
+      country
+    }
+
+    logs {
+      message
+      createdAt
+    }
+  }
+}
