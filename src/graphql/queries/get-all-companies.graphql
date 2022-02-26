@@ -1,0 +1,26 @@
+query GetAllCompanies($limit: Float!, $page: Float!) {
+  getAllCompanies(limit: $limit, page: $page) {
+    errors {
+      field
+      message
+    }
+    hasMore
+    length
+    companies {
+      _id
+      title
+      companyId
+      street
+      postCode
+      country
+      createdAt
+      updatedAt
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+    }
+  }
+}
