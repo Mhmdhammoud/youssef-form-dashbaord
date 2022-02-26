@@ -1,0 +1,38 @@
+query GetAllUsers($limit: Float!, $page: Float!) {
+  getAllUsers(limit: $limit, page: $page) {
+    errors {
+      field
+      message
+    }
+    hasMore
+    length
+    users {
+      _id
+      fullName
+      fname
+      lname
+      email
+      role
+      userId
+      isActive
+      createdAt
+      updatedAt
+      company {
+        _id
+        title
+        companyId
+        street
+        postCode
+        country
+        createdAt
+        updatedAt
+        contactPerson {
+          fullName
+          email
+          phoneNumber
+          customerAccount
+        }
+      }
+    }
+  }
+}

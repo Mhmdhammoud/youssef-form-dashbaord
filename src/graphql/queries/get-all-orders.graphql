@@ -1,0 +1,109 @@
+query GetAllOrders(
+  $limit: Float!
+  $page: Float!
+  $orderCategory: OrderCategory!
+) {
+  getAllOrders(orderCategory: $orderCategory, limit: $limit, page: $page) {
+    errors {
+      field
+      message
+    }
+    hasMore
+    length
+    orders {
+      _id
+      deliveryDetails {
+        urgent
+        standard
+        invoiceNumber
+      }
+      creator {
+        _id
+        fullName
+        fname
+        lname
+        email
+        role
+        userId
+        isActive
+        createdAt
+        updatedAt
+      }
+      company {
+        _id
+        title
+        companyId
+        street
+        postCode
+        country
+        contactPerson {
+          fullName
+          email
+          phoneNumber
+          customerAccount
+        }
+      }
+      extraDetails {
+        comment
+        accessories
+      }
+
+      impressions {
+        left
+        right
+      }
+
+      logs {
+        message
+        createdAt
+      }
+
+      product {
+        left {
+          haModel
+          shellId
+          serialNumber
+          style
+          canalLength
+          manufacturer
+          cymbaLength
+          ventSize
+          quantity
+          color
+          surface
+          soundTube
+          canal
+          markingDots
+        }
+        right {
+          haModel
+          shellId
+          serialNumber
+          style
+          canalLength
+          manufacturer
+          cymbaLength
+          ventSize
+          quantity
+          color
+          surface
+          soundTube
+          canal
+          markingDots
+        }
+      }
+
+      orderType
+      status
+      remake
+      reason
+      orderId
+      bioporShore
+      material
+      rejectionReason
+      reOrder
+      createdAt
+      updatedAt
+    }
+  }
+}
