@@ -30,6 +30,10 @@ const PageConstants: IRoute[] = [
     isPrivate: true,
   },
   {
+    route: '/order',
+    isPrivate: true,
+  },
+  {
     route: '/all-orders',
     isPrivate: true,
   },
