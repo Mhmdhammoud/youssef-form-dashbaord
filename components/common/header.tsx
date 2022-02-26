@@ -1,9 +1,13 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
 
+import Link from 'next/link';
+import { logout, startLogout } from '../../actions';
+import { useRouter } from 'next/router';
+import Cookies from 'universal-cookie';
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
   { name: 'All Users', href: 'all-users', current: false },
@@ -17,6 +21,20 @@ function classNames(...classes) {
 }
 
 export default function Example() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleLogout = useCallback(() => {
+    const cookies = new Cookies();
+
+    cookies.remove('token');
+    cookies.remove('isAuthenticated');
+    cookies.set('isAuthenticated', false, { path: '/' });
+
+    dispatch(logout());
+
+    router.push('/');
+  }, [dispatch, router]);
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -67,8 +85,7 @@ export default function Example() {
                   type="button"
                   className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <span onClick={handleLogout}>Logout</span>
                 </button>
 
                 {/* Profile dropdown */}
