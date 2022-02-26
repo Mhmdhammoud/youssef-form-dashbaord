@@ -29,5 +29,9 @@ const PageConstants: IRoute[] = [
     route: '/company',
     isPrivate: true,
   },
+  {
+    route: '/all-orders',
+    isPrivate: true,
+  },
 ];
 export default PageConstants;

@@ -74,7 +74,7 @@ const Index = () => {
           else console.log(err);
         });
     },
-    [company]
+    [router, submit]
   );
 
   const handleChangeConfirmPassword = useCallback(
