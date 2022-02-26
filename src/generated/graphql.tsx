@@ -484,12 +484,27 @@ export type EditCompanyMutationVariables = Exact<{
 
 export type EditCompanyMutation = { __typename?: 'Mutation', editCompany: { __typename?: 'CompanyResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type RejectOrderMutationVariables = Exact<{
+  _id: Scalars['ID'];
+  rejectionReason: Scalars['String'];
+}>;
+
+
+export type RejectOrderMutation = { __typename?: 'Mutation', rejectOrder: { __typename?: 'OrderResponses', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, order?: { __typename?: 'Order', status: OrderStatus, orderId?: string | null, createdAt: any, updatedAt: any, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber?: string | null }, logs?: Array<{ __typename?: 'Logs', message: string, createdAt: any }> | null } | null } };
+
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token?: string | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
+export type UploadFileMutationVariables = Exact<{
+  file: Scalars['Upload'];
+}>;
+
+
+export type UploadFileMutation = { __typename?: 'Mutation', uploadFile: { __typename?: 'UploadResponse', file?: string | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type GetAllCompaniesQueryVariables = Exact<{
   limit: Scalars['Float'];
@@ -651,6 +666,88 @@ export function useEditCompanyMutation(baseOptions?: Apollo.MutationHookOptions<
 export type EditCompanyMutationHookResult = ReturnType<typeof useEditCompanyMutation>;
 export type EditCompanyMutationResult = Apollo.MutationResult<EditCompanyMutation>;
 export type EditCompanyMutationOptions = Apollo.BaseMutationOptions<EditCompanyMutation, EditCompanyMutationVariables>;
+export const RejectOrderDocument = gql`
+    mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
+  rejectOrder(_id: $_id, rejectionReason: $rejectionReason) {
+    errors {
+      field
+      message
+    }
+    order {
+      product {
+        left {
+          haModel
+          serialNumber
+          style
+          canalLength
+          cymbaLength
+          ventSize
+          quantity
+          canal
+          soundTube
+          surface
+          color
+          shellId
+        }
+        right {
+          haModel
+          serialNumber
+          style
+          canalLength
+          cymbaLength
+          ventSize
+          quantity
+          canal
+          soundTube
+          surface
+          color
+          shellId
+        }
+      }
+      status
+      orderId
+      deliveryDetails {
+        urgent
+        standard
+        invoiceNumber
+      }
+      createdAt
+      updatedAt
+      logs {
+        message
+        createdAt
+      }
+    }
+  }
+}
+    `;
+export type RejectOrderMutationFn = Apollo.MutationFunction<RejectOrderMutation, RejectOrderMutationVariables>;
+
+/**
+ * __useRejectOrderMutation__
+ *
+ * To run a mutation, you first call `useRejectOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRejectOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rejectOrderMutation, { data, loading, error }] = useRejectOrderMutation({
+ *   variables: {
+ *      _id: // value for '_id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRejectOrderMutation(baseOptions?: Apollo.MutationHookOptions<RejectOrderMutation, RejectOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RejectOrderMutation, RejectOrderMutationVariables>(RejectOrderDocument, options);
+      }
+export type RejectOrderMutationHookResult = ReturnType<typeof useRejectOrderMutation>;
+export type RejectOrderMutationResult = Apollo.MutationResult<RejectOrderMutation>;
+export type RejectOrderMutationOptions = Apollo.BaseMutationOptions<RejectOrderMutation, RejectOrderMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
@@ -688,6 +785,43 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const UploadFileDocument = gql`
+    mutation UploadFile($file: Upload!) {
+  uploadFile(file: $file) {
+    errors {
+      field
+      message
+    }
+    file
+  }
+}
+    `;
+export type UploadFileMutationFn = Apollo.MutationFunction<UploadFileMutation, UploadFileMutationVariables>;
+
+/**
+ * __useUploadFileMutation__
+ *
+ * To run a mutation, you first call `useUploadFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadFileMutation, { data, loading, error }] = useUploadFileMutation({
+ *   variables: {
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useUploadFileMutation(baseOptions?: Apollo.MutationHookOptions<UploadFileMutation, UploadFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadFileMutation, UploadFileMutationVariables>(UploadFileDocument, options);
+      }
+export type UploadFileMutationHookResult = ReturnType<typeof useUploadFileMutation>;
+export type UploadFileMutationResult = Apollo.MutationResult<UploadFileMutation>;
+export type UploadFileMutationOptions = Apollo.BaseMutationOptions<UploadFileMutation, UploadFileMutationVariables>;
 export const GetAllCompaniesDocument = gql`
     query GetAllCompanies($limit: Float!, $page: Float!) {
   getAllCompanies(limit: $limit, page: $page) {
