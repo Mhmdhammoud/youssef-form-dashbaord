@@ -1,0 +1,52 @@
+mutation CreateCompany(
+  $admin: CreateCompanyAdminInput!
+  $company: CreateCompanyInput!
+) {
+  createCompany(admin: $admin, company: $company) {
+    errors {
+      field
+      message
+    }
+    company {
+      _id
+      title
+      companyId
+      createdAt
+      updatedAt
+      manufacturers
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+      employees {
+        _id
+        fullName
+        fname
+        lname
+        email
+        role
+        userId
+        isActive
+        createdAt
+        updatedAt
+      }
+      street
+      postCode
+      country
+    }
+    admin {
+      _id
+      fullName
+      fname
+      lname
+      email
+      role
+      userId
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+}
