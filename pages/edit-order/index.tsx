@@ -40,6 +40,10 @@ const Index = () => {
   const [rejectionReason, setRejectionReason] = useState<string>('');
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [rejectionType, setRejectionType] = useState<string>('');
+  const [modalFiles, setModalFiles] = useState({
+    left: '',
+    right: '',
+  });
   const [cannelImagePlaceholderLeft, setCannelImagePlaceHolderLeft] = useState(
     AllImages.cannel.left[AllImages.cannel.left.length - 1].img
   );
@@ -293,6 +297,117 @@ const Index = () => {
             </OrderLayout>
           )}
           {/*reject ends here*/}
+
+          <OrderLayout title="Upload Modal" cols={2}>
+            <OrderLayout.Item className={'text-center'}>
+              {modalFiles?.left === '' ? (
+                <Uploader
+                  onChange={(e) =>
+                    //@ts-ignore
+                    handleUpload(e).then((file) => {
+                      setModalFiles((prevState) => ({
+                        ...prevState,
+                        left: file!,
+                      }));
+                    })
+                  }
+                  id="left"
+                  variant="svg"
+                  accept="all"
+                  text="Upload Left Modal File"
+                />
+              ) : (
+                <div className="relative">
+                  <STLViewer
+                    url={modalFiles?.left}
+                    modelColor="rgb(115, 194, 251)"
+                    backgroundColor={'#fff'}
+                    rotate={true}
+                    orbitControls={true}
+                    model={modalFiles?.left}
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 absolute cursor-pointer"
+                    style={{
+                      top: 0,
+                      right: 0,
+                    }}
+                    onClick={() =>
+                      setModalFiles((prevState) => ({
+                        ...prevState,
+                        left: '',
+                      }))
+                    }
+                    fill="white"
+                    viewBox="0 0 24 24"
+                    stroke="red"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              )}
+            </OrderLayout.Item>
+            <OrderLayout.Item className={'text-center'}>
+              {modalFiles?.right === '' ? (
+                <Uploader
+                  onChange={(e) =>
+                    //@ts-ignore
+                    handleUpload(e).then((file) => {
+                      setModalFiles((prevState) => ({
+                        ...prevState,
+                        right: file!,
+                      }));
+                    })
+                  }
+                  id="right"
+                  variant="svg"
+                  accept="all"
+                  text="Upload right Modal File"
+                />
+              ) : (
+                <div className="relative">
+                  <STLViewer
+                    url={modalFiles?.right}
+                    modelColor="rgb(255, 0, 48)"
+                    backgroundColor={'#fff'}
+                    rotate={true}
+                    orbitControls={true}
+                    model={modalFiles?.right}
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 absolute cursor-pointer"
+                    style={{
+                      top: 0,
+                      right: 0,
+                    }}
+                    onClick={() =>
+                      setModalFiles((prevState) => ({
+                        ...prevState,
+                        right: '',
+                      }))
+                    }
+                    fill="white"
+                    viewBox="0 0 24 24"
+                    stroke="red"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              )}
+            </OrderLayout.Item>
+          </OrderLayout>
 
           <StlModal
             modalOpen={stlModalOpen}
