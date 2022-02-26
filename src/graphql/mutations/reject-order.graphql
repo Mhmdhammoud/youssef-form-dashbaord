@@ -1,0 +1,53 @@
+mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
+  rejectOrder(_id: $_id, rejectionReason: $rejectionReason) {
+    errors {
+      field
+      message
+    }
+    order {
+      product {
+        left {
+          haModel
+          serialNumber
+          style
+          canalLength
+          cymbaLength
+          ventSize
+          quantity
+          canal
+          soundTube
+          surface
+          color
+          shellId
+        }
+        right {
+          haModel
+          serialNumber
+          style
+          canalLength
+          cymbaLength
+          ventSize
+          quantity
+          canal
+          soundTube
+          surface
+          color
+          shellId
+        }
+      }
+      status
+      orderId
+      deliveryDetails {
+        urgent
+        standard
+        invoiceNumber
+      }
+      createdAt
+      updatedAt
+      logs {
+        message
+        createdAt
+      }
+    }
+  }
+}
