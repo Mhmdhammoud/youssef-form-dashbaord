@@ -58,7 +58,7 @@ const Index = () => {
         manufacturers: company?.manufacturers,
       });
     }
-  }, [data, id]);
+  }, [data, id, company]);
 
   const handleChange = useCallback(
     (
@@ -89,7 +89,7 @@ const Index = () => {
         }));
       }
     },
-    [companyData]
+    []
   );
   const handleContactPersonChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +121,7 @@ const Index = () => {
           setNotificationOpen(false);
         }, 2000);
       });
-  }, [companyData]);
+  }, [companyData, submit, refetch, company?._id]);
 
   return (
     <React.Fragment>
