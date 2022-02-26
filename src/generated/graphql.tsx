@@ -476,6 +476,14 @@ export type CreateCompanyMutationVariables = Exact<{
 
 export type CreateCompanyMutation = { __typename?: 'Mutation', createCompany: { __typename?: 'SingleCompanyResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, manufacturers: Array<string>, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null } | null, admin?: { __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any } | null } };
 
+export type EditCompanyMutationVariables = Exact<{
+  _id: Scalars['ID'];
+  input: CreateCompanyInput;
+}>;
+
+
+export type EditCompanyMutation = { __typename?: 'Mutation', editCompany: { __typename?: 'CompanyResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
@@ -507,6 +515,13 @@ export type GetAllUsersQueryVariables = Exact<{
 
 
 export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: { __typename?: 'AllUsersResponse', hasMore: boolean, length: number, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, users?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any, company: { __typename?: 'Company', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, createdAt: any, updatedAt: any, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } }> | null } };
+
+export type GetCompanyQueryVariables = Exact<{
+  companyId: Scalars['ID'];
+}>;
+
+
+export type GetCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, createdAt: any, updatedAt: any, manufacturers: Array<string>, employees?: Array<{ __typename?: 'User', _id: string, fname: string, lname: string, fullName: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } | null } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -592,6 +607,43 @@ export function useCreateCompanyMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCompanyMutationHookResult = ReturnType<typeof useCreateCompanyMutation>;
 export type CreateCompanyMutationResult = Apollo.MutationResult<CreateCompanyMutation>;
 export type CreateCompanyMutationOptions = Apollo.BaseMutationOptions<CreateCompanyMutation, CreateCompanyMutationVariables>;
+export const EditCompanyDocument = gql`
+    mutation EditCompany($_id: ID!, $input: CreateCompanyInput!) {
+  editCompany(_id: $_id, input: $input) {
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type EditCompanyMutationFn = Apollo.MutationFunction<EditCompanyMutation, EditCompanyMutationVariables>;
+
+/**
+ * __useEditCompanyMutation__
+ *
+ * To run a mutation, you first call `useEditCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditCompanyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editCompanyMutation, { data, loading, error }] = useEditCompanyMutation({
+ *   variables: {
+ *      _id: // value for '_id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditCompanyMutation(baseOptions?: Apollo.MutationHookOptions<EditCompanyMutation, EditCompanyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditCompanyMutation, EditCompanyMutationVariables>(EditCompanyDocument, options);
+      }
+export type EditCompanyMutationHookResult = ReturnType<typeof useEditCompanyMutation>;
+export type EditCompanyMutationResult = Apollo.MutationResult<EditCompanyMutation>;
+export type EditCompanyMutationOptions = Apollo.BaseMutationOptions<EditCompanyMutation, EditCompanyMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
@@ -888,6 +940,73 @@ export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const GetCompanyDocument = gql`
+    query GetCompany($companyId: ID!) {
+  getCompany(companyId: $companyId) {
+    errors {
+      field
+      message
+    }
+    company {
+      _id
+      title
+      companyId
+      street
+      postCode
+      country
+      createdAt
+      updatedAt
+      manufacturers
+      employees {
+        _id
+        fname
+        lname
+        fullName
+        email
+        role
+        userId
+        isActive
+        createdAt
+        updatedAt
+      }
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCompanyQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyQuery({
+ *   variables: {
+ *      companyId: // value for 'companyId'
+ *   },
+ * });
+ */
+export function useGetCompanyQuery(baseOptions: Apollo.QueryHookOptions<GetCompanyQuery, GetCompanyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompanyQuery, GetCompanyQueryVariables>(GetCompanyDocument, options);
+      }
+export function useGetCompanyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyQuery, GetCompanyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompanyQuery, GetCompanyQueryVariables>(GetCompanyDocument, options);
+        }
+export type GetCompanyQueryHookResult = ReturnType<typeof useGetCompanyQuery>;
+export type GetCompanyLazyQueryHookResult = ReturnType<typeof useGetCompanyLazyQuery>;
+export type GetCompanyQueryResult = Apollo.QueryResult<GetCompanyQuery, GetCompanyQueryVariables>;
 export const MeDocument = gql`
     query me {
   me {
