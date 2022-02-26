@@ -1,0 +1,23 @@
+query me {
+  me {
+    errors {
+      field
+      message
+    }
+    user {
+      _id
+      fullName
+      fname
+      lname
+      company {
+        _id
+        title
+        companyId
+        manufacturers
+      }
+      email
+      role
+      userId
+    }
+  }
+}
