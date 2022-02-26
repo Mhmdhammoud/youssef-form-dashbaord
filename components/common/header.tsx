@@ -5,10 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Dashboard', href: '/', current: true },
   { name: 'All Users', href: 'all-users', current: false },
   { name: 'All Companies', href: 'all-companies', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'All Orders', href: 'all-orders', current: false },
 ];
 
 //@ts-ignore
