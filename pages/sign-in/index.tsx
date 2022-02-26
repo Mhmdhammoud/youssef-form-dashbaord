@@ -62,7 +62,6 @@ const Index = () => {
       if (loginData?.token) {
         cookies.set('token', loginData.token, { path: '/' });
         cookies.set('isAuthenticated', true, { path: '/' });
-
         dispatch(login(loginData.token));
       }
     }
