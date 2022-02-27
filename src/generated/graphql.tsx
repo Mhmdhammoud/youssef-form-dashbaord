@@ -574,6 +574,14 @@ export type UploadFileMutationVariables = Exact<{
 
 export type UploadFileMutation = { __typename?: 'Mutation', uploadFile: { __typename?: 'UploadResponse', file?: string | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
+export type GetAllAdminsQueryVariables = Exact<{
+  limit: Scalars['Float'];
+  page: Scalars['Float'];
+}>;
+
+
+export type GetAllAdminsQuery = { __typename?: 'Query', getAllAdmins: { __typename?: 'AllAdminsResponse', hasMore: boolean, length: number, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, admins?: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null } };
+
 export type GetAllCompaniesQueryVariables = Exact<{
   limit: Scalars['Float'];
   page: Scalars['Float'];
@@ -1216,6 +1224,59 @@ export function useUploadFileMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UploadFileMutationHookResult = ReturnType<typeof useUploadFileMutation>;
 export type UploadFileMutationResult = Apollo.MutationResult<UploadFileMutation>;
 export type UploadFileMutationOptions = Apollo.BaseMutationOptions<UploadFileMutation, UploadFileMutationVariables>;
+export const GetAllAdminsDocument = gql`
+    query GetAllAdmins($limit: Float!, $page: Float!) {
+  getAllAdmins(limit: $limit, page: $page) {
+    errors {
+      field
+      message
+    }
+    hasMore
+    length
+    admins {
+      _id
+      fullName
+      fname
+      lname
+      email
+      role
+      adminId
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllAdminsQuery__
+ *
+ * To run a query within a React component, call `useGetAllAdminsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAdminsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAdminsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useGetAllAdminsQuery(baseOptions: Apollo.QueryHookOptions<GetAllAdminsQuery, GetAllAdminsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllAdminsQuery, GetAllAdminsQueryVariables>(GetAllAdminsDocument, options);
+      }
+export function useGetAllAdminsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAdminsQuery, GetAllAdminsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllAdminsQuery, GetAllAdminsQueryVariables>(GetAllAdminsDocument, options);
+        }
+export type GetAllAdminsQueryHookResult = ReturnType<typeof useGetAllAdminsQuery>;
+export type GetAllAdminsLazyQueryHookResult = ReturnType<typeof useGetAllAdminsLazyQuery>;
+export type GetAllAdminsQueryResult = Apollo.QueryResult<GetAllAdminsQuery, GetAllAdminsQueryVariables>;
 export const GetAllCompaniesDocument = gql`
     query GetAllCompanies($limit: Float!, $page: Float!) {
   getAllCompanies(limit: $limit, page: $page) {

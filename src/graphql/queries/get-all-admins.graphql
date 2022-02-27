@@ -1,0 +1,22 @@
+query GetAllAdmins($limit: Float!, $page: Float!) {
+  getAllAdmins(limit: $limit, page: $page) {
+    errors {
+      field
+      message
+    }
+    hasMore
+    length
+    admins {
+      _id
+      fullName
+      fname
+      lname
+      email
+      role
+      adminId
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+}
