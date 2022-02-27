@@ -67,15 +67,14 @@ const Index = () => {
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex-shrink-0 flex items-center">
-                  <Link href={'/'} passHref>
-                    <Image
-                      className="block lg:hidden h-8 w-auto cursor-pointer"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                      alt="Workflow"
-                      width={32}
-                      height={32}
-                    />
-                  </Link>
+                  <Image
+                    className="block lg:hidden h-8 w-auto cursor-pointer"
+                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                    alt="Workflow"
+                    width={32}
+                    height={32}
+                    onClick={() => router.push('/')}
+                  />
                 </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4 align-middle">
