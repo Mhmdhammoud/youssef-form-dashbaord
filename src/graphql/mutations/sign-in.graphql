@@ -1,4 +1,3 @@
-# Write your query or mutation here
 mutation Login($input: LoginInput!) {
   login(input: $input) {
     errors {

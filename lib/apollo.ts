@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import { createUploadLink } from 'apollo-upload-client';
 
 const uploadLink = createUploadLink({
-  uri: 'https://form-api.meritt-website.dev/',
+  uri: 'https://admin-api.meritt-website.dev/',
 });
 const client = (token: string) => {
   const authLink = setContext(async (_, { headers }) => {

@@ -1,9 +1,10 @@
-mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
-  rejectOrder(_id: $_id, rejectionReason: $rejectionReason) {
+mutation UpdateOrder($_id: ID!, $input: UpdateOrderInput!) {
+  updateOrder(_id: $_id, input: $input) {
     errors {
       field
       message
     }
+
     order {
       product {
         left {
@@ -14,11 +15,12 @@ mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
           cymbaLength
           ventSize
           quantity
-          canal
-          soundTube
-          surface
           color
-          shellId
+          surface
+          soundTube
+          markingDots
+          canal
+          manufacturer
           model
         }
         right {
@@ -29,30 +31,45 @@ mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
           cymbaLength
           ventSize
           quantity
-          canal
-          soundTube
-          surface
           color
-          shellId
+          surface
+          soundTube
+          markingDots
+          canal
           model
         }
       }
-      status
-      orderId
-      reason
-      rejectionReason
-      remake
       deliveryDetails {
         urgent
         standard
         invoiceNumber
       }
-      createdAt
-      updatedAt
+      extraDetails {
+        comment
+        accessories
+      }
+
+      orderType
+      status
+      remake
+      reason
+      orderId
+      bioporShore
+      material
+      _id
+      reOrder
+
+      impressions {
+        left
+        right
+      }
       logs {
         message
         createdAt
       }
+      rejectionReason
+      createdAt
+      updatedAt
     }
   }
 }

@@ -29,6 +29,7 @@ import {
   useRejectOrderMutation,
   useMeQuery,
   UserRole,
+  OrderStatus,
 } from '../../src/generated/graphql';
 import { useUpload } from '../../hooks';
 
@@ -37,9 +38,12 @@ const Index = () => {
   const [mainStl, setMainStl] = useState<string>('');
   const [stlModalOpen, setStlModalOpen] = useState<boolean>(false);
   const [showReject, setShowReject] = useState<boolean>(false);
+  const [showStatus, setShowStatus] = useState<boolean>(false);
+  const [showModel, setShowModel] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] = useState<string>('');
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [rejectionType, setRejectionType] = useState<string>('');
+  const [orderStatus, setOrderStatus] = useState<string>('');
   const [modalFiles, setModalFiles] = useState({
     left: '',
     right: '',
@@ -233,6 +237,30 @@ const Index = () => {
 
   const { handleUpload } = useUpload();
 
+  const fixString = (str: string) => {
+    return (
+      str.charAt(0).toUpperCase() +
+      str.slice(1).toLocaleLowerCase().replace(/_/g, ' ')
+    );
+  };
+
+  console.log(BTEOrder);
+
+  const handleOrderStatusChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      event.target.value === fixString(OrderStatus.ImpressionEvaluation)
+        ? setOrderStatus(OrderStatus.ImpressionEvaluation)
+        : event.target.value === fixString(OrderStatus.Modeled)
+        ? setOrderStatus(OrderStatus.Modeled)
+        : event.target.value === fixString(OrderStatus.Modelling)
+        ? setOrderStatus(OrderStatus.Modelling)
+        : '';
+    },
+    []
+  );
+
+  console.log(orderStatus);
+
   return (
     <React.Fragment>
       <Header />
@@ -243,16 +271,29 @@ const Index = () => {
         <div className="space-y-6">
           <h2 className="text-center text-2xl py-2 my-2">BTE Order</h2>
 
-          {userData?.role === UserRole?.Super && (
-            <div className="flex">
-              <button
-                onClick={() => setShowReject(!showReject)}
-                className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                Reject
-              </button>
-            </div>
-          )}
+          <div className="flex justify-around">
+            <button
+              onClick={() => setShowReject(!showReject)}
+              className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Reject Order
+            </button>
+
+            <button
+              onClick={() => setShowModel(!showModel)}
+              className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Upload Model
+            </button>
+
+            <button
+              onClick={() => setShowStatus(!showStatus)}
+              className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Change Order Status
+            </button>
+          </div>
+
           {/*reject starts here*/}
           {showReject && (
             <OrderLayout title={'Reject'} cols={2}>
@@ -298,117 +339,149 @@ const Index = () => {
           )}
           {/*reject ends here*/}
 
-          <OrderLayout title="Upload Modal" cols={2}>
-            <OrderLayout.Item className={'text-center'}>
-              {modalFiles?.left === '' ? (
-                <Uploader
-                  onChange={(e) =>
-                    //@ts-ignore
-                    handleUpload(e).then((file) => {
-                      setModalFiles((prevState) => ({
-                        ...prevState,
-                        left: file!,
-                      }));
-                    })
-                  }
-                  id="left"
-                  variant="svg"
-                  accept="all"
-                  text="Upload Left Modal File"
-                />
-              ) : (
-                <div className="relative">
-                  <STLViewer
-                    url={modalFiles?.left}
-                    modelColor="rgb(115, 194, 251)"
-                    backgroundColor={'#fff'}
-                    rotate={true}
-                    orbitControls={true}
-                    model={modalFiles?.left}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 absolute cursor-pointer"
-                    style={{
-                      top: 0,
-                      right: 0,
-                    }}
-                    onClick={() =>
-                      setModalFiles((prevState) => ({
-                        ...prevState,
-                        left: '',
-                      }))
+          {showModel && (
+            <OrderLayout title="Upload Modal" cols={3}>
+              <OrderLayout.Item className={'text-center'}>
+                {modalFiles?.left === '' ? (
+                  <Uploader
+                    onChange={(e) =>
+                      //@ts-ignore
+                      handleUpload(e).then((file) => {
+                        setModalFiles((prevState) => ({
+                          ...prevState,
+                          left: file!,
+                        }));
+                      })
                     }
-                    fill="white"
-                    viewBox="0 0 24 24"
-                    stroke="red"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-              )}
-            </OrderLayout.Item>
-            <OrderLayout.Item className={'text-center'}>
-              {modalFiles?.right === '' ? (
-                <Uploader
-                  onChange={(e) =>
-                    //@ts-ignore
-                    handleUpload(e).then((file) => {
-                      setModalFiles((prevState) => ({
-                        ...prevState,
-                        right: file!,
-                      }));
-                    })
-                  }
-                  id="right"
-                  variant="svg"
-                  accept="all"
-                  text="Upload right Modal File"
-                />
-              ) : (
-                <div className="relative">
-                  <STLViewer
-                    url={modalFiles?.right}
-                    modelColor="rgb(255, 0, 48)"
-                    backgroundColor={'#fff'}
-                    rotate={true}
-                    orbitControls={true}
-                    model={modalFiles?.right}
+                    id="left"
+                    variant="svg"
+                    accept="all"
+                    text="Upload Left Modal File"
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 absolute cursor-pointer"
-                    style={{
-                      top: 0,
-                      right: 0,
-                    }}
-                    onClick={() =>
-                      setModalFiles((prevState) => ({
-                        ...prevState,
-                        right: '',
-                      }))
-                    }
-                    fill="white"
-                    viewBox="0 0 24 24"
-                    stroke="red"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ) : (
+                  <div className="relative">
+                    <STLViewer
+                      url={modalFiles?.left}
+                      modelColor="rgb(115, 194, 251)"
+                      backgroundColor={'#fff'}
+                      rotate={true}
+                      orbitControls={true}
+                      model={modalFiles?.left}
                     />
-                  </svg>
-                </div>
-              )}
-            </OrderLayout.Item>
-          </OrderLayout>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8 absolute cursor-pointer"
+                      style={{
+                        top: 0,
+                        right: 0,
+                      }}
+                      onClick={() =>
+                        setModalFiles((prevState) => ({
+                          ...prevState,
+                          left: '',
+                        }))
+                      }
+                      fill="white"
+                      viewBox="0 0 24 24"
+                      stroke="red"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </OrderLayout.Item>
+              <OrderLayout.Item className={'text-center'}>
+                {modalFiles?.right === '' ? (
+                  <Uploader
+                    onChange={(e) =>
+                      //@ts-ignore
+                      handleUpload(e).then((file) => {
+                        setModalFiles((prevState) => ({
+                          ...prevState,
+                          right: file!,
+                        }));
+                      })
+                    }
+                    id="right"
+                    variant="svg"
+                    accept="all"
+                    text="Upload right Modal File"
+                  />
+                ) : (
+                  <div className="relative">
+                    <STLViewer
+                      url={modalFiles?.right}
+                      modelColor="rgb(255, 0, 48)"
+                      backgroundColor={'#fff'}
+                      rotate={true}
+                      orbitControls={true}
+                      model={modalFiles?.right}
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8 absolute cursor-pointer"
+                      style={{
+                        top: 0,
+                        right: 0,
+                      }}
+                      onClick={() =>
+                        setModalFiles((prevState) => ({
+                          ...prevState,
+                          right: '',
+                        }))
+                      }
+                      fill="white"
+                      viewBox="0 0 24 24"
+                      stroke="red"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </OrderLayout.Item>
+              <OrderLayout.Item className="text-center flex items-center justify-center">
+                <button
+                  onClick={handleReject}
+                  className="justify-center mt-2 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Submit
+                </button>
+              </OrderLayout.Item>
+            </OrderLayout>
+          )}
 
+          {showStatus && (
+            <OrderLayout title={'Change Order Status'} cols={1}>
+              <OrderLayout.Item className={'text-center'}>
+                <Select
+                  id="rejectionType"
+                  direction="binaural"
+                  options={[
+                    fixString(OrderStatus.ImpressionEvaluation),
+                    fixString(OrderStatus.Modelling),
+                    fixString(OrderStatus.Modeled),
+                  ]}
+                  onChange={handleOrderStatusChange}
+                />
+                <button
+                  onClick={handleReject}
+                  className="inline-flex justify-center mt-2 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Submit
+                </button>
+              </OrderLayout.Item>
+            </OrderLayout>
+          )}
           <StlModal
             modalOpen={stlModalOpen}
             setModalOpen={setStlModalOpen}
