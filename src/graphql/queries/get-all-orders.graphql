@@ -1,9 +1,5 @@
-query GetAllOrders(
-  $limit: Float!
-  $page: Float!
-  $orderCategory: OrderCategory!
-) {
-  getAllOrders(orderCategory: $orderCategory, limit: $limit, page: $page) {
+query GetAllOrders($limit: Float!, $page: Float!) {
+  getAllOrders(limit: $limit, page: $page) {
     errors {
       field
       message

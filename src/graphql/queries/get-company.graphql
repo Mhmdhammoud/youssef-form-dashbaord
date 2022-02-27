@@ -1,37 +1,49 @@
 query GetCompany($companyId: ID!) {
-	getCompany(companyId: $companyId) {
-		errors {
-			field
-			message
-		}
-		company {
-			_id
-			title
-			companyId
-			street
-			postCode
-			country
-			createdAt
-			updatedAt
-			manufacturers
-			employees {
-				_id
-				fname
-				lname
-				fullName
-				email
-				role
-				userId
-				isActive
-				createdAt
-				updatedAt
-			}
-			contactPerson {
-				fullName
-				email
-				phoneNumber
-				customerAccount
-			}
-		}
-	}
+  getCompany(companyId: $companyId) {
+    errors {
+      field
+      message
+    }
+    company {
+      _id
+      title
+      companyId
+      street
+      postCode
+      country
+      createdAt
+      updatedAt
+      manufacturers
+      employees {
+        _id
+        fname
+        lname
+        fullName
+        email
+        role
+        userId
+        isActive
+        createdAt
+        updatedAt
+      }
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+    }
+    admin {
+      _id
+      fullName
+      fname
+      lname
+      email
+      role
+      userId
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
 }

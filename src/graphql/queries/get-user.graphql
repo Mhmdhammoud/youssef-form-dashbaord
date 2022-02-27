@@ -1,11 +1,10 @@
-query ($limit: Float!, $page: Float!) {
-  getAllUsers(limit: $limit, page: $page) {
+query GetUser($userId: ID!) {
+  getUser(userId: $userId) {
     errors {
       field
       message
     }
-    hasMore
-    users {
+    user {
       _id
       fullName
       fname
@@ -17,15 +16,14 @@ query ($limit: Float!, $page: Float!) {
       createdAt
       updatedAt
       company {
+        _id
         title
         companyId
-        _id
-        createdAt
-        updatedAt
-        country
         street
         postCode
-        manufacturers
+        country
+        createdAt
+        updatedAt
         contactPerson {
           fullName
           email

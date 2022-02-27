@@ -1,8 +1,21 @@
-mutation EditCompany($_id:ID!,$input:CreateCompanyInput!){
-	editCompany(_id:$_id,input:$input){
-		errors{
-			field
-			message
-		}
-	}
+mutation EditCompany($_id: ID!, $input: CreateCompanyInput!) {
+  editCompany(_id: $_id, input: $input) {
+    company {
+      _id
+      title
+      companyId
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+      street
+      postCode
+      manufacturers
+      country
+      createdAt
+      updatedAt
+    }
+  }
 }
