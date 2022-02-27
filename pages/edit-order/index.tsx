@@ -1,48 +1,36 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 //@ts-ignore
 import STLViewer from 'stl-viewer';
 import {
+  ConfirmationModal,
   Footer,
   Header,
   Notification,
   OrderLayout,
-  OrderStepper,
   Select,
-  StlModal,
   Uploader,
   Wrapper,
 } from '../../components';
-import {
-  AllColors,
-  AllImages,
-  AllManufacturers,
-  AllStyles,
-  AllVents,
-  soundTubeColor,
-  AllRejectionReasons,
-} from '../../data';
-import {
-  UpdateOrderInput,
-  OrderType,
-  useGetOrderQuery,
-  useRejectOrderMutation,
-  useMeQuery,
-  UserRole,
-  OrderStatus,
-  useUpdateOrderMutation,
-  useChangeOrderStatusMutation,
-} from '../../src/generated/graphql';
+import { AllImages, AllRejectionReasons } from '../../data';
 import { useUpload } from '../../hooks';
+import {
+  OrderStatus,
+  OrderType,
+  UpdateOrderInput,
+  useChangeOrderStatusMutation,
+  useGetOrderQuery,
+  useMeQuery,
+  useRejectOrderMutation,
+  useUpdateOrderMutation,
+} from '../../src/generated/graphql';
 
 const Index = () => {
-  const [side, setSide] = useState<string>('both');
-  const [mainStl, setMainStl] = useState<string>('');
-  const [stlModalOpen, setStlModalOpen] = useState<boolean>(false);
   const [showReject, setShowReject] = useState<boolean>(false);
   const [showStatus, setShowStatus] = useState<boolean>(false);
   const [showModel, setShowModel] = useState<boolean>(false);
+  const [showConfirmationModal, setShowConfirmationModal] =
+    useState<boolean>(false);
   const [rejectionReason, setRejectionReason] = useState<string>('');
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [rejectionType, setRejectionType] = useState<string>('');
@@ -268,10 +256,9 @@ const Index = () => {
 
   const handleSubmitModel = useCallback(() => {
     submitUpdateOrder().then((res) => {
-      console.log(res);
-      refetch();
+      router.push('/order?id=' + order?.orderId?.split('_')[1]);
     });
-  }, [refetch, submitUpdateOrder]);
+  }, [submitUpdateOrder, order?.orderId, router]);
 
   const fixString = (str: string) => {
     return (
@@ -296,22 +283,27 @@ const Index = () => {
   );
 
   const handleChangeOrderStatus = useCallback(() => {
-    submitOrderStatus().then((res) => {
-      refetch();
-    });
-  }, [refetch, submitOrderStatus]);
+    submitOrderStatus()
+      .then((res) => {
+        router.push('/order?id=' + order?.orderId?.split('_')[1]);
+      })
+      .catch((err) => {
+        if (err?.response) console.log(err.response.data);
+        else console.log(err);
+      });
+  }, [submitOrderStatus, router, order?.orderId]);
 
   return (
     <React.Fragment>
       <Header />
       <Wrapper
         loading={loading}
-        classes="my-8 sm:mx-auto sm:w-full sm:max-w-6xl"
+        classes="my-8 sm:mx-auto sm:w-full sm:max-w-6xl min-h-[70vh]"
       >
         <div className="space-y-6">
           <h2 className="text-center text-2xl py-2 my-2">BTE Order</h2>
 
-          <div className="flex justify-around">
+          <div className="flex justify-around align-middle">
             <button
               onClick={() => {
                 setShowReject(!showReject),
@@ -381,7 +373,7 @@ const Index = () => {
                 )}
 
                 <button
-                  onClick={handleReject}
+                  onClick={() => setShowConfirmationModal(true)}
                   className="inline-flex justify-center mt-2 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Submit
@@ -445,12 +437,22 @@ const Index = () => {
                           top: 0,
                           right: 0,
                         }}
-                        onClick={() =>
+                        onClick={() => {
                           setModalFiles((prevState) => ({
                             ...prevState,
                             left: '',
-                          }))
-                        }
+                          })),
+                            setBTEOrder((prevState) => ({
+                              ...prevState,
+                              product: {
+                                ...prevState.product,
+                                left: {
+                                  ...prevState.product.left,
+                                  model: '',
+                                },
+                              },
+                            }));
+                        }}
                         fill="white"
                         viewBox="0 0 24 24"
                         stroke="red"
@@ -510,12 +512,22 @@ const Index = () => {
                           top: 0,
                           right: 0,
                         }}
-                        onClick={() =>
+                        onClick={() => {
                           setModalFiles((prevState) => ({
                             ...prevState,
                             right: '',
-                          }))
-                        }
+                          })),
+                            setBTEOrder((prevState) => ({
+                              ...prevState,
+                              product: {
+                                ...prevState.product,
+                                right: {
+                                  ...prevState.product.right,
+                                  model: '',
+                                },
+                              },
+                            }));
+                        }}
                         fill="white"
                         viewBox="0 0 24 24"
                         stroke="red"
@@ -564,10 +576,15 @@ const Index = () => {
               </OrderLayout.Item>
             </OrderLayout>
           )}
-          <StlModal
-            modalOpen={stlModalOpen}
-            setModalOpen={setStlModalOpen}
-            stl={mainStl}
+
+          <ConfirmationModal
+            buttonText="Reject"
+            action={handleReject}
+            open={showConfirmationModal}
+            setOpen={setShowConfirmationModal}
+            text="Are you sure you want to reject this order?"
+            title="Reject Order"
+            variant="Warning"
           />
 
           <Notification

@@ -9,3 +9,4 @@ export { default as Uploader } from './common/uploader';
 export { default as StlModal } from './StlModal';
 export { default as OrderLayout } from './Layout/OrderLayout';
 export { default as Select } from './common/Select';
+export { default as ConfirmationModal } from './ConfirmationModal';
