@@ -64,6 +64,10 @@ const Index = () => {
                         >
                           Role
                         </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        />
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -91,6 +95,16 @@ const Index = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {person.role}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <span
+                              onClick={() =>
+                                router.push('/user?id=' + person?.userId)
+                              }
+                              className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                            >
+                              View
+                            </span>
                           </td>
                         </tr>
                       ))}
