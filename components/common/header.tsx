@@ -1,4 +1,4 @@
-import { Fragment, useCallback } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
@@ -8,19 +8,21 @@ import Link from 'next/link';
 import { logout, startLogout } from '../../actions';
 import { useRouter } from 'next/router';
 import Cookies from 'universal-cookie';
-const navigation = [
-  { name: 'Dashboard', href: '/', current: true },
-  { name: 'All Users', href: 'all-users', current: false },
-  { name: 'All Companies', href: 'all-companies', current: false },
-  { name: 'All Orders', href: 'all-orders', current: false },
-];
 
 //@ts-ignore
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Example() {
+const Index = () => {
+  const [navigation, setNavigation] = useState([
+    { name: 'Dashboard', href: '/', current: true },
+    { name: 'All Users', href: 'all-users', current: false },
+    { name: 'All Companies', href: 'all-companies', current: false },
+    { name: 'All Orders', href: 'all-orders', current: false },
+    { name: 'All Admins', href: 'all-admins', current: false },
+  ]);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -35,6 +37,17 @@ export default function Example() {
 
     router.push('/');
   }, [dispatch, router]);
+
+  // const handleClick = useCallback((item) => {
+  //   setNavigation((prevState) => ({
+  //     ...prevState,
+  //     [item]: {
+  //       ...prevState[item],
+  //       current: true,
+  //     },
+  //   }));
+  // }, []);
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -54,17 +67,19 @@ export default function Example() {
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex-shrink-0 flex items-center">
-                  <Image
-                    className="block lg:hidden h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                    alt="Workflow"
-                    width={50}
-                    height={50}
-                  />
+                  <Link href={'/'} passHref>
+                    <Image
+                      className="block lg:hidden h-8 w-auto cursor-pointer"
+                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                      alt="Workflow"
+                      width={32}
+                      height={32}
+                    />
+                  </Link>
                 </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4 align-middle">
-                    {navigation.map((item) => (
+                    {navigation?.map((item) => (
                       <div
                         className={classNames(
                           item.current
@@ -73,6 +88,7 @@ export default function Example() {
                           'px-3 py-2 rounded-md text-sm font-medium'
                         )}
                         key={item.name!}
+                        // onClick={() => handleClick(item)}
                       >
                         <Link href={item.href}>{item.name}</Link>
                       </div>
@@ -93,13 +109,6 @@ export default function Example() {
                   <div>
                     <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open user menu</span>
-                      <Image
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                        width={50}
-                        height={50}
-                      />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -182,4 +191,5 @@ export default function Example() {
       )}
     </Disclosure>
   );
-}
+};
+export default Index;
