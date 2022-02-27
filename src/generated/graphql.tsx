@@ -590,13 +590,13 @@ export type GetAllOrdersQueryVariables = Exact<{
 
 export type GetAllOrdersQuery = { __typename?: 'Query', getAllOrders: { __typename?: 'AllOrdersResponse', hasMore: boolean, length: number, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, orders?: Array<{ __typename?: 'Order', _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason?: string | null, orderId?: string | null, bioporShore?: string | null, material: string, rejectionReason?: string | null, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber?: string | null }, creator: { __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs?: Array<{ __typename?: 'Logs', message: string, createdAt: any }> | null, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
 
-export type Unnamed_1_QueryVariables = Exact<{
+export type GetAllUsersQueryVariables = Exact<{
   limit: Scalars['Float'];
   page: Scalars['Float'];
 }>;
 
 
-export type Unnamed_1_Query = { __typename?: 'Query', getAllUsers: { __typename?: 'AllUsersResponse', hasMore: boolean, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, users?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any, company: { __typename?: 'Company', title: string, companyId: string, _id: string, createdAt: any, updatedAt: any, country: string, street: string, postCode: string, manufacturers: Array<string>, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } }> | null } };
+export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: { __typename?: 'AllUsersResponse', hasMore: boolean, length: number, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, users?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any, company: { __typename?: 'Company', title: string, companyId: string, _id: string, createdAt: any, updatedAt: any, country: string, street: string, postCode: string, manufacturers: Array<string>, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } }> | null } };
 
 export type GetCompanyQueryVariables = Exact<{
   companyId: Scalars['ID'];
@@ -1405,14 +1405,15 @@ export function useGetAllOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetAllOrdersQueryHookResult = ReturnType<typeof useGetAllOrdersQuery>;
 export type GetAllOrdersLazyQueryHookResult = ReturnType<typeof useGetAllOrdersLazyQuery>;
 export type GetAllOrdersQueryResult = Apollo.QueryResult<GetAllOrdersQuery, GetAllOrdersQueryVariables>;
-export const Document = gql`
-    query ($limit: Float!, $page: Float!) {
+export const GetAllUsersDocument = gql`
+    query GetAllUsers($limit: Float!, $page: Float!) {
   getAllUsers(limit: $limit, page: $page) {
     errors {
       field
       message
     }
     hasMore
+    length
     users {
       _id
       fullName
@@ -1447,33 +1448,33 @@ export const Document = gql`
     `;
 
 /**
- * __useQuery__
+ * __useGetAllUsersQuery__
  *
- * To run a query within a React component, call `useQuery` and pass it any options that fit your needs.
- * When your component renders, `useQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useQuery({
+ * const { data, loading, error } = useGetAllUsersQuery({
  *   variables: {
  *      limit: // value for 'limit'
  *      page: // value for 'page'
  *   },
  * });
  */
-export function useQuery(baseOptions: Apollo.QueryHookOptions<Query, QueryVariables>) {
+export function useGetAllUsersQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<Query, QueryVariables>(Document, options);
+        return Apollo.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
       }
-export function useLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Query, QueryVariables>) {
+export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<Query, QueryVariables>(Document, options);
+          return Apollo.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
         }
-export type QueryHookResult = ReturnType<typeof useQuery>;
-export type LazyQueryHookResult = ReturnType<typeof useLazyQuery>;
-export type QueryResult = Apollo.QueryResult<Query, QueryVariables>;
+export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
+export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
+export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const GetCompanyDocument = gql`
     query GetCompany($companyId: ID!) {
   getCompany(companyId: $companyId) {
