@@ -32,6 +32,7 @@ query GetOrder($orderId: ID!) {
         shellId
         manufacturer
         markingDots
+        model
       }
       right {
         haModel
@@ -48,6 +49,7 @@ query GetOrder($orderId: ID!) {
         shellId
         manufacturer
         markingDots
+        model
       }
     }
 

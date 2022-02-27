@@ -1,10 +1,26 @@
-mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
-  rejectOrder(_id: $_id, rejectionReason: $rejectionReason) {
+mutation ChangeOrderStatus($_id: ID!, $status: OrderStatus!) {
+  changeOrderStatus(_id: $_id, status: $status) {
     errors {
       field
       message
     }
     order {
+      _id
+      material
+      bioporShore
+      createdAt
+      updatedAt
+      orderId
+      remake
+      orderType
+      reason
+      status
+
+      impressions {
+        left
+        right
+      }
+
       product {
         left {
           haModel
@@ -19,6 +35,8 @@ mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
           surface
           color
           shellId
+          manufacturer
+          markingDots
           model
         }
         right {
@@ -34,21 +52,26 @@ mutation RejectOrder($_id: ID!, $rejectionReason: String!) {
           surface
           color
           shellId
+          manufacturer
+          markingDots
           model
         }
       }
-      status
-      orderId
-      reason
-      rejectionReason
-      remake
+
       deliveryDetails {
         urgent
         standard
         invoiceNumber
       }
-      createdAt
-      updatedAt
+      extraDetails {
+        comment
+        accessories
+      }
+
+      company {
+        _id
+      }
+
       logs {
         message
         createdAt
