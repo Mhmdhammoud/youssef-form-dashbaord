@@ -1,10 +1,11 @@
-query ($limit: Float!, $page: Float!) {
+query GetAllUsers($limit: Float!, $page: Float!) {
   getAllUsers(limit: $limit, page: $page) {
     errors {
       field
       message
     }
     hasMore
+    length
     users {
       _id
       fullName
