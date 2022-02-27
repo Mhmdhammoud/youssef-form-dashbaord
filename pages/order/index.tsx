@@ -166,6 +166,9 @@ const Index = () => {
                 </div>
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:landscape:hidden ">
                   <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <h2 className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      Impressions
+                    </h2>
                     <div className="grid grid-cols-2">
                       <div className="col-span-1 relative">
                         <a download href={order?.impressions?.left}>
@@ -212,6 +215,63 @@ const Index = () => {
                     </div>
                   </dd>
                 </div>
+                {order?.product?.left?.model !== '' &&
+                  order?.product?.right?.model !== '' && (
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:landscape:hidden ">
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <h2 className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          Model Files
+                        </h2>
+                        <div className="grid grid-cols-2">
+                          <div className="col-span-1 relative">
+                            {order?.product?.left?.model! !== '' ? (
+                              <div>
+                                <a download href={order?.product?.left?.model!}>
+                                  <DownloadIcon
+                                    className={
+                                      'w-6 h-6 text-black cursor-pointer absolute top-0 right-10'
+                                    }
+                                  />
+                                </a>
+                                <STLViewer
+                                  url={order?.product?.left?.model!}
+                                  modelColor="rgb(115, 194, 251)"
+                                  backgroundColor={'#fff'}
+                                  rotate={true}
+                                  orbitControls={true}
+                                  model={order?.product?.left?.model!}
+                                />
+                              </div>
+                            ) : null}
+                          </div>
+                          <div className="col-span-1 relative">
+                            {order?.product?.right?.model! !== '' ? (
+                              <div>
+                                <a
+                                  download
+                                  href={order?.product?.right?.model!}
+                                >
+                                  <DownloadIcon
+                                    className={
+                                      'w-6 h-6 text-black cursor-pointer absolute top-0 right-10'
+                                    }
+                                  />
+                                </a>
+                                <STLViewer
+                                  url={order?.product?.right?.model!}
+                                  modelColor="rgb(255, 0, 48)"
+                                  backgroundColor={'#fff'}
+                                  rotate={true}
+                                  orbitControls={true}
+                                  model={order?.product?.right?.model!}
+                                />
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      </dd>
+                    </div>
+                  )}
               </dl>
             </div>
           </div>

@@ -26,7 +26,7 @@ const Index = () => {
         loading={loading}
         classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-7xl"
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col min-h-[50vh]">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
               {allUsers?.length! > 0 ? (
