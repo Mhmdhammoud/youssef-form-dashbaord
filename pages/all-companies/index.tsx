@@ -32,7 +32,7 @@ const Index = () => {
     },
   });
   const { data: meData } = useMeQuery();
-  const userRole = meData?.me?.user?.role;
+  const userRole = meData?.me?.admin?.role;
   const companies = data?.getAllCompanies;
   const hasMore = companies?.hasMore;
   const router = useRouter();
@@ -45,16 +45,14 @@ const Index = () => {
         classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-7xl"
       >
         <div className="flex flex-col">
-          {userRole === UserRole.Super && (
-            <div className="flex justify-end my-3">
-              <button
-                onClick={() => router.push('/create-company')}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Add Company
-              </button>
-            </div>
-          )}
+          <div className="flex justify-end my-3">
+            <button
+              onClick={() => router.push('/create-company')}
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Add Company
+            </button>
+          </div>
 
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
