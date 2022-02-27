@@ -4,7 +4,6 @@ import { Header, Footer, Wrapper, Notification } from '../../components';
 import {
   AllOrdersResponse,
   GetAllOrdersQuery,
-  OrderCategory,
   useGetAllOrdersQuery,
   useMeQuery,
   UserRole,
@@ -28,7 +27,6 @@ const Index = () => {
 
   const { data, refetch, loading, error } = useGetAllOrdersQuery({
     variables: {
-      orderCategory: OrderCategory.All,
       limit: 10,
       page: page,
     },
@@ -36,7 +34,7 @@ const Index = () => {
 
   const hasMore = data?.getAllOrders?.hasMore;
   const allOrders = data?.getAllOrders;
-  const me = meData?.me?.user;
+  const me = meData?.me?.admin;
 
   return (
     <React.Fragment>
