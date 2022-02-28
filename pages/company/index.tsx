@@ -6,10 +6,35 @@ import {
   CreateCompanyInput,
   useGetCompanyQuery,
   useEditCompanyMutation,
+  useGetAllOrdersQuery,
+  OrderStatus,
 } from '../../src/generated/graphql';
 import { AllCountries, AllManufacturers } from '../../data';
 import moment from 'moment';
-
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  ArcElement,
+  BarElement,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 const Index = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
@@ -26,7 +51,17 @@ const Index = () => {
     street: '',
     title: '',
   });
-
+  const labels = [
+    'Checked',
+    'Impression Evaluation',
+    'Modeled',
+    'Modelling',
+    'Mounting',
+    'Placed',
+    'Printed',
+    'Printing',
+    'Shipped',
+  ];
   const router = useRouter();
   const { id } = router.query;
 
@@ -38,7 +73,95 @@ const Index = () => {
 
   const company = data?.getCompany?.company;
 
-  console.log(company);
+  const { data: ordersData } = useGetAllOrdersQuery({
+    variables: {
+      limit: 9999999,
+      page: 0,
+    },
+  });
+
+  const allOrders = ordersData?.getAllOrders?.orders?.filter(
+    (item) => item?.company?.companyId === id
+  );
+  const CheckedOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Checked
+  ).length;
+
+  const ImpressionEvaluationOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.ImpressionEvaluation
+  ).length;
+
+  const ModeledOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Modeled
+  ).length;
+
+  const ModellingOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Modelling
+  ).length;
+
+  const MountingOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Mounted
+  ).length;
+
+  const PlacedOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Placed
+  ).length;
+
+  const PrintedOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Printed
+  ).length;
+
+  const PrintingOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Printing
+  ).length;
+  const ShippedOrders = allOrders?.filter(
+    (item) => item?.status === OrderStatus.Shipped
+  ).length;
+
+  const barData = {
+    labels,
+    datasets: [
+      {
+        data: [
+          CheckedOrders,
+          ImpressionEvaluationOrders,
+          ModeledOrders,
+          ModellingOrders,
+          MountingOrders,
+          PlacedOrders,
+          PrintedOrders,
+          PrintingOrders,
+          ShippedOrders,
+        ],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(65,105,225)',
+          'rgb(144,238,144)',
+          'rgb(238,130,238)',
+          'rgb(255,127,80)',
+          'rgb(139,0,139)',
+          'rgb(244,164,96)',
+        ],
+        hoverOffset: 4,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        // position: 'bottom' as const,
+        display: false,
+      },
+      title: {
+        display: false,
+        text: 'Orders Per Status',
+      },
+    },
+  };
 
   const [submit, { data: DATA, loading: LOADING }] = useEditCompanyMutation();
 
@@ -400,6 +523,19 @@ const Index = () => {
               </button>
             </div>
           )}
+        </div>
+
+        <div className="flex flex-col py-2">
+          <div className="">
+            <h2 className="text-2xl text-gray-600 text-center pb-2">
+              Company orders per status
+            </h2>
+            <Bar
+              options={options}
+              data={barData}
+              className={'rounded-lg max-h-80 '}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col">
