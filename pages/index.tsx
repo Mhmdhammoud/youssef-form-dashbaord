@@ -81,7 +81,7 @@ const Home: NextPage = () => {
     (item) => item?.status === OrderStatus.Shipped
   ).length;
 
-  const pieData = {
+  const barData = {
     labels,
     datasets: [
       {
@@ -137,7 +137,7 @@ const Home: NextPage = () => {
             <h1 className="text-2xl font-semibold text-gray-700 text-center py-4">
               Orders Per Status
             </h1>
-            <Bar options={options} data={pieData} className={'rounded-lg '} />
+            <Bar options={options} data={barData} className={'rounded-lg '} />
           </div>
           <div className="col-span-1"></div>
         </div>
