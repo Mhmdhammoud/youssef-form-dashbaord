@@ -15,7 +15,7 @@ const Index = () => {
 		if (isAuthenticated) {
 			router.push('/')
 		}
-	}, [])
+	}, [isAuthenticated, router])
 	const {token} = router.query
 	const [password, setPassword] = useState<string>('')
 	const [confirmPassword, setConfirmPassword] = useState<string>('')
@@ -44,7 +44,7 @@ const Index = () => {
 		}).catch(err => {
 			console.log(err)
 		})
-	}, [token, password])
+	}, [submitReset, password, token, router])
 	const [passwordShown, setPasswordShown] = useState<boolean>(false)
 	const [confirmPasswordShown, setConfirmPasswordShown] =
 		useState<boolean>(false)
