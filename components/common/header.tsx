@@ -70,7 +70,7 @@ const Index = () => {
                                 <div className="flex-shrink-0 flex items-center">
                                     <Image
                                         className="block lg:hidden h-8 w-auto cursor-pointer"
-                                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                                        src="https://hassans.s3.eu-central-1.amazonaws.com/youssef/assets/logo.png"
                                         alt="Workflow"
                                         width={32}
                                         height={32}
