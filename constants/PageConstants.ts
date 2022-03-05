@@ -49,5 +49,13 @@ const PageConstants: IRoute[] = [
     route: '/user',
     isPrivate: true,
   },
+  {
+    route: '/forgot-password',
+    isPrivate: false,
+  },
+  {
+    route: '/reset-password',
+    isPrivate: false,
+  },
 ];
 export default PageConstants;

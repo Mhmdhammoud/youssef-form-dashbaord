@@ -9,10 +9,11 @@ interface IProps {
     [x: string]: any
 }
 
-const Wrapper: React.FC<IProps> = ({loading, children, classes}, restProp) => {
+const Wrapper: React.FC<IProps> = (props) => {
+    const {loading, children, classes, full = true, ...restProp} = props
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className={classnames('flex justify-center items-center', full ? ' h-screen' : '')}>
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 my-5"/>
             </div>
         )
