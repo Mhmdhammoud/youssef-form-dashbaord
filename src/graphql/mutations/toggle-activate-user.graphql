@@ -1,0 +1,8 @@
+mutation ToggleActivateUser($userId: ID!) {
+    toggleActivateUser(userId: $userId) {
+        errors {
+            field
+            message
+        }
+    }
+}

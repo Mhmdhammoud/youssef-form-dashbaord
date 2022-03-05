@@ -279,9 +279,12 @@ export type Mutation = {
   createUser: UserResponse;
   editCompany: CompanyResponse;
   editUser: UserResponse;
+  forgotPassword: AdminResponse;
   login: AuthResponse;
   rejectOrder: OrderResponses;
+  resetPassword: AdminResponse;
   toggleActivate: AdminResponse;
+  toggleActivateUser: UserResponse;
   updateOrder: OrderResponses;
   uploadFile: UploadResponse;
 };
@@ -320,6 +323,11 @@ export type MutationEditUserArgs = {
 };
 
 
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
+};
+
+
 export type MutationLoginArgs = {
   input: LoginInput;
 };
@@ -331,8 +339,19 @@ export type MutationRejectOrderArgs = {
 };
 
 
+export type MutationResetPasswordArgs = {
+  password: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
 export type MutationToggleActivateArgs = {
   adminId: Scalars['ID'];
+};
+
+
+export type MutationToggleActivateUserArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -551,6 +570,13 @@ export type LoginMutationVariables = Exact<{
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token?: string | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
+export type ToggleActivateUserMutationVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type ToggleActivateUserMutation = { __typename?: 'Mutation', toggleActivateUser: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type ToggleActivateMutationVariables = Exact<{
   adminId: Scalars['ID'];
@@ -1038,6 +1064,42 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const ToggleActivateUserDocument = gql`
+    mutation ToggleActivateUser($userId: ID!) {
+  toggleActivateUser(userId: $userId) {
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+export type ToggleActivateUserMutationFn = Apollo.MutationFunction<ToggleActivateUserMutation, ToggleActivateUserMutationVariables>;
+
+/**
+ * __useToggleActivateUserMutation__
+ *
+ * To run a mutation, you first call `useToggleActivateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleActivateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleActivateUserMutation, { data, loading, error }] = useToggleActivateUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useToggleActivateUserMutation(baseOptions?: Apollo.MutationHookOptions<ToggleActivateUserMutation, ToggleActivateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ToggleActivateUserMutation, ToggleActivateUserMutationVariables>(ToggleActivateUserDocument, options);
+      }
+export type ToggleActivateUserMutationHookResult = ReturnType<typeof useToggleActivateUserMutation>;
+export type ToggleActivateUserMutationResult = Apollo.MutationResult<ToggleActivateUserMutation>;
+export type ToggleActivateUserMutationOptions = Apollo.BaseMutationOptions<ToggleActivateUserMutation, ToggleActivateUserMutationVariables>;
 export const ToggleActivateDocument = gql`
     mutation ToggleActivate($adminId: ID!) {
   toggleActivate(adminId: $adminId) {
