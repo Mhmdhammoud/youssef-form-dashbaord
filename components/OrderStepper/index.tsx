@@ -150,7 +150,7 @@ const Index: React.FC<IProps> = (props) => {
         return () => {
             updateOrderStepper()
         }
-    }, [orderStatus])
+    }, [orderStatus, updateOrderStepper])
 
     return (
         <nav aria-label="Progress" className="mb-5 print:hidden">
