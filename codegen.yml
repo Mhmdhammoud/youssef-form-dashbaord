@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'https://admin-api.meritt-website.dev/'
+schema: 'https://admin-api.remotedigital.org/'
 documents: 'src/graphql/**/*.graphql'
 generates:
   src/generated/graphql.tsx:
