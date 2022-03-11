@@ -36,8 +36,6 @@ const Index = () => {
     });
 
     const order = data?.getOrder;
-    console.log(order);
-
     useEffect(() => {
         JsBarcode('#barcode', order?.orderId?.split('order_')[1]!, {
             format: 'code128',
@@ -48,7 +46,6 @@ const Index = () => {
             displayValue: false,
         });
     }, [id, order]);
-
     return (
         <React.Fragment>
             <Header/>
