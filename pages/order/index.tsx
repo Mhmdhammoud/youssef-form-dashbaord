@@ -93,7 +93,7 @@ const Index = () => {
                                     {order?.logs && order?.logs.length > 0 && (
                                         <div className="flex justify-end mt-3 print:hidden">
                                             <button
-                                                onClick={() => setLogModalOpen(true)}
+                                                onClick={() => window.print()}
                                                 className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700 mx-3"
                                             >
                                                 Print
