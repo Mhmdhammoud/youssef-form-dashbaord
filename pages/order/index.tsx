@@ -2,25 +2,10 @@ import React, {useEffect, useState} from 'react'
 import JsBarcode from 'jsbarcode'
 import moment from 'moment'
 import {useRouter} from 'next/router'
-import {
-    Footer,
-    Header,
-    Wrapper,
-    LogModal,
-    OrderStepper,
-} from '../../components'
-import {
-    OrderStatus,
-    OrderType,
-    useGetOrderQuery,
-} from '../../src/generated/graphql'
+import {Footer, Header, LogModal, OrderStepper, Wrapper,} from '../../components'
+import {OrderStatus, OrderType, useGetOrderQuery,} from '../../src/generated/graphql'
 import RenderTableByOrderType from './RenderTableByOrderType'
-import {
-    InformationCircleIcon,
-    PencilIcon,
-    DownloadIcon,
-    PrinterIcon,
-} from '@heroicons/react/solid'
+import {DownloadIcon, InformationCircleIcon, PencilIcon, PrinterIcon,} from '@heroicons/react/solid'
 //@ts-ignore
 import STLViewer from 'stl-viewer'
 
@@ -103,7 +88,7 @@ const Index = () => {
                                                 Logs
                                                 <InformationCircleIcon className='ml-2 h-4 w-4'/>
                                             </button>
-                                            {order?.status === OrderStatus?.Placed && (
+                                            {(order?.status === OrderStatus?.Placed || order?.status === OrderStatus.ImpressionEvaluation || order?.status === OrderStatus.Modelling) && (
                                                 <button
                                                     onClick={() =>
                                                         router.push(`/edit-order?id=${order?.orderId}`)
