@@ -47,7 +47,7 @@ const Select: React.FC<IProps> = ({
 					Select an Option
 				</option>
 			)}
-			{options.map((option, index) => (
+			{options?.map((option, index) => (
 				<option
 					key={index}
 					value={option}

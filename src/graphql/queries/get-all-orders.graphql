@@ -19,7 +19,6 @@ query GetAllOrders($limit: Float!, $page: Float!) {
         fname
         lname
         email
-        role
         userId
         isActive
         createdAt
