@@ -1,43 +1,41 @@
-import React, {useEffect, useState} from 'react';
-import JsBarcode from 'jsbarcode';
-import moment from 'moment';
-import {useRouter} from 'next/router';
+import React, {useEffect, useState} from 'react'
+import JsBarcode from 'jsbarcode'
+import moment from 'moment'
+import {useRouter} from 'next/router'
 import {
     Footer,
     Header,
     Wrapper,
     LogModal,
     OrderStepper,
-} from '../../components';
+} from '../../components'
 import {
     OrderStatus,
     OrderType,
     useGetOrderQuery,
-} from '../../src/generated/graphql';
-import RenderTableByOrderType from './RenderTableByOrderType';
+} from '../../src/generated/graphql'
+import RenderTableByOrderType from './RenderTableByOrderType'
 import {
     InformationCircleIcon,
     PencilIcon,
     DownloadIcon,
-    PrinterIcon
-} from '@heroicons/react/solid';
+    PrinterIcon,
+} from '@heroicons/react/solid'
 //@ts-ignore
-import STLViewer from 'stl-viewer';
+import STLViewer from 'stl-viewer'
 
 const Index = () => {
-    const router = useRouter();
-    const {id} = router.query;
-    const [logModalOpen, setLogModalOpen] = useState<boolean>(false);
+    const router = useRouter()
+    const {id} = router.query
+    const [logModalOpen, setLogModalOpen] = useState<boolean>(false)
 
-    const {data, loading} = useGetOrderQuery({
+    const {data, loading, refetch} = useGetOrderQuery({
         variables: {
             orderId: `order_${id as string}`,
         },
-    });
+    })
 
-    const order = data?.getOrder;
-    console.log(order);
-
+    const order = data?.getOrder
     useEffect(() => {
         JsBarcode('#barcode', order?.orderId?.split('order_')[1]!, {
             format: 'code128',
@@ -46,37 +44,36 @@ const Index = () => {
             width: 1.5,
             height: 40,
             displayValue: false,
-        });
-    }, [id, order]);
-
+        })
+    }, [id, order])
     return (
         <React.Fragment>
             <Header/>
-            <Wrapper loading={loading} classes="mb-4 print:portrait:my-[-48px]">
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-6xl">
-                    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-                        <div className="px-4 py-5 sm:px-6 print:portrait:py-2">
+            <Wrapper loading={loading} classes='mb-4 print:portrait:my-[-52px]'>
+                <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-6xl'>
+                    <div className='bg-white shadow overflow-hidden sm:rounded-lg'>
+                        <div className='px-4 py-5 sm:px-6 print:portrait:py-2'>
                             <OrderStepper orderStatus={order?.status!}/>
-                            <div className="grid gap-6 grid-cols-2 p-2">
-                                <div className="col-span-1 rounded-lg pb-2">
-                                    <p className="text-lg leading-6 font-medium text-gray-900">
+                            <div className='grid gap-6 grid-cols-2 p-2'>
+                                <div className='col-span-1 rounded-lg pb-2'>
+                                    <p className='text-lg leading-6 font-medium text-gray-900'>
                                         Product Type:{' '}
                                         {order?.orderType.length !== undefined && order?.orderType}
                                     </p>
-                                    <p className="mt-1 text-sm text-gray-500">
+                                    <p className='mt-1 text-sm text-gray-500'>
                                         Order ID: {order?.orderId?.split('order_')[1]}
                                     </p>
                                     <svg id={'barcode'} style={{maxWidth: '250px'}}/>
                                 </div>
-                                <div className="col-span-1 rounded-lg pb-2">
+                                <div className='col-span-1 rounded-lg pb-2'>
                                     <div
-                                        className="flex flex-col justify-end"
+                                        className='flex flex-col justify-end'
                                         style={{
                                             alignItems: 'flex-end',
                                         }}
                                     >
                     <span
-                        className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800">
+                        className='px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800'>
                       {order?.status.length !== undefined &&
                           order?.status.charAt(0).toUpperCase() +
                           order?.status
@@ -84,37 +81,37 @@ const Index = () => {
                               .toLocaleLowerCase()
                               .replace(/_/g, ' ')}
                     </span>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className='mt-1 text-sm text-gray-500'>
                                             Created At:{' '}
                                             {moment(order?.createdAt).format('DD-MM-YYYY')}
                                         </p>
                                     </div>
 
                                     {order?.logs && order?.logs.length > 0 && (
-                                        <div className="flex justify-end mt-3 print:hidden">
+                                        <div className='flex justify-end mt-3 print:hidden'>
                                             <button
-                                                onClick={() => setLogModalOpen(true)}
-                                                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700 mx-3"
+                                                onClick={() => window.print()}
+                                                className='inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700 mx-3'
                                             >
                                                 Print
-                                                <PrinterIcon className="ml-2 h-4 w-4"/>
+                                                <PrinterIcon className='ml-2 h-4 w-4'/>
                                             </button>
                                             <button
                                                 onClick={() => setLogModalOpen(true)}
-                                                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                                                className='inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700'
                                             >
                                                 Logs
-                                                <InformationCircleIcon className="ml-2 h-4 w-4"/>
+                                                <InformationCircleIcon className='ml-2 h-4 w-4'/>
                                             </button>
                                             {order?.status === OrderStatus?.Placed && (
                                                 <button
                                                     onClick={() =>
                                                         router.push(`/edit-order?id=${order?.orderId}`)
                                                     }
-                                                    className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                                                    className='inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700'
                                                 >
                                                     Edit
-                                                    <PencilIcon className="ml-2 h-4 w-4"/>
+                                                    <PencilIcon className='ml-2 h-4 w-4'/>
                                                 </button>
                                             )}
                                         </div>
@@ -122,25 +119,25 @@ const Index = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="border-t border-gray-200 px-4 py-5 print:py-0 sm:p-0 ">
-                            <dl className="sm:divide-y sm:divide-gray-200">
+                        <div className='border-t border-gray-200 px-4 py-5 print:py-0 sm:p-0 print:mt-[-10px]'>
+                            <dl className='sm:divide-y sm:divide-gray-200'>
                                 {order?.remake && (
-                                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
-                                        <dt className="text-sm font-medium text-gray-500">
+                                    <div className='py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6'>
+                                        <dt className='text-sm font-medium text-gray-500'>
                                             Remake reason
                                         </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                        <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1'>
                                             {order?.reason}
                                         </dd>
                                     </div>
                                 )}
 
                                 <div
-                                    className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-2">
-                                    <dt className="text-sm font-medium text-gray-500">
+                                    className='py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-2'>
+                                    <dt className='text-sm font-medium text-gray-500'>
                                         Due date
                                     </dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                    <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1'>
                                         {order?.deliveryDetails?.urgent
                                             ? moment(order?.createdAt)
                                                 .add(1, 'days')
@@ -152,21 +149,21 @@ const Index = () => {
                                 </div>
 
                                 <div
-                                    className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-2">
-                                    <dt className="text-sm font-medium text-gray-500">
+                                    className='py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-2'>
+                                    <dt className='text-sm font-medium text-gray-500'>
                                         Delivery Type
                                     </dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                    <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1'>
                                         {order?.deliveryDetails?.urgent ? 'Urgent' : 'Standard'}
                                     </dd>
                                 </div>
 
                                 <div
-                                    className="py-4 sm:py-5 grid grid-cols-1 sm:gap-4 sm:px-6 print:portrait:py-1 print:portrait:mt-0">
-                                    <dt className="text-sm font-medium text-gray-500">
+                                    className='py-4 sm:py-5 grid grid-cols-1 sm:gap-4 sm:px-6 print:portrait:py-1 print:portrait:mt-[-8px]'>
+                                    <dt className='text-sm font-medium text-gray-500'>
                                         Product Info
                                     </dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
                                         <RenderTableByOrderType
                                             //@ts-ignore
                                             orderProduct={order?.product as string}
@@ -177,13 +174,13 @@ const Index = () => {
                                     </dd>
                                 </div>
                                 <div
-                                    className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:hidden print:landscape:hidden ">
-                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                        <h2 className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    className='py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:hidden print:landscape:hidden '>
+                                    <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
+                                        <h2 className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                                             Impressions
                                         </h2>
-                                        <div className="grid grid-cols-2">
-                                            <div className="col-span-1 relative">
+                                        <div className='grid grid-cols-2'>
+                                            <div className='col-span-1 relative'>
                                                 <a download href={order?.impressions?.left}>
                                                     <DownloadIcon
                                                         className={
@@ -194,7 +191,7 @@ const Index = () => {
                                                 {order?.impressions?.left !== '' ? (
                                                     <STLViewer
                                                         url={order?.impressions?.left}
-                                                        modelColor="rgb(115, 194, 251)"
+                                                        modelColor='rgb(115, 194, 251)'
                                                         backgroundColor={'#fff'}
                                                         rotate={true}
                                                         orbitControls={true}
@@ -204,7 +201,7 @@ const Index = () => {
                                                     'N/A'
                                                 )}
                                             </div>
-                                            <div className="col-span-1 relative">
+                                            <div className='col-span-1 relative'>
                                                 <a download href={order?.impressions?.right}>
                                                     <DownloadIcon
                                                         className={
@@ -215,7 +212,7 @@ const Index = () => {
                                                 {order?.impressions?.right !== '' ? (
                                                     <STLViewer
                                                         url={order?.impressions?.right}
-                                                        modelColor="rgb(255, 0, 48)"
+                                                        modelColor='rgb(255, 0, 48)'
                                                         backgroundColor={'#fff'}
                                                         rotate={true}
                                                         orbitControls={true}
@@ -231,13 +228,13 @@ const Index = () => {
                                 {order?.product?.left?.model !== '' &&
                                     order?.product?.right?.model !== '' && (
                                         <div
-                                            className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:landscape:hidden ">
-                                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                <h2 className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            className='py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:landscape:hidden print:portrait:hidden '>
+                                            <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
+                                                <h2 className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                                                     Model Files
                                                 </h2>
-                                                <div className="grid grid-cols-2">
-                                                    <div className="col-span-1 relative">
+                                                <div className='grid grid-cols-2'>
+                                                    <div className='col-span-1 relative'>
                                                         {order?.product?.left?.model! !== '' ? (
                                                             <div>
                                                                 <a download href={order?.product?.left?.model!}>
@@ -249,7 +246,7 @@ const Index = () => {
                                                                 </a>
                                                                 <STLViewer
                                                                     url={order?.product?.left?.model!}
-                                                                    modelColor="rgb(115, 194, 251)"
+                                                                    modelColor='rgb(115, 194, 251)'
                                                                     backgroundColor={'#fff'}
                                                                     rotate={true}
                                                                     orbitControls={true}
@@ -258,7 +255,7 @@ const Index = () => {
                                                             </div>
                                                         ) : null}
                                                     </div>
-                                                    <div className="col-span-1 relative">
+                                                    <div className='col-span-1 relative'>
                                                         {order?.product?.right?.model! !== '' ? (
                                                             <div>
                                                                 <a
@@ -273,7 +270,7 @@ const Index = () => {
                                                                 </a>
                                                                 <STLViewer
                                                                     url={order?.product?.right?.model!}
-                                                                    modelColor="rgb(255, 0, 48)"
+                                                                    modelColor='rgb(255, 0, 48)'
                                                                     backgroundColor={'#fff'}
                                                                     rotate={true}
                                                                     orbitControls={true}
@@ -300,7 +297,7 @@ const Index = () => {
             </Wrapper>
             <Footer/>
         </React.Fragment>
-    );
-};
+    )
+}
 
-export default Index;
+export default Index

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {OrderStatus} from '../../src/generated/graphql'
 
 interface IProps {
@@ -20,7 +20,7 @@ const Index: React.FC<IProps> = (props) => {
         {id: 'Step 9', name: 'Shipped', status: 'upcoming'},
     ])
 
-    const updateOrderStepper = () => {
+    const updateOrderStepper = useCallback(() => {
         switch (orderStatus) {
             case OrderStatus.Placed:
                 setSteps((prevState) => {
@@ -142,7 +142,7 @@ const Index: React.FC<IProps> = (props) => {
             default:
                 break
         }
-    }
+    }, [orderStatus])
 
     useEffect(() => {
         updateOrderStepper()
