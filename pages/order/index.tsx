@@ -234,8 +234,6 @@ const Index = () => {
                   </dd>
                 </div>
                 {meData?.me.admin &&
-                  order?.product?.left?.model !== '' &&
-                  order?.product?.right?.model !== '' &&
                   (meData.me.admin.role === AdminRole.Technician ||
                     meData.me.admin.role === AdminRole.Admin) && (
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:landscape:hidden print:portrait:hidden ">
@@ -247,7 +245,8 @@ const Index = () => {
                           {(order?.direction === OrderDirection.Left ||
                             order?.direction === OrderDirection?.Bineural) && (
                             <div className="col-span-1 relative">
-                              {order?.product?.left?.model! !== '' ? (
+                              {order?.product?.left?.model! !== '' &&
+                              order?.product?.left?.model ? (
                                 <div>
                                   <a
                                     download
@@ -268,13 +267,16 @@ const Index = () => {
                                     model={order?.product?.left?.model!}
                                   />
                                 </div>
-                              ) : null}
+                              ) : (
+                                <div className="ml-6">N/A</div>
+                              )}
                             </div>
                           )}
                           {(order?.direction === OrderDirection.Right ||
                             order?.direction === OrderDirection?.Bineural) && (
                             <div className="col-span-1 relative">
-                              {order?.product?.right?.model! !== '' ? (
+                              {order?.product?.right?.model! !== '' &&
+                              order?.product?.right?.model ? (
                                 <div>
                                   <a
                                     download
@@ -295,33 +297,11 @@ const Index = () => {
                                     model={order?.product?.right?.model!}
                                   />
                                 </div>
-                              ) : null}
+                              ) : (
+                                <div className="ml-6">N/A</div>
+                              )}
                             </div>
                           )}
-                          <div className="col-span-1 relative">
-                            {order?.product?.right?.model! !== '' ? (
-                              <div>
-                                <a
-                                  download
-                                  href={order?.product?.right?.model!}
-                                >
-                                  <DownloadIcon
-                                    className={
-                                      'w-6 h-6 text-black cursor-pointer absolute top-0 right-10'
-                                    }
-                                  />
-                                </a>
-                                <STLViewer
-                                  url={order?.product?.right?.model!}
-                                  modelColor="rgb(255, 0, 48)"
-                                  backgroundColor={'#fff'}
-                                  rotate={true}
-                                  orbitControls={true}
-                                  model={order?.product?.right?.model!}
-                                />
-                              </div>
-                            ) : null}
-                          </div>
                         </div>
                       </dd>
                     </div>
