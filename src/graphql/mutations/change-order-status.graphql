@@ -15,7 +15,6 @@ mutation ChangeOrderStatus($_id: ID!, $status: OrderStatus!) {
       orderType
       reason
       status
-
       impressions {
         left
         right
