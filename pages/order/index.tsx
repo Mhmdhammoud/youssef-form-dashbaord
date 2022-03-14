@@ -3,7 +3,7 @@ import JsBarcode from 'jsbarcode'
 import moment from 'moment'
 import {useRouter} from 'next/router'
 import {Footer, Header, LogModal, OrderStepper, Wrapper,} from '../../components'
-import {OrderStatus, OrderType, useGetOrderQuery,} from '../../src/generated/graphql'
+import {AdminRole, OrderStatus, OrderType, useGetOrderQuery, useMeQuery,} from '../../src/generated/graphql'
 import RenderTableByOrderType from './RenderTableByOrderType'
 import {DownloadIcon, InformationCircleIcon, PencilIcon, PrinterIcon,} from '@heroicons/react/solid'
 //@ts-ignore
@@ -13,7 +13,7 @@ const Index = () => {
     const router = useRouter()
     const {id} = router.query
     const [logModalOpen, setLogModalOpen] = useState<boolean>(false)
-
+    const {data: meData} = useMeQuery()
     const {data, loading, refetch} = useGetOrderQuery({
         variables: {
             orderId: `order_${id as string}`,
@@ -164,7 +164,7 @@ const Index = () => {
                                         <h2 className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                                             Impressions
                                         </h2>
-                                        <div className='grid grid-cols-2'>
+                                        <div className='grid grid-cols-2 px-6'>
                                             <div className='col-span-1 relative'>
                                                 <a download href={order?.impressions?.left}>
                                                     <DownloadIcon
@@ -210,8 +210,8 @@ const Index = () => {
                                         </div>
                                     </dd>
                                 </div>
-                                {order?.product?.left?.model !== '' &&
-                                    order?.product?.right?.model !== '' && (
+                                {meData?.me.admin && order?.product?.left?.model !== '' &&
+                                    order?.product?.right?.model !== '' && (meData.me.admin.role === AdminRole.Technician || meData.me.admin.role === AdminRole.Admin) && (
                                         <div
                                             className='py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:landscape:hidden print:portrait:hidden '>
                                             <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
