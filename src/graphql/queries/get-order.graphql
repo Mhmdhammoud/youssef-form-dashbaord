@@ -1,6 +1,5 @@
 query GetOrder($orderId: ID!) {
   getOrder(orderId: $orderId) {
-    direction
     _id
     material
     bioporShore
@@ -12,6 +11,13 @@ query GetOrder($orderId: ID!) {
     reason
     status
     direction
+    creator {
+      fullName
+      email
+      role
+      userId
+      isActive
+    }
 
     impressions {
       left
