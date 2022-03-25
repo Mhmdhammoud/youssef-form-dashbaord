@@ -15,6 +15,7 @@ import RenderTableByOrderType from './RenderTableByOrderType';
 import {DownloadIcon, InformationCircleIcon, PencilIcon, PrinterIcon,} from '@heroicons/react/solid';
 //@ts-ignore
 import STLViewer from 'stl-viewer';
+import toUpperFirst from "../../utils/ToUpperFirst";
 
 const Index = () => {
     const router = useRouter();
@@ -51,7 +52,7 @@ const Index = () => {
                                 <div className="col-span-1 rounded-lg pb-2 print:col-span-2">
                                     <p className="text-lg leading-6 font-medium text-gray-900">
                                         Product Type:{' '}
-                                        {order?.orderType.length !== undefined && order?.orderType}
+                                        {order?.orderType.length !== undefined && toUpperFirst(order?.orderType)}
                                     </p>
                                     <p>
                     <span className="text-sm leading-5 font-medium text-gray-500 print:hidden">
@@ -227,7 +228,7 @@ const Index = () => {
 
                                         <div className="grid grid-cols-2">
                                             {(order?.direction === OrderDirection.Left ||
-                                                order?.direction === OrderDirection?.Bineural) && (
+                                                order?.direction === OrderDirection.Binaural) && (
                                                 <div className="col-span-1 relative">
                                                     <a download href={order?.impressions?.left}>
                                                         <DownloadIcon
@@ -251,7 +252,7 @@ const Index = () => {
                                                 </div>
                                             )}
                                             {(order?.direction === OrderDirection.Right ||
-                                                order?.direction === OrderDirection?.Bineural) && (
+                                                order?.direction === OrderDirection.Binaural) && (
                                                 <div className="col-span-1 relative">
                                                     <a download href={order?.impressions?.right}>
                                                         <DownloadIcon
@@ -285,7 +286,7 @@ const Index = () => {
                                         </h2>
                                         <div className="grid grid-cols-2">
                                             {(order?.direction === OrderDirection.Left ||
-                                                order?.direction === OrderDirection?.Bineural) && (
+                                                order?.direction === OrderDirection.Binaural) && (
                                                 <div className="col-span-1 relative">
                                                     {order?.product?.left?.model! !== '' &&
                                                     order?.product?.left?.model ? (
@@ -324,7 +325,7 @@ const Index = () => {
                                                 </div>
                                             )}
                                             {(order?.direction === OrderDirection.Right ||
-                                                order?.direction === OrderDirection?.Bineural) && (
+                                                order?.direction === OrderDirection.Binaural) && (
                                                 <div className="col-span-1 relative">
                                                     {order?.product?.right?.model! !== '' &&
                                                     order?.product?.right?.model ? (

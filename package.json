@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gen": "graphql-codegen --config codegen.yml"
+    "gen": "graphql-codegen --config codegen.yml",
+    "types": "tsc --noemit"
   },
   "dependencies": {
     "@apollo/client": "^3.5.8",
