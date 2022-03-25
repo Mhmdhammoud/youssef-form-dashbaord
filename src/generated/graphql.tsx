@@ -390,7 +390,7 @@ export type Order = {
 };
 
 export enum OrderDirection {
-  Bineural = 'BINEURAL',
+  Binaural = 'BINAURAL',
   Left = 'LEFT',
   Right = 'RIGHT'
 }
@@ -416,8 +416,14 @@ export enum OrderStatus {
 export enum OrderType {
   Bte = 'BTE',
   Custom = 'CUSTOM',
+  IndustrialPlugs = 'INDUSTRIAL_PLUGS',
+  InEarMonitoring = 'IN_EAR_MONITORING',
+  MusicPlugs = 'MUSIC_PLUGS',
   Plugs = 'PLUGS',
-  Ric = 'RIC'
+  Ric = 'RIC',
+  SkyPlugs = 'SKY_PLUGS',
+  SleepPlugs = 'SLEEP_PLUGS',
+  SwimmingPlugs = 'SWIMMING_PLUGS'
 }
 
 export type Product = {
@@ -528,8 +534,8 @@ export type UserResponse = {
 
 export enum UserRole {
   Admin = 'ADMIN',
-  Normal = 'NORMAL',
-  Super = 'SUPER'
+  Audiologist = 'AUDIOLOGIST',
+  Technician = 'TECHNICIAN'
 }
 
 export type ChangeOrderStatusMutationVariables = Exact<{
