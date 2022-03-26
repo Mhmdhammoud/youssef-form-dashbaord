@@ -1,95 +1,100 @@
 query GetOrder($orderId: ID!) {
-  getOrder(orderId: $orderId) {
-    _id
-    material
-    bioporShore
-    createdAt
-    updatedAt
-    orderId
-    remake
-    orderType
-    reason
-    status
-    direction
-    creator {
-      fullName
-      email
-      role
-      userId
-      isActive
-    }
-
-    impressions {
-      left
-      right
-    }
-
-    product {
-      left {
-        haModel
-        serialNumber
-        style
-        canalLength
-        cymbaLength
-        ventSize
-        quantity
-        canal
-        soundTube
-        surface
-        color
-        shellId
+    getOrder(orderId: $orderId) {
+        _id
+        material
+        bioporShore
+        createdAt
+        updatedAt
+        orderId
+        remake
+        orderType
+        reason
+        status
+        direction
         manufacturer
-        markingDots
-        model
-      }
-      right {
-        haModel
-        serialNumber
-        style
-        canalLength
-        cymbaLength
-        ventSize
-        quantity
-        canal
-        soundTube
-        surface
-        color
-        shellId
-        manufacturer
-        markingDots
-        model
-      }
-    }
+        filter
+        cordColor
+        creator {
+            fullName
+            email
+            role
+            userId
+            isActive
+        }
 
-    deliveryDetails {
-      urgent
-      standard
-      invoiceNumber
-    }
-    extraDetails {
-      comment
-      accessories
-    }
+        impressions {
+            left
+            right
+        }
 
-    company {
-      _id
-      title
-      companyId
-      createdAt
-      updatedAt
-      contactPerson {
-        fullName
-        email
-        phoneNumber
-      }
-      street
-      postCode
-      country
-    }
+        product {
+            left {
+                haModel
+                serialNumber
+                style
+                canalLength
+                cymbaLength
+                ventSize
+                quantity
+                canal
+                soundTube
+                surface
+                color
+                shellId
+                manufacturer
+                markingDots
+                model
+                engraving
+            }
+            right {
+                haModel
+                serialNumber
+                style
+                canalLength
+                cymbaLength
+                ventSize
+                quantity
+                canal
+                soundTube
+                surface
+                color
+                shellId
+                manufacturer
+                markingDots
+                model
+                engraving
+            }
+        }
 
-    logs {
-      message
-      createdAt
+        deliveryDetails {
+            urgent
+            standard
+            invoiceNumber
+        }
+        extraDetails {
+            comment
+            accessories
+        }
+
+        company {
+            _id
+            title
+            companyId
+            createdAt
+            updatedAt
+            contactPerson {
+                fullName
+                email
+                phoneNumber
+            }
+            street
+            postCode
+            country
+        }
+
+        logs {
+            message
+            createdAt
+        }
     }
-  }
 }
