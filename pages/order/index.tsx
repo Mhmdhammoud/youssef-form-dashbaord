@@ -156,7 +156,7 @@ const Index = () => {
                                                 Logs
                                                 <InformationCircleIcon className='ml-2 h-4 w-4'/>
                                             </button>
-                                            {order?.status === OrderStatus?.Placed && (
+                                            {(order?.status === OrderStatus?.Placed || order?.status === OrderStatus?.ImpressionEvaluation || order?.status === OrderStatus?.Modelling || order?.status === OrderStatus?.Modeled) && (
                                                 <button
                                                     onClick={() =>
                                                         router.push(`/edit-order?id=${order?.orderId}`)
