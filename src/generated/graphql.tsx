@@ -90,6 +90,7 @@ export type BteEar = {
   canalLength: Scalars['String'];
   color: Scalars['String'];
   cymbaLength: Scalars['String'];
+  engraving: Scalars['String'];
   haModel: Scalars['String'];
   manufacturer: Scalars['String'];
   markingDots: Scalars['Boolean'];
@@ -370,13 +371,16 @@ export type Order = {
   _id: Scalars['String'];
   bioporShore?: Maybe<Scalars['String']>;
   company: Company;
+  cordColor: Scalars['String'];
   createdAt: Scalars['DateTime'];
   creator: User;
   deliveryDetails: DeliveryDetails;
   direction: OrderDirection;
   extraDetails: ExtraDetails;
+  filter: Scalars['String'];
   impressions: Impressions;
   logs?: Maybe<Array<Logs>>;
+  manufacturer: Scalars['String'];
   material: Scalars['String'];
   orderId?: Maybe<Scalars['String']>;
   orderType: OrderType;
@@ -672,7 +676,7 @@ export type GetOrderQueryVariables = Exact<{
 }>;
 
 
-export type GetOrderQuery = { __typename?: 'Query', getOrder?: { __typename?: 'Order', _id: string, material: string, bioporShore?: string | null, createdAt: any, updatedAt: any, orderId?: string | null, remake: boolean, orderType: OrderType, reason?: string | null, status: OrderStatus, direction: OrderDirection, creator: { __typename?: 'User', fullName: string, email: string, role: UserRole, userId: string, isActive: boolean }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model?: string | null }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model?: string | null } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber?: string | null }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string } }, logs?: Array<{ __typename?: 'Logs', message: string, createdAt: any }> | null } | null };
+export type GetOrderQuery = { __typename?: 'Query', getOrder?: { __typename?: 'Order', _id: string, material: string, bioporShore?: string | null, createdAt: any, updatedAt: any, orderId?: string | null, remake: boolean, orderType: OrderType, reason?: string | null, status: OrderStatus, direction: OrderDirection, manufacturer: string, filter: string, cordColor: string, creator: { __typename?: 'User', fullName: string, email: string, role: UserRole, userId: string, isActive: boolean }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model?: string | null, engraving: string }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model?: string | null, engraving: string } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber?: string | null }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string } }, logs?: Array<{ __typename?: 'Logs', message: string, createdAt: any }> | null } | null };
 
 export type GetUserQueryVariables = Exact<{
   userId: Scalars['ID'];
@@ -1792,6 +1796,9 @@ export const GetOrderDocument = gql`
     reason
     status
     direction
+    manufacturer
+    filter
+    cordColor
     creator {
       fullName
       email
@@ -1820,6 +1827,7 @@ export const GetOrderDocument = gql`
         manufacturer
         markingDots
         model
+        engraving
       }
       right {
         haModel
@@ -1837,6 +1845,7 @@ export const GetOrderDocument = gql`
         manufacturer
         markingDots
         model
+        engraving
       }
     }
     deliveryDetails {

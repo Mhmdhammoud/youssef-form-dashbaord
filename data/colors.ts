@@ -218,5 +218,85 @@ const colors: IColorModel = {
 		},
 	],
 }
+export const SwimmingPlugsColors: ColorModel[] = [
+	{
+		label: '60 Clear transparent',
+		color: '#fff',
+	},
+	{
+		label: '61 Reddish transparent',
+		color: '#fcc4af',
+	},
+	{
+		label: '613 Medium brown transparent',
+		color: '#d9bfa2',
+	},
+	{
+		label: '617 Red opaque',
+		color: '#e51e26',
+	},
+	{
+		label: '618 Pink opaque',
+		color: '#ed6ea7',
+	},
+	{
+		label: '622 Blue opaque',
+		color: '#312f80',
+	},
+	{
+		label: '632 Yellow opaque',
+		color: '#fcdd07',
+	},
+	{
+		label: '634 Orange opaque',
+		color: '#ef7e23',
+	},
+	{
+		label: '642 Green opaque',
+		color: '#1aa749',
+	},
+	{
+		label: '652 Black opaque',
+		color: '#050708',
+	},
+	{
+		label: '662 White opaque',
+		color: '#fff',
+	},
+]
+export const CordColors: ColorModel[] = [
+	{
+		label: '14 TAN',
+		color: '#e49d67',
+	},
+	{
+		label: '21 Clear',
+		color: '#dddbe1',
+	},
+	{
+		label: '22 Cocoa Brown',
+		color: '#a7703b',
+	},
+	{
+		label: '26 Pink',
+		color: '#efbb9c',
+	},
+	{
+		label: '28 Brown',
+		color: '#743016',
+	},
+	{
+		label: 'RO Red',
+		color: '#aa2b23',
+	},
+	{
+		label: 'BO Blue',
+		color: '#1b367b',
+	},
+	{
+		label: '06 Black',
+		color: '#000',
+	},
+]
 
 export default colors
