@@ -44,7 +44,7 @@ const models = [
 		value: 'reddish orange transparent',
 	},
 	{
-		src: 'https://hassans.s3.eu-central-1.amazonaws.com/youssef/assets/roetlich_orange_trans_01.png',
+		src: 'https://hassans.s3.eu-central-1.amazonaws.com/youssef/assets/rot_trans_01.png',
 		value: 'red transparent',
 	},
 	{

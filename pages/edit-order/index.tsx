@@ -17,12 +17,13 @@ import { useUpload } from '../../hooks';
 import {
   OrderStatus,
   OrderType,
-  UpdateOrderInput,
+  CreateOrderInput,
   useChangeOrderStatusMutation,
   useGetOrderQuery,
   useMeQuery,
   useRejectOrderMutation,
   useUpdateOrderMutation,
+  OrderDirection,
 } from '../../src/generated/graphql';
 
 const Index = () => {
@@ -54,7 +55,7 @@ const Index = () => {
     AllImages.cymba.right[AllImages.cymba.right.length - 1].img
   );
 
-  const [BTEOrder, setBTEOrder] = useState<UpdateOrderInput>({
+  const [BTEOrder, setBTEOrder] = useState<CreateOrderInput>({
     product: {
       left: {
         haModel: '',
@@ -71,6 +72,8 @@ const Index = () => {
         manufacturer: '',
         markingDots: false,
         model: '',
+        hasEngraving: false,
+        engraving: '',
       },
       right: {
         haModel: '',
@@ -87,6 +90,8 @@ const Index = () => {
         manufacturer: '',
         markingDots: false,
         model: '',
+        hasEngraving: false,
+        engraving: '',
       },
     },
     deliveryDetails: {
@@ -107,6 +112,11 @@ const Index = () => {
     orderType: OrderType.Bte,
     remake: false,
     reason: '',
+    cordColor: '',
+    manufacturer: '',
+    hasCord: false,
+    filter: '',
+    direction: OrderDirection.Binaural,
   });
   const { data: meData } = useMeQuery();
   const router = useRouter();
@@ -165,6 +175,8 @@ const Index = () => {
           manufacturer: order?.product?.left?.manufacturer!,
           markingDots: order?.product?.left?.markingDots!,
           model: order?.product?.left?.model!,
+          hasEngraving: order?.product?.left?.hasEngraving!,
+          engraving: order?.product?.left?.engraving!,
         },
         right: {
           haModel: order?.product?.right?.haModel!,
@@ -181,6 +193,8 @@ const Index = () => {
           manufacturer: order?.product?.right?.manufacturer!,
           markingDots: order?.product?.right?.markingDots!,
           model: order?.product?.right?.model!,
+          hasEngraving: order?.product?.right?.hasEngraving!,
+          engraving: order?.product?.right?.engraving!,
         },
       },
       deliveryDetails: {
@@ -204,6 +218,11 @@ const Index = () => {
 
       remake: order?.remake!,
       reason: order?.reason!,
+      manufacturer: order?.manufacturer!,
+      hasCord: order?.hasCord!,
+      filter: order?.filter!,
+      direction: order?.direction!,
+      cordColor: order?.cordColor!,
     });
     const cannelImageLeft = AllImages?.cannel?.left?.find(
       (item) => item.value === order?.product?.left?.canalLength

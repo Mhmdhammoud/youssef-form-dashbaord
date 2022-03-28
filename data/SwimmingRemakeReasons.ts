@@ -1,4 +1,4 @@
-const bteReasons = [
+const swimmingPlugsReason = [
 	'Ordinary remake (lost...)',
 	'Feedback',
 	'Change from hard to soft',
@@ -20,4 +20,4 @@ const bteReasons = [
 	// 'Remove volume control',
 	// 'Remove switch',
 ]
-export default bteReasons
+export default swimmingPlugsReason

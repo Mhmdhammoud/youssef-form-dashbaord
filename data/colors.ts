@@ -12,42 +12,90 @@ export interface IColorModel {
 	fototec: ColorModel[]
 }
 
+export interface ISwimmingColorModel {
+	light: ColorModel[]
+	fluoreszent: ColorModel[]
+}
+
+export const SwimmingPlugsColors: ISwimmingColorModel = {
+	light: [
+		{
+			label: '28516 purple opaque',
+			color: '#7f5da4',
+		},
+		{
+			label: '28524 light blue opaque',
+			color: '#97b9e2',
+		},
+		{
+			label: '28525 dark blue opaque',
+			color: '#271d67',
+		},
+		{
+			label: '28526 dark red opaque',
+			color: '#ae0f0a',
+		},
+		{
+			label: '28527 neon yellow opaque',
+			color: '#ffdd00',
+		},
+		{
+			label: '28513 neon pink opaque',
+			color: '#ed6ea7',
+		},
+		{
+			label: '28593 neon orange opaque',
+			color: '#f07d00',
+		},
+		{
+			label: '28543 neon green opaque',
+			color: '#60bea3',
+		},
+		{
+			label: '28552 black opaque',
+			color: '#1d1d1b',
+		},
+		{
+			label: '28562 white opaque',
+			color: '#fff',
+		},
+		{
+			label: '28571 beige opaque',
+			color: '#d6b78f',
+		}],
+	fluoreszent: [
+		{
+			label: '28700 Yellow Fluoreszent',
+			color: '#ffdd00',
+		},
+		{
+			label: '28701 Green Fluoreszent',
+			color: '#23a638',
+		},
+		{
+			label: '28702 Blue Fluoreszent',
+			color: '#1c86c8',
+		},
+		{
+			label: '28703 Magenta Fluoreszent',
+			color: '#ed6ea7',
+		},
+		{
+			label: '28704 Red Fluoreszent',
+			color: '#e30613',
+		},
+		{
+			label: '28705 Orange Fluoreszent',
+			color: '#f07d00',
+		}
+		],
+}
+
+
 export const soundTubeColor: ColorModel[] = [
 	{
-		color: '#ff0000',
-		label: 'B1 #13HW Normal',
-	},
-	{
-		color: '#0000ff',
-		label: 'B2 #13HW Normal',
-	},
-	{
-		color: '#db5cff',
-		label: 'B3 #13HW Normal',
-	},
-	{
-		color: '#00ff00',
-		label: 'B4 #13HW Normal',
-	},
-	{
-		color: '#ff8522',
-		label: 'B5 #13HW Normal',
-	},
-	{
-		color: '#ffdf34',
-		label: 'B6 #13HW Normal',
-	},
-	{
-		color: '#402a2a',
-		label: 'B7 #13HW Normal',
-	},
-	{
-		color: '#6600ff',
-		label: 'B8 #13HW Normal',
-	},
-	{
 		color: '#fff',
-		label: '13N21 PH#13 Normal',
+		label: '13N21 PH#13',
 	},
 	{
 		color: '#fff',
@@ -59,7 +107,7 @@ export const soundTubeColor: ColorModel[] = [
 	},
 	{
 		color: '#574141',
-		label: '13NL7 PH#13 Normal',
+		label: '13NL7 PH#13',
 	},
 	{
 		color: '#574141',
@@ -72,6 +120,38 @@ export const soundTubeColor: ColorModel[] = [
 	{
 		color: '#574141',
 		label: '13TDL7 PH#13 Tube Thick wall',
+	},
+	{
+		color: '#ff0000',
+		label: 'B1 #13HW',
+	},
+	{
+		color: '#0000ff',
+		label: 'B2 #13HW',
+	},
+	{
+		color: '#db5cff',
+		label: 'B3 #13HW',
+	},
+	{
+		color: '#00ff00',
+		label: 'B4 #13HW',
+	},
+	{
+		color: '#ff8522',
+		label: 'B5 #13HW',
+	},
+	{
+		color: '#ffdf34',
+		label: 'B6 #13HW',
+	},
+	{
+		color: '#402a2a',
+		label: 'B7 #13HW',
+	},
+	{
+		color: '#6600ff',
+		label: 'B8 #13HW',
 	},
 ]
 const colors: IColorModel = {
@@ -218,85 +298,41 @@ const colors: IColorModel = {
 		},
 	],
 }
-export const SwimmingPlugsColors: ColorModel[] = [
-	{
-		label: '60 Clear transparent',
-		color: '#fff',
-	},
-	{
-		label: '61 Reddish transparent',
-		color: '#fcc4af',
-	},
-	{
-		label: '613 Medium brown transparent',
-		color: '#d9bfa2',
-	},
-	{
-		label: '617 Red opaque',
-		color: '#e51e26',
-	},
-	{
-		label: '618 Pink opaque',
-		color: '#ed6ea7',
-	},
-	{
-		label: '622 Blue opaque',
-		color: '#312f80',
-	},
-	{
-		label: '632 Yellow opaque',
-		color: '#fcdd07',
-	},
-	{
-		label: '634 Orange opaque',
-		color: '#ef7e23',
-	},
-	{
-		label: '642 Green opaque',
-		color: '#1aa749',
-	},
-	{
-		label: '652 Black opaque',
-		color: '#050708',
-	},
-	{
-		label: '662 White opaque',
-		color: '#fff',
-	},
-]
 export const CordColors: ColorModel[] = [
 	{
-		label: '14 TAN',
-		color: '#e49d67',
+		label: '102 Clear',
+		color: '#ffffff',
 	},
 	{
-		label: '21 Clear',
-		color: '#dddbe1',
+		label: '110 Light Red',
+		color: '#ff355e',
 	},
 	{
-		label: '22 Cocoa Brown',
-		color: '#a7703b',
+		label: '113 Neon',
+		color: '#38f814',
 	},
 	{
-		label: '26 Pink',
-		color: '#efbb9c',
+		label: '111 Light Blue',
+		color: '#2f2fff',
 	},
 	{
-		label: '28 Brown',
-		color: '#743016',
+		label: '112 Light Green',
+		color: '#00ff7f',
+	},
+
+	{
+		label: '114 Light Purple',
+		color: '#7752BD',
 	},
 	{
-		label: 'RO Red',
-		color: '#aa2b23',
+		label: '115 Light Orange',
+		color: '#ff7b19',
 	},
 	{
-		label: 'BO Blue',
-		color: '#1b367b',
-	},
-	{
-		label: '06 Black',
-		color: '#000',
+		label: '116 Light Pink',
+		color: '#ff389c',
 	},
 ]
+
 
 export default colors
