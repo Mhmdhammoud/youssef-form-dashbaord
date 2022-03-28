@@ -7,14 +7,14 @@ import CymbaRightTwo from '../public/cymbaright2.png'
 import CymbaRightThree from '../public/cymbaright3.png'
 import CymbaRightFour from '../public/cymbaright4.png'
 
-import CanalLeftOne from '../public/cannelleft1.png'
-import CanalLeftTwo from '../public/cannelleft2.png'
-import CanalLeftThree from '../public/cannelleft3.png'
-import CanalLeftFour from '../public/cannelleft4.png'
-import CanalRightOne from '../public/cannelright1.png'
-import CanalRightTwo from '../public/cannelright2.png'
-import CanalRightThree from '../public/cannelright3.png'
-import CanalRightFour from '../public/cannelright4.png'
+import CanalRightOne from '../public/cannelleft1.png'
+import CanalRightTwo from '../public/cannelleft2.png'
+import CanalRightThree from '../public/cannelleft3.png'
+import CanalRightFour from '../public/cannelleft4.png'
+import CanalLeftOne from '../public/cannelright1.png'
+import CanalLeftTwo from '../public/cannelright2.png'
+import CanalLeftThree from '../public/cannelright3.png'
+import CanalLeftFour from '../public/cannelright4.png'
 
 interface basicImage {
 	img: any
@@ -42,11 +42,11 @@ const earImages: images = {
 				value: '1st bend',
 			},
 			{
-				img: CanalLeftFour,
+				img: CanalLeftThree,
 				value: '2nd bend',
 			},
 			{
-				img: CanalLeftThree,
+				img: CanalLeftFour,
 				value: 'Before first bend',
 			},
 			{
@@ -60,11 +60,11 @@ const earImages: images = {
 				value: '1st bend',
 			},
 			{
-				img: CanalRightThree,
+				img: CanalRightFour,
 				value: '2nd bend',
 			},
 			{
-				img: CanalRightFour,
+				img:  CanalRightThree,
 				value: 'Before first bend',
 			},
 			{
