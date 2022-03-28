@@ -1,4 +1,4 @@
-mutation UpdateOrder($_id: ID!, $input: UpdateOrderInput!) {
+mutation UpdateOrder($_id: ID!, $input: CreateOrderInput!) {
   updateOrder(_id: $_id, input: $input) {
     errors {
       field
@@ -22,6 +22,7 @@ mutation UpdateOrder($_id: ID!, $input: UpdateOrderInput!) {
           canal
           manufacturer
           model
+          hasEngraving
         }
         right {
           haModel
@@ -37,6 +38,7 @@ mutation UpdateOrder($_id: ID!, $input: UpdateOrderInput!) {
           markingDots
           canal
           model
+          hasEngraving
         }
       }
       deliveryDetails {
@@ -58,6 +60,8 @@ mutation UpdateOrder($_id: ID!, $input: UpdateOrderInput!) {
       material
       _id
       reOrder
+
+      hasCord
 
       impressions {
         left
