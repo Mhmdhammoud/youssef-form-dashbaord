@@ -4,6 +4,7 @@ import {Footer, Header, Wrapper} from '../../components';
 import {useGetUserQuery, UserRole} from '../../src/generated/graphql';
 import moment from 'moment';
 import {AllCountries} from '../../data';
+import {withRouter} from "../../hoc";
 
 const Index = () => {
     const router = useRouter();
@@ -233,4 +234,4 @@ const Index = () => {
         </React.Fragment>
     );
 };
-export default Index;
+export default withRouter(Index);

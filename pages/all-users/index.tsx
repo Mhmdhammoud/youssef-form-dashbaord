@@ -4,6 +4,7 @@ import {Header, Wrapper, Footer} from '../../components';
 import {useRouter} from 'next/router';
 import {useGetAllUsersQuery, useToggleActivateUserMutation} from '../../src/generated/graphql';
 import {ToUpperFirst} from "../../utils";
+import {withRouter} from "../../hoc";
 
 const Index = () => {
     const [page, setPage] = useState<number>(0);
@@ -188,4 +189,4 @@ const Index = () => {
     );
 };
 
-export default Index;
+export default withRouter(Index);

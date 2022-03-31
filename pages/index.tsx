@@ -14,6 +14,7 @@ import {
   BarElement,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import {withRouter} from "../hoc";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -147,4 +148,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default withRouter(Home);

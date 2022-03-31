@@ -25,6 +25,7 @@ import {
   useUpdateOrderMutation,
   OrderDirection,
 } from '../../src/generated/graphql';
+import {withRouter} from "../../hoc";
 
 const Index = () => {
   const [showReject, setShowReject] = useState<boolean>(false);
@@ -619,4 +620,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withRouter(Index);
