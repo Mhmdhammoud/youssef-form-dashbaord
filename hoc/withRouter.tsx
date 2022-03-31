@@ -1,72 +1,62 @@
-import { useRouter } from 'next/router';
-import { PageConstants } from '../constants';
-import SigninPage from '../pages/sign-in';
-import { useEffect, useState } from 'react';
-import { Wrapper } from '../components';
-import Cookies from 'universal-cookie';
-import { ApolloProvider } from '@apollo/client';
-import { ApolloClient } from '../lib';
+import {useRouter} from 'next/router'
+import {PageConstants} from '../constants'
+import {useCallback, useEffect} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import {AppState} from '../reducers'
+import {useMeLazyQuery} from "../src/generated/graphql";
+import {startLogout} from "../actions";
 
-const withAuth = (
-  //@ts-ignore
-  WrappedComponent: ({ Component, pageProps }) => JSX.Element
-) => {
-  //@ts-ignore
-  // eslint-disable-next-line react/display-name
-  return (props) => {
-    const Router = useRouter();
-    const cookies = new Cookies();
-    const token = cookies.get('token');
-    const isAuthenticated = cookies.get('isAuthenticated');
-    const [loading, setLoading] = useState<boolean>(true);
-    const path = Router.asPath;
-
+const withRouter = (
     //@ts-ignore
-    useEffect(() => {
-      const ROUTE = PageConstants.find((item) => item.route === path);
-      if (!ROUTE) {
-        setLoading(false);
-        return (
-          <ApolloProvider client={ApolloClient(token)}>
-            <WrappedComponent {...props} />
-          </ApolloProvider>
-        );
-      }
-      const { isPrivate } = ROUTE;
-      if (!isPrivate) {
-        setLoading(false);
-        return (
-          <ApolloProvider client={ApolloClient(token)}>
-            <WrappedComponent {...props} />
-          </ApolloProvider>
-        );
-      } else {
-        if (!isAuthenticated) {
-          setLoading(false);
-          Router.push('/sign-in', '/sign-in', { shallow: true });
+    WrappedComponent,
+) => {
+    //@ts-ignore
+    // eslint-disable-next-line react/display-name
+    return (props) => {
+        const isClient = typeof window !== 'undefined'
+        if (isClient) {
+            const Router = useRouter()
+            const {isAuthenticated, user: {token}} = useSelector((state: AppState) => state.auth)
+            const path = Router.asPath
+            const ROUTE = PageConstants.find((item) => path.includes(item.route))
+            const [fetchData, {}] = useMeLazyQuery()
+            const dispatch = useDispatch()
+            const validateAuth = useCallback(() => {
+                fetchData({
+                    context: {
+                        headers: {
+                            authorization: `Bearer ${token}`
+                        }
+                    }
+                }).then(query => {
+                    if (query.error) {
+                        dispatch(startLogout())
+                    }
+                }).catch(console.error)
+            }, [dispatch, fetchData, token])
+            useEffect(() => {
+                if (isAuthenticated) {
+                    console.log(isAuthenticated)
+                    validateAuth()
+                }
+                if (isAuthenticated && path === '/sign-in') {
+                    Router.push('/', '/', {shallow: true})
+                }
+                if (!isAuthenticated && path === '/sign-in') {
+                    return
+                } else if (!isAuthenticated) {
+                    Router.push('/sign-in', '/sign-in', {shallow: true})
+                    return
+                }
+            }, [dispatch, path, Router, ROUTE, token, isAuthenticated, validateAuth])
+            return (
+                <WrappedComponent {...props} />
+            )
         } else {
-          setLoading(false);
-          return (
-            <ApolloProvider client={ApolloClient(token)}>
-              <WrappedComponent {...props} />
-            </ApolloProvider>
-          );
+            return (
+                <WrappedComponent {...props} />
+            )
         }
-      }
-    }, [path, isAuthenticated, token, props, Router]);
-    if (loading) {
-      return (
-        <ApolloProvider client={ApolloClient(token)}>
-          <Wrapper loading />
-        </ApolloProvider>
-      );
-    } else {
-      return (
-        <ApolloProvider client={ApolloClient(token)}>
-          <WrappedComponent {...props} />
-        </ApolloProvider>
-      );
     }
-  };
-};
-export default withAuth;
+}
+export default withRouter

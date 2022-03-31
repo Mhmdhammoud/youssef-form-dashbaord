@@ -7,6 +7,7 @@ import {
   MutationCreateCompanyArgs,
   useCreateCompanyMutation,
 } from '../../src/generated/graphql';
+import {withRouter} from "../../hoc";
 const Index = () => {
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -528,4 +529,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withRouter(Index);

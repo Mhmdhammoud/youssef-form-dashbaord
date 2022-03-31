@@ -9,6 +9,7 @@ import { AllCountries } from '../../data';
 import moment from 'moment';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import {withRouter} from "../../hoc";
 
 const Index = () => {
   const [hidden, setHidden] = useState<boolean>(true);
@@ -183,4 +184,4 @@ const Index = () => {
     </Fragment>
   );
 };
-export default Index;
+export default withRouter(Index);

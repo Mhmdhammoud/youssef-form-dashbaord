@@ -5,6 +5,7 @@ import {useGetAllOrdersQuery, useMeQuery,} from '../../src/generated/graphql';
 
 import moment from 'moment';
 import toUpperFirst from "../../utils/ToUpperFirst";
+import {withRouter} from "../../hoc";
 
 const Index = () => {
     const refScanner = useRef();
@@ -248,4 +249,4 @@ const Index = () => {
     );
 };
 
-export default Index;
+export default withRouter(Index);

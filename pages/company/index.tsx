@@ -24,6 +24,7 @@ import {
   BarElement,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import {withRouter} from "../../hoc";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -620,4 +621,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withRouter(Index);
