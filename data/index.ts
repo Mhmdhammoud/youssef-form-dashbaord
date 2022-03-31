@@ -10,6 +10,7 @@ export { default as AllRejectionReasons } from './rejectionReasons';
 export { default as homePageModels } from './homepageModels';
 export { default as SwimmingPlugsStyles } from './SwimmingPlugsStyles';
 export { default as MusicPlugs } from './musicPlugs';
+export { default as NightPlugs, NightColors } from './nightPlugs';
 export {
   default as MonitoringPlugsColors,
   monitoringStyles as MonitoringStyles,
