@@ -1,18 +1,13 @@
-import { LockClosedIcon } from '@heroicons/react/solid';
-import {
-  ErrorToast,
-  Footer,
-  Header,
-  Notification,
-  Wrapper,
-} from '../../components';
-import React, { useCallback, useEffect, useState } from 'react';
+import {LockClosedIcon} from '@heroicons/react/solid';
+import {ErrorToast, Footer, Header, Notification, Wrapper,} from '../../components';
+import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link';
-import { useForgotPasswordMutation } from '../../src/generated/graphql';
-import { useSelector } from 'react-redux';
-import { AppState } from '../../reducers';
-import { useRouter } from 'next/router';
+import {useForgotPasswordMutation} from '../../src/generated/graphql';
+import {useSelector} from 'react-redux';
+import {AppState} from '../../reducers';
+import {useRouter} from 'next/router';
 import Image from 'next/image';
+import {withRouter} from "../../hoc";
 
 const Index = () => {
   const router = useRouter();
@@ -154,4 +149,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withRouter(Index);

@@ -10,6 +10,7 @@ import {AppState} from '../../reducers';
 import {useLoginMutation} from '../../src/generated/graphql';
 import Link from 'next/link'
 import Cookies from 'universal-cookie';
+import {withRouter} from "../../hoc";
 
 const Index = () => {
     const [userData, setUserData] = useState<Signinpayload>({
@@ -151,4 +152,4 @@ const Index = () => {
         </>
     );
 };
-export default Index;
+export default withRouter(Index);
