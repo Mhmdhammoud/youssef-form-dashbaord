@@ -1,4 +1,4 @@
-query GetCompany($companyId: ID!) {
+query GetSingleCompany($companyId: ID!) {
   getCompany(companyId: $companyId) {
     errors {
       field
@@ -8,17 +8,23 @@ query GetCompany($companyId: ID!) {
       _id
       title
       companyId
-      street
-      postCode
-      country
       createdAt
       updatedAt
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+      street
+      postCode
       manufacturers
+      country
       employees {
         _id
+        fullName
         fname
         lname
-        fullName
         email
         role
         userId
@@ -26,24 +32,18 @@ query GetCompany($companyId: ID!) {
         createdAt
         updatedAt
       }
-      contactPerson {
+      assigned {
+        _id
         fullName
+        fname
+        lname
         email
-        phoneNumber
-        customerAccount
+        role
+        adminId
+        isActive
+        createdAt
+        updatedAt
       }
-    }
-    admin {
-      _id
-      fullName
-      fname
-      lname
-      email
-      role
-      userId
-      isActive
-      createdAt
-      updatedAt
     }
   }
 }
