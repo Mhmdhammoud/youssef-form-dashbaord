@@ -4,15 +4,10 @@ query GetAllCompanies($limit: Float!, $page: Float!) {
       field
       message
     }
-    hasMore
-    length
     companies {
       _id
       title
       companyId
-      street
-      postCode
-      country
       createdAt
       updatedAt
       contactPerson {
@@ -21,6 +16,24 @@ query GetAllCompanies($limit: Float!, $page: Float!) {
         phoneNumber
         customerAccount
       }
+      street
+      postCode
+      manufacturers
+      country
+      assigned {
+        _id
+        fullName
+        fname
+        lname
+        email
+        role
+        adminId
+        isActive
+        createdAt
+        updatedAt
+      }
     }
+    length
+    hasMore
   }
 }

@@ -84,6 +84,11 @@ export type AuthResponse = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type BasicResponse = {
+  __typename?: 'BasicResponse';
+  errors: Array<FieldError>;
+};
+
 export type BteEar = {
   __typename?: 'BteEar';
   canal: Scalars['String'];
@@ -108,6 +113,7 @@ export type BteEar = {
 export type Company = {
   __typename?: 'Company';
   _id: Scalars['String'];
+  assigned: Array<Admin>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
   country: Scalars['String'];
@@ -129,6 +135,7 @@ export type CompanyResponse = {
 export type CompanyWithEmployees = {
   __typename?: 'CompanyWithEmployees';
   _id: Scalars['String'];
+  assigned: Array<Admin>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
   country: Scalars['String'];
@@ -292,6 +299,7 @@ export type Logs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  assignTechnician: BasicResponse;
   /** Change order status */
   changeOrderStatus?: Maybe<OrderResponses>;
   /** Create a new admin account with the given email and password. Returns the created admin deactivated. */
@@ -308,6 +316,12 @@ export type Mutation = {
   toggleActivateUser: UserResponse;
   updateOrder: OrderResponses;
   uploadFile: UploadResponse;
+};
+
+
+export type MutationAssignTechnicianArgs = {
+  companyId: Scalars['ID'];
+  userId: Scalars['ID'];
 };
 
 
@@ -655,7 +669,7 @@ export type GetAllCompaniesQueryVariables = Exact<{
 }>;
 
 
-export type GetAllCompaniesQuery = { __typename?: 'Query', getAllCompanies: { __typename?: 'AllCompaniesResponse', hasMore: boolean, length: number, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, companies?: Array<{ __typename?: 'Company', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, createdAt: any, updatedAt: any, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }> | null } };
+export type GetAllCompaniesQuery = { __typename?: 'Query', getAllCompanies: { __typename?: 'AllCompaniesResponse', length: number, hasMore: boolean, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, companies?: Array<{ __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, manufacturers: Array<string>, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, assigned: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> }> | null } };
 
 export type GetAllOrdersQueryVariables = Exact<{
   limit: Scalars['Float'];
@@ -673,12 +687,12 @@ export type GetAllUsersQueryVariables = Exact<{
 
 export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: { __typename?: 'AllUsersResponse', hasMore: boolean, length: number, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, users?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any, company: { __typename?: 'Company', title: string, companyId: string, _id: string, createdAt: any, updatedAt: any, country: string, street: string, postCode: string, manufacturers: Array<string>, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } }> | null } };
 
-export type GetCompanyQueryVariables = Exact<{
+export type GetSingleCompanyQueryVariables = Exact<{
   companyId: Scalars['ID'];
 }>;
 
 
-export type GetCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, createdAt: any, updatedAt: any, manufacturers: Array<string>, employees?: Array<{ __typename?: 'User', _id: string, fname: string, lname: string, fullName: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } } | null, admin?: { __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any } | null } | null };
+export type GetSingleCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, manufacturers: Array<string>, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, assigned: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> } | null } | null };
 
 export type GetOrderQueryVariables = Exact<{
   orderId: Scalars['ID'];
@@ -1463,15 +1477,10 @@ export const GetAllCompaniesDocument = gql`
       field
       message
     }
-    hasMore
-    length
     companies {
       _id
       title
       companyId
-      street
-      postCode
-      country
       createdAt
       updatedAt
       contactPerson {
@@ -1480,7 +1489,25 @@ export const GetAllCompaniesDocument = gql`
         phoneNumber
         customerAccount
       }
+      street
+      postCode
+      manufacturers
+      country
+      assigned {
+        _id
+        fullName
+        fname
+        lname
+        email
+        role
+        adminId
+        isActive
+        createdAt
+        updatedAt
+      }
     }
+    length
+    hasMore
   }
 }
     `;
@@ -1715,8 +1742,8 @@ export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
-export const GetCompanyDocument = gql`
-    query GetCompany($companyId: ID!) {
+export const GetSingleCompanyDocument = gql`
+    query GetSingleCompany($companyId: ID!) {
   getCompany(companyId: $companyId) {
     errors {
       field
@@ -1726,17 +1753,23 @@ export const GetCompanyDocument = gql`
       _id
       title
       companyId
-      street
-      postCode
-      country
       createdAt
       updatedAt
+      contactPerson {
+        fullName
+        email
+        phoneNumber
+        customerAccount
+      }
+      street
+      postCode
       manufacturers
+      country
       employees {
         _id
+        fullName
         fname
         lname
-        fullName
         email
         role
         userId
@@ -1744,56 +1777,50 @@ export const GetCompanyDocument = gql`
         createdAt
         updatedAt
       }
-      contactPerson {
+      assigned {
+        _id
         fullName
+        fname
+        lname
         email
-        phoneNumber
-        customerAccount
+        role
+        adminId
+        isActive
+        createdAt
+        updatedAt
       }
-    }
-    admin {
-      _id
-      fullName
-      fname
-      lname
-      email
-      role
-      userId
-      isActive
-      createdAt
-      updatedAt
     }
   }
 }
     `;
 
 /**
- * __useGetCompanyQuery__
+ * __useGetSingleCompanyQuery__
  *
- * To run a query within a React component, call `useGetCompanyQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompanyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSingleCompanyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSingleCompanyQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCompanyQuery({
+ * const { data, loading, error } = useGetSingleCompanyQuery({
  *   variables: {
  *      companyId: // value for 'companyId'
  *   },
  * });
  */
-export function useGetCompanyQuery(baseOptions: Apollo.QueryHookOptions<GetCompanyQuery, GetCompanyQueryVariables>) {
+export function useGetSingleCompanyQuery(baseOptions: Apollo.QueryHookOptions<GetSingleCompanyQuery, GetSingleCompanyQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCompanyQuery, GetCompanyQueryVariables>(GetCompanyDocument, options);
+        return Apollo.useQuery<GetSingleCompanyQuery, GetSingleCompanyQueryVariables>(GetSingleCompanyDocument, options);
       }
-export function useGetCompanyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyQuery, GetCompanyQueryVariables>) {
+export function useGetSingleCompanyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSingleCompanyQuery, GetSingleCompanyQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCompanyQuery, GetCompanyQueryVariables>(GetCompanyDocument, options);
+          return Apollo.useLazyQuery<GetSingleCompanyQuery, GetSingleCompanyQueryVariables>(GetSingleCompanyDocument, options);
         }
-export type GetCompanyQueryHookResult = ReturnType<typeof useGetCompanyQuery>;
-export type GetCompanyLazyQueryHookResult = ReturnType<typeof useGetCompanyLazyQuery>;
-export type GetCompanyQueryResult = Apollo.QueryResult<GetCompanyQuery, GetCompanyQueryVariables>;
+export type GetSingleCompanyQueryHookResult = ReturnType<typeof useGetSingleCompanyQuery>;
+export type GetSingleCompanyLazyQueryHookResult = ReturnType<typeof useGetSingleCompanyLazyQuery>;
+export type GetSingleCompanyQueryResult = Apollo.QueryResult<GetSingleCompanyQuery, GetSingleCompanyQueryVariables>;
 export const GetOrderDocument = gql`
     query GetOrder($orderId: ID!) {
   getOrder(orderId: $orderId) {
