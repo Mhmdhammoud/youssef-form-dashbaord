@@ -1,0 +1,37 @@
+query GetSingleAdmin($adminId: ID!) {
+    getSingleAdmin(adminId: $adminId) {
+        errors {
+            field
+            message
+        }
+        admin {
+            _id
+            fullName
+            fname
+            lname
+            email
+            role
+            adminId
+            isActive
+            createdAt
+            updatedAt
+            companies {
+                _id
+                title
+                companyId
+                createdAt
+                updatedAt
+                contactPerson {
+                    fullName
+                    email
+                    phoneNumber
+                    customerAccount
+                }
+                street
+                postCode
+                country
+                manufacturers
+            }
+        }
+    }
+}
