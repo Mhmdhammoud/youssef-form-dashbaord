@@ -5,6 +5,7 @@ import {useGetUserQuery, UserRole} from '../../src/generated/graphql';
 import moment from 'moment';
 import {AllCountries} from '../../data';
 import {withRouter} from "../../hoc";
+import {ToUpperFirst} from "../../utils";
 
 const Index = () => {
     const router = useRouter();
@@ -18,7 +19,6 @@ const Index = () => {
 
     const user = data?.getUser?.user;
 
-    console.log(user);
     return (
         <React.Fragment>
             <Header/>
@@ -48,7 +48,7 @@ const Index = () => {
                                                         : 'px-2 mt-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800'
                                             }
                                         >
-                                            {user?.role}
+                                            {ToUpperFirst(user?.role)}
                                         </p>
                                     </div>
                                     <div className="text-right">
