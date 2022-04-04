@@ -450,7 +450,7 @@ const Index = () => {
                                     <span className="flex-grow">
                     {company?.assigned?.map((item, index) => {
                         return (
-                            <Link href={`/user?id=${item.adminId}`} key={index}>
+                            <Link href={`/admin?id=${item.adminId}`} key={index}>
                                 <a className="pr-2 text-blue-400">
                                     {item.fullName}
                                     {index !== company?.assigned?.length - 1 && ','}

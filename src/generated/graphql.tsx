@@ -46,6 +46,21 @@ export enum AdminRole {
   Technician = 'TECHNICIAN'
 }
 
+export type AdminWithCompanies = {
+  __typename?: 'AdminWithCompanies';
+  _id: Scalars['String'];
+  adminId: Scalars['String'];
+  companies?: Maybe<Array<Company>>;
+  createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  fname: Scalars['String'];
+  fullName: Scalars['String'];
+  isActive: Scalars['Boolean'];
+  lname: Scalars['String'];
+  role: AdminRole;
+  updatedAt: Scalars['DateTime'];
+};
+
 export type AllAdminsResponse = {
   __typename?: 'AllAdminsResponse';
   admins?: Maybe<Array<Admin>>;
@@ -191,6 +206,7 @@ export type CreateCompanyAdminInput = {
 };
 
 export type CreateCompanyInput = {
+  assigned?: InputMaybe<Array<Scalars['ID']>>;
   contactPerson: CreateContactPersonInput;
   country: Scalars['String'];
   manufacturers: Array<Scalars['String']>;
@@ -400,6 +416,12 @@ export type MutationUploadFileArgs = {
   file: Scalars['Upload'];
 };
 
+export type NonAdminResponse = {
+  __typename?: 'NonAdminResponse';
+  admin?: Maybe<AdminWithCompanies>;
+  errors: Array<FieldError>;
+};
+
 export type Order = {
   __typename?: 'Order';
   _id: Scalars['String'];
@@ -481,6 +503,7 @@ export type Query = {
   getCompany?: Maybe<SingleCompanyResponse>;
   /** Get order by id */
   getOrder?: Maybe<Order>;
+  getSingleAdmin: NonAdminResponse;
   /** Get user by id */
   getUser?: Maybe<UserResponse>;
   me: AdminResponse;
@@ -518,6 +541,11 @@ export type QueryGetCompanyArgs = {
 
 export type QueryGetOrderArgs = {
   orderId: Scalars['ID'];
+};
+
+
+export type QueryGetSingleAdminArgs = {
+  adminId: Scalars['ID'];
 };
 
 
@@ -700,6 +728,13 @@ export type GetOrderQueryVariables = Exact<{
 
 
 export type GetOrderQuery = { __typename?: 'Query', getOrder?: { __typename?: 'Order', _id: string, material: string, bioporShore: string, createdAt: any, updatedAt: any, orderId: string, remake: boolean, orderType: OrderType, reason: string, status: OrderStatus, direction: OrderDirection, manufacturer: string, filter: string, cordColor: string, hasCord: boolean, creator: { __typename?: 'User', fullName: string, email: string, role: UserRole, userId: string, isActive: boolean }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model: string, engraving: string, hasEngraving: boolean }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model: string, engraving: string, hasEngraving: boolean } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string } }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }> } | null };
+
+export type GetSingleAdminQueryVariables = Exact<{
+  adminId: Scalars['ID'];
+}>;
+
+
+export type GetSingleAdminQuery = { __typename?: 'Query', getSingleAdmin: { __typename?: 'NonAdminResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, admin?: { __typename?: 'AdminWithCompanies', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any, companies?: Array<{ __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, manufacturers: Array<string>, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }> | null } | null } };
 
 export type GetUserQueryVariables = Exact<{
   userId: Scalars['ID'];
@@ -1949,6 +1984,73 @@ export function useGetOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetOrderQueryHookResult = ReturnType<typeof useGetOrderQuery>;
 export type GetOrderLazyQueryHookResult = ReturnType<typeof useGetOrderLazyQuery>;
 export type GetOrderQueryResult = Apollo.QueryResult<GetOrderQuery, GetOrderQueryVariables>;
+export const GetSingleAdminDocument = gql`
+    query GetSingleAdmin($adminId: ID!) {
+  getSingleAdmin(adminId: $adminId) {
+    errors {
+      field
+      message
+    }
+    admin {
+      _id
+      fullName
+      fname
+      lname
+      email
+      role
+      adminId
+      isActive
+      createdAt
+      updatedAt
+      companies {
+        _id
+        title
+        companyId
+        createdAt
+        updatedAt
+        contactPerson {
+          fullName
+          email
+          phoneNumber
+          customerAccount
+        }
+        street
+        postCode
+        country
+        manufacturers
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSingleAdminQuery__
+ *
+ * To run a query within a React component, call `useGetSingleAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSingleAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSingleAdminQuery({
+ *   variables: {
+ *      adminId: // value for 'adminId'
+ *   },
+ * });
+ */
+export function useGetSingleAdminQuery(baseOptions: Apollo.QueryHookOptions<GetSingleAdminQuery, GetSingleAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSingleAdminQuery, GetSingleAdminQueryVariables>(GetSingleAdminDocument, options);
+      }
+export function useGetSingleAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSingleAdminQuery, GetSingleAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSingleAdminQuery, GetSingleAdminQueryVariables>(GetSingleAdminDocument, options);
+        }
+export type GetSingleAdminQueryHookResult = ReturnType<typeof useGetSingleAdminQuery>;
+export type GetSingleAdminLazyQueryHookResult = ReturnType<typeof useGetSingleAdminLazyQuery>;
+export type GetSingleAdminQueryResult = Apollo.QueryResult<GetSingleAdminQuery, GetSingleAdminQueryVariables>;
 export const GetUserDocument = gql`
     query GetUser($userId: ID!) {
   getUser(userId: $userId) {
