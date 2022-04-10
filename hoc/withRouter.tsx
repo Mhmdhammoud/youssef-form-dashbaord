@@ -19,7 +19,7 @@ const withRouter = (
             const {isAuthenticated, user: {token}} = useSelector((state: AppState) => state.auth)
             const path = Router.asPath
             const ROUTE = PageConstants.find((item) => path.includes(item.route))
-            const [fetchData, {}] = useMeLazyQuery()
+            const [fetchData, {error,client}] = useMeLazyQuery()
             const dispatch = useDispatch()
             const validateAuth = useCallback(() => {
                 fetchData({
@@ -29,7 +29,7 @@ const withRouter = (
                         }
                     }
                 }).then(query => {
-                    if (query.error) {
+                    if (!query.data) {
                         dispatch(startLogout())
                     }
                 }).catch(console.error)
