@@ -1,11 +1,11 @@
 import {Fragment, useCallback, useState} from 'react';
 import {Disclosure, Menu, Transition} from '@headlessui/react';
-import {BellIcon, MenuIcon, XIcon} from '@heroicons/react/outline';
+import {MenuIcon, XIcon} from '@heroicons/react/outline';
 import Image from 'next/image';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import Link from 'next/link';
-import {logout, startLogout} from '../../actions';
+import {logout} from '../../actions';
 import {useRouter} from 'next/router';
 import Cookies from 'universal-cookie';
 
@@ -21,6 +21,7 @@ const Index = () => {
         {name: 'All Companies', href: 'all-companies', current: false},
         {name: 'All Orders', href: 'all-orders', current: false},
         {name: 'All Admins', href: 'all-admins', current: false},
+        {name: 'Create Admin', href: 'create-admin', current: false},
     ]);
 
     const router = useRouter();
