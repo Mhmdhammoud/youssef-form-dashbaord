@@ -29,7 +29,7 @@ const withRouter = (
                         }
                     }
                 }).then(query => {
-                    if (!query.data) {
+                    if (query.data===null) {
                         dispatch(startLogout())
                     }
                 }).catch(console.error)
