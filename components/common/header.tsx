@@ -81,18 +81,18 @@ const Index = () => {
                                 <div className="hidden sm:block sm:ml-6">
                                     <div className="flex space-x-4 align-middle">
                                         {navigation?.map((item) => (
-                                            <div
-                                                className={classNames(
-                                                    item.current
-                                                        ? 'bg-gray-900 text-white'
-                                                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                                    'px-3 py-2 rounded-md text-sm font-medium'
-                                                )}
-                                                key={item.name!}
-                                                // onClick={() => handleClick(item)}
-                                            >
-                                                <Link href={item.href}>{item.name}</Link>
-                                            </div>
+                                            <Link href={item.href} key={item.name!}>
+                                                <a
+                                                    className={classNames(
+                                                        item.current
+                                                            ? 'bg-gray-900 text-white'
+                                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                        'px-3 py-2 rounded-md text-sm font-medium'
+                                                    )}
+                                                >
+                                                    {item.name}
+                                                </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>

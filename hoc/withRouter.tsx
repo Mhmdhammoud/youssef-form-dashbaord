@@ -3,8 +3,9 @@ import {PageConstants} from '../constants'
 import {useCallback, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {AppState} from '../reducers'
-import {useMeLazyQuery} from "../src/generated/graphql";
 import {startLogout} from "../actions";
+import {ApolloClient} from "../lib";
+import meQuery from "./meQuery";
 
 const withRouter = (
     //@ts-ignore
@@ -19,24 +20,16 @@ const withRouter = (
             const {isAuthenticated, user: {token}} = useSelector((state: AppState) => state.auth)
             const path = Router.asPath
             const ROUTE = PageConstants.find((item) => path.includes(item.route))
-            const [fetchData, {error,client}] = useMeLazyQuery()
             const dispatch = useDispatch()
             const validateAuth = useCallback(() => {
-                fetchData({
-                    context: {
-                        headers: {
-                            authorization: `Bearer ${token}`
-                        }
-                    }
-                }).then(query => {
-                    if (query.data===null) {
-                        dispatch(startLogout())
-                    }
-                }).catch(console.error)
-            }, [dispatch, fetchData, token])
+                ApolloClient().query({
+                    query: meQuery
+                }).catch(err => {
+                    dispatch(startLogout())
+                })
+            }, [dispatch])
             useEffect(() => {
                 if (isAuthenticated) {
-                    console.log(isAuthenticated)
                     validateAuth()
                 }
                 if (isAuthenticated && path === '/sign-in') {
