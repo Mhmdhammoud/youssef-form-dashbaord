@@ -8,7 +8,6 @@ const uploadLink = createUploadLink({
 })
 const client = () => {
     const myStore = store.getState()
-    //@ts-ignore
     const token = myStore.auth.user.token
     const authLink = setContext(async (_, {headers}) => {
         return {
