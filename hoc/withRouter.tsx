@@ -18,8 +18,16 @@ const withRouter = (
         if (isClient) {
             const Router = useRouter()
             const {isAuthenticated, user: {token}} = useSelector((state: AppState) => state.auth)
-            const path = Router.asPath
-            const ROUTE = PageConstants.find((item) => path.includes(item.route))
+            const path = Router.pathname
+            const ROUTE = PageConstants.find((item) => {
+                if (path.split('/')[1] === '' && item.route.split('/')[1] === '') {
+                    return item
+                } else {
+                    return item.route.split('/')[1] === ''
+                        ? false
+                        : path.split('/')[1].includes(item.route.split('/')[1])
+                }
+            })
             const dispatch = useDispatch()
             const validateAuth = useCallback(() => {
                 ApolloClient().query({
@@ -37,7 +45,7 @@ const withRouter = (
                 }
                 if (!isAuthenticated && path === '/sign-in') {
                     return
-                } else if (!isAuthenticated) {
+                } else if (!isAuthenticated && ROUTE?.isPrivate) {
                     Router.push('/sign-in', '/sign-in', {shallow: true})
                     return
                 }
