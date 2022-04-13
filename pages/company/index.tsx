@@ -189,7 +189,7 @@ const Index = () => {
                 street: company?.street,
                 title: company?.title,
                 manufacturers: company?.manufacturers,
-                assigned: company?.assigned.map(item => item._id)
+                assigned: company.assigned ? company?.assigned.map(item => item._id) : []
             });
         }
     }, [data, id, company]);
@@ -453,7 +453,7 @@ const Index = () => {
                             <Link href={`/admin?id=${item.adminId}`} key={index}>
                                 <a className="pr-2 text-blue-400">
                                     {item.fullName}
-                                    {index !== company?.assigned?.length - 1 && ','}
+                                    {company?.assigned && index !== company?.assigned?.length - 1 && ','}
                                 </a>
                             </Link>
                         )

@@ -150,7 +150,7 @@ export type CompanyResponse = {
 export type CompanyWithEmployees = {
   __typename?: 'CompanyWithEmployees';
   _id: Scalars['String'];
-  assigned: Array<Admin>;
+  assigned?: Maybe<Array<Admin>>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
   country: Scalars['String'];
@@ -206,7 +206,7 @@ export type CreateCompanyAdminInput = {
 };
 
 export type CreateCompanyInput = {
-  assigned?: InputMaybe<Array<Scalars['ID']>>;
+  assigned: Array<Scalars['ID']>;
   contactPerson: CreateContactPersonInput;
   country: Scalars['String'];
   manufacturers: Array<Scalars['String']>;
@@ -720,7 +720,7 @@ export type GetSingleCompanyQueryVariables = Exact<{
 }>;
 
 
-export type GetSingleCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, manufacturers: Array<string>, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, assigned: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> } | null } | null };
+export type GetSingleCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, manufacturers: Array<string>, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, assigned?: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null } | null } | null };
 
 export type GetOrderQueryVariables = Exact<{
   orderId: Scalars['ID'];
