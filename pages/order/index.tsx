@@ -52,7 +52,6 @@ const Index = () => {
   const order = data?.getOrder;
 
   const renderTableBasedOnOrderType = useCallback(() => {
-    console.log(order);
     switch (order?.orderType) {
       case OrderType.SwimmingPlugs:
         return <SwimmingOrderTable order={order as Order} />;
