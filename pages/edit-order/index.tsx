@@ -25,7 +25,7 @@ import {
   useUpdateOrderMutation,
   OrderDirection,
 } from '../../src/generated/graphql';
-import {withRouter} from "../../hoc";
+import { withRouter } from '../../hoc';
 
 const Index = () => {
   const [showReject, setShowReject] = useState<boolean>(false);
@@ -286,8 +286,6 @@ const Index = () => {
       str.slice(1).toLocaleLowerCase().replace(/_/g, ' ')
     );
   };
-
-  console.log(BTEOrder);
 
   const handleOrderStatusChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
