@@ -12,7 +12,6 @@ const useUpload = () => {
     setIsUploaded(false);
 
     if (event.target.files) {
-      console.log(event.target.files[0]);
       return upload({ variables: { file: event.target.files[0] } })
         .then((res) => {
           setIsUploaded(true);
