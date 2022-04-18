@@ -1,39 +1,20 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import { Header, Footer, Wrapper } from '../../components/';
-import {
-  useGetAllCompaniesQuery,
-  useMeQuery,
-  UserRole,
-} from '../../src/generated/graphql';
-import { AllCountries } from '../../data';
 import moment from 'moment';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {withRouter} from "../../hoc";
+import React, { Fragment, useState } from 'react';
+import { Footer, Header, Wrapper } from '../../components/';
+import { withRouter } from '../../hoc';
+import { Sorting, useGetAllCompaniesQuery } from '../../src/generated/graphql';
 
 const Index = () => {
-  const [hidden, setHidden] = useState<boolean>(true);
-  const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
-  const [paginationPages, setPaginationPages] = useState({
-    totalItems: 0,
-    currentPage: 0,
-    pageSize: 0,
-    totalPages: 0,
-    startPage: 0,
-    endPage: 0,
-    startIndex: 0,
-    endIndex: 0,
-    pages: [0],
-  });
   const { data, loading, error, refetch } = useGetAllCompaniesQuery({
     variables: {
       limit: 10,
       page: page,
+      sort: Sorting.Desc,
     },
   });
-  const { data: meData } = useMeQuery();
-  const userRole = meData?.me?.admin?.role;
   const companies = data?.getAllCompanies;
   const hasMore = companies?.hasMore;
   const router = useRouter();
