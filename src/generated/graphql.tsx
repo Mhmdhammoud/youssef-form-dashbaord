@@ -519,6 +519,7 @@ export type QueryGetAllAdminsArgs = {
 export type QueryGetAllCompaniesArgs = {
   limit: Scalars['Float'];
   page: Scalars['Float'];
+  sort: Sorting;
 };
 
 
@@ -559,6 +560,12 @@ export type SingleCompanyResponse = {
   company?: Maybe<CompanyWithEmployees>;
   errors: Array<FieldError>;
 };
+
+/** Describes the sort order of the data fetched */
+export enum Sorting {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
 
 export type UploadResponse = {
   __typename?: 'UploadResponse';
@@ -694,6 +701,7 @@ export type GetAllAdminsQuery = { __typename?: 'Query', getAllAdmins: { __typena
 export type GetAllCompaniesQueryVariables = Exact<{
   limit: Scalars['Float'];
   page: Scalars['Float'];
+  sort: Sorting;
 }>;
 
 
@@ -1506,8 +1514,8 @@ export type GetAllAdminsQueryHookResult = ReturnType<typeof useGetAllAdminsQuery
 export type GetAllAdminsLazyQueryHookResult = ReturnType<typeof useGetAllAdminsLazyQuery>;
 export type GetAllAdminsQueryResult = Apollo.QueryResult<GetAllAdminsQuery, GetAllAdminsQueryVariables>;
 export const GetAllCompaniesDocument = gql`
-    query GetAllCompanies($limit: Float!, $page: Float!) {
-  getAllCompanies(limit: $limit, page: $page) {
+    query GetAllCompanies($limit: Float!, $page: Float!, $sort: Sorting!) {
+  getAllCompanies(limit: $limit, page: $page, sort: $sort) {
     errors {
       field
       message
@@ -1561,6 +1569,7 @@ export const GetAllCompaniesDocument = gql`
  *   variables: {
  *      limit: // value for 'limit'
  *      page: // value for 'page'
+ *      sort: // value for 'sort'
  *   },
  * });
  */

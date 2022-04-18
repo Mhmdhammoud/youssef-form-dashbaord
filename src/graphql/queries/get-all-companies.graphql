@@ -1,5 +1,5 @@
-query GetAllCompanies($limit: Float!, $page: Float!) {
-  getAllCompanies(limit: $limit, page: $page) {
+query GetAllCompanies($limit: Float!, $page: Float!, $sort: Sorting!) {
+  getAllCompanies(limit: $limit, page: $page, sort: $sort) {
     errors {
       field
       message
