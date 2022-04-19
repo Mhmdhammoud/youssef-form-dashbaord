@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
+import React, { useCallback, useEffect, useState } from 'react'
 //@ts-ignore
-import STLViewer from 'stl-viewer';
+import STLViewer from 'stl-viewer'
 import {
   ConfirmationModal,
   Footer,
@@ -11,9 +11,9 @@ import {
   Select,
   Uploader,
   Wrapper,
-} from '../../components';
-import { AllImages, AllRejectionReasons } from '../../data';
-import { useUpload } from '../../hooks';
+} from '..'
+import { AllImages, AllRejectionReasons } from '../../data'
+import { useUpload } from '../../hooks'
 import {
   OrderStatus,
   OrderType,
@@ -24,37 +24,37 @@ import {
   useRejectOrderMutation,
   useUpdateOrderMutation,
   OrderDirection,
-} from '../../src/generated/graphql';
-import { withRouter } from '../../hoc';
+} from '../../src/generated/graphql'
+import { withRouter } from '../../hoc'
 
 const Index = () => {
-  const [showReject, setShowReject] = useState<boolean>(false);
-  const [showStatus, setShowStatus] = useState<boolean>(false);
-  const [showModel, setShowModel] = useState<boolean>(false);
+  const [showReject, setShowReject] = useState<boolean>(false)
+  const [showStatus, setShowStatus] = useState<boolean>(false)
+  const [showModel, setShowModel] = useState<boolean>(false)
   const [showConfirmationModal, setShowConfirmationModal] =
-    useState<boolean>(false);
-  const [rejectionReason, setRejectionReason] = useState<string>('');
-  const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
-  const [rejectionType, setRejectionType] = useState<string>('');
+    useState<boolean>(false)
+  const [rejectionReason, setRejectionReason] = useState<string>('')
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
+  const [rejectionType, setRejectionType] = useState<string>('')
   const [orderStatus, setOrderStatus] = useState<OrderStatus>(
     OrderStatus.Placed
-  );
+  )
   const [modalFiles, setModalFiles] = useState({
     left: '',
     right: '',
-  });
+  })
   const [cannelImagePlaceholderLeft, setCannelImagePlaceHolderLeft] = useState(
     AllImages.cannel.left[AllImages.cannel.left.length - 1].img
-  );
+  )
   const [cannelImagePlaceholderRight, setCannelImagePlaceHolderRight] =
-    useState(AllImages.cannel.right[AllImages.cannel.right.length - 1].img);
+    useState(AllImages.cannel.right[AllImages.cannel.right.length - 1].img)
 
   const [cymbaImagePlaceholderLeft, setCymbaImagePlaceHolderLeft] = useState(
     AllImages.cymba.left[AllImages.cymba.left.length - 1].img
-  );
+  )
   const [cymbaImagePlaceholderRight, setCymbaImagePlaceHolderRight] = useState(
     AllImages.cymba.right[AllImages.cymba.right.length - 1].img
-  );
+  )
 
   const [BTEOrder, setBTEOrder] = useState<CreateOrderInput>({
     product: {
@@ -118,27 +118,26 @@ const Index = () => {
     hasCord: false,
     filter: '',
     direction: OrderDirection.Binaural,
-  });
-  const { data: meData } = useMeQuery();
-  const router = useRouter();
-  const { id } = router.query;
+  })
+  const { data: meData } = useMeQuery()
+  const router = useRouter()
+  const { id } = router.query
 
   const { data, loading, refetch } = useGetOrderQuery({
     variables: {
-      //@ts-ignore
-      orderId: id,
+      orderId: id as string,
     },
-  });
-  const order = data?.getOrder;
+  })
+  const order = data?.getOrder
 
-  const userData = meData?.me?.admin;
+  const userData = meData?.me?.admin
   const [submitRejection, { data: rejectionDataResponse }] =
     useRejectOrderMutation({
       variables: {
         _id: order?._id!,
         rejectionReason: rejectionReason,
       },
-    });
+    })
 
   const [submitUpdateOrder, { error: updateError, data: updateData }] =
     useUpdateOrderMutation({
@@ -146,7 +145,7 @@ const Index = () => {
         _id: order?._id!,
         input: BTEOrder,
       },
-    });
+    })
 
   const [
     submitOrderStatus,
@@ -156,7 +155,7 @@ const Index = () => {
       _id: order?._id!,
       status: orderStatus,
     },
-  });
+  })
 
   useEffect(() => {
     setBTEOrder({
@@ -224,42 +223,42 @@ const Index = () => {
       filter: order?.filter!,
       direction: order?.direction!,
       cordColor: order?.cordColor!,
-    });
+    })
     const cannelImageLeft = AllImages?.cannel?.left?.find(
       (item) => item.value === order?.product?.left?.canalLength
-    )?.img;
+    )?.img
     const cannelImageRight = AllImages?.cannel?.right?.find(
       (item) => item.value === order?.product?.right?.canalLength
-    )?.img;
+    )?.img
     const cymbaImageLeft = AllImages?.cymba?.left?.find(
       (item) => item.value === order?.product?.left?.cymbaLength
-    )?.img;
+    )?.img
     const cymbaImageRight = AllImages?.cymba?.right?.find(
       (item) => item.value === order?.product?.right?.cymbaLength
-    )?.img;
+    )?.img
     if (cannelImageLeft) {
-      setCannelImagePlaceHolderLeft(cannelImageLeft);
-      setCannelImagePlaceHolderRight(cannelImageRight);
-      setCymbaImagePlaceHolderLeft(cymbaImageLeft);
-      setCymbaImagePlaceHolderRight(cymbaImageRight);
+      setCannelImagePlaceHolderLeft(cannelImageLeft)
+      setCannelImagePlaceHolderRight(cannelImageRight)
+      setCymbaImagePlaceHolderLeft(cymbaImageLeft)
+      setCymbaImagePlaceHolderRight(cymbaImageRight)
     }
-  }, [id, order]);
+  }, [id, order])
 
   const handleReject = useCallback(() => {
     submitRejection()
       .then((res) => {
-        setNotificationOpen(true);
-        setShowReject(false);
-        setRejectionReason('');
+        setNotificationOpen(true)
+        setShowReject(false)
+        setRejectionReason('')
         router.push(
           '/order?id=' + res?.data?.rejectOrder?.order?.orderId!.split('_')[1]
-        );
+        )
       })
       .catch((err) => {
-        if (err?.response) console.log(err?.response?.data);
-        else console.log(err);
-      });
-  }, [router, submitRejection]);
+        if (err?.response) console.log(err?.response?.data)
+        else console.log(err)
+      })
+  }, [router, submitRejection])
 
   const handleRejectionReason = useCallback(
     (
@@ -267,25 +266,25 @@ const Index = () => {
         | React.ChangeEvent<HTMLInputElement>
         | React.ChangeEvent<HTMLSelectElement>
     ) => {
-      setRejectionReason(event.target.value);
+      setRejectionReason(event.target.value)
     },
     []
-  );
+  )
 
-  const { handleUpload } = useUpload();
+  const { handleUpload } = useUpload()
 
   const handleSubmitModel = useCallback(() => {
     submitUpdateOrder().then((res) => {
-      router.push('/order?id=' + order?.orderId?.split('_')[1]);
-    });
-  }, [submitUpdateOrder, order?.orderId, router]);
+      router.push('/order?id=' + order?.orderId?.split('_')[1])
+    })
+  }, [submitUpdateOrder, order?.orderId, router])
 
   const fixString = (str: string) => {
     return (
       str.charAt(0).toUpperCase() +
       str.slice(1).toLocaleLowerCase().replace(/_/g, ' ')
-    );
-  };
+    )
+  }
 
   const handleOrderStatusChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -295,21 +294,21 @@ const Index = () => {
         ? setOrderStatus(OrderStatus.Modeled)
         : event.target.value === fixString(OrderStatus.Modelling)
         ? setOrderStatus(OrderStatus.Modelling)
-        : setOrderStatus(OrderStatus.Placed);
+        : setOrderStatus(OrderStatus.Placed)
     },
     []
-  );
+  )
 
   const handleChangeOrderStatus = useCallback(() => {
     submitOrderStatus()
       .then((res) => {
-        router.push('/order?id=' + order?.orderId?.split('_')[1]);
+        router.push('/order?id=' + order?.orderId?.split('_')[1])
       })
       .catch((err) => {
-        if (err?.response) console.log(err.response.data);
-        else console.log(err);
-      });
-  }, [submitOrderStatus, router, order?.orderId]);
+        if (err?.response) console.log(err.response.data)
+        else console.log(err)
+      })
+  }, [submitOrderStatus, router, order?.orderId])
 
   return (
     <React.Fragment>
@@ -326,7 +325,7 @@ const Index = () => {
               onClick={() => {
                 setShowReject(!showReject),
                   setShowModel(false),
-                  setShowModel(false);
+                  setShowModel(false)
               }}
               className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
@@ -337,7 +336,7 @@ const Index = () => {
               onClick={() => {
                 setShowModel(!showModel),
                   setShowReject(false),
-                  setShowStatus(false);
+                  setShowStatus(false)
               }}
               className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
@@ -348,7 +347,7 @@ const Index = () => {
               onClick={() => {
                 setShowStatus(!showStatus),
                   setShowReject(false),
-                  setShowModel(false);
+                  setShowModel(false)
               }}
               className="inline-flex w-64 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
@@ -414,9 +413,9 @@ const Index = () => {
                             setModalFiles((prevState) => ({
                               ...prevState,
                               left: file!,
-                            }));
+                            }))
 
-                            console.log({ file });
+                            console.log({ file })
                             setBTEOrder((prevState) => ({
                               ...prevState,
                               product: {
@@ -426,11 +425,11 @@ const Index = () => {
                                   model: file!,
                                 },
                               },
-                            }));
+                            }))
                           })
                           .catch((err) => {
-                            if (err.response) console.log(err.response.data);
-                            else console.log(err);
+                            if (err.response) console.log(err.response.data)
+                            else console.log(err)
                           })
                       }
                       id="left"
@@ -469,7 +468,7 @@ const Index = () => {
                                   model: '',
                                 },
                               },
-                            }));
+                            }))
                         }}
                         fill="white"
                         viewBox="0 0 24 24"
@@ -494,7 +493,7 @@ const Index = () => {
                           setModalFiles((prevState) => ({
                             ...prevState,
                             right: file!,
-                          }));
+                          }))
 
                           setBTEOrder((prevState) => ({
                             ...prevState,
@@ -505,7 +504,7 @@ const Index = () => {
                                 model: file!,
                               },
                             },
-                          }));
+                          }))
                         })
                       }
                       id="right"
@@ -544,7 +543,7 @@ const Index = () => {
                                   model: '',
                                 },
                               },
-                            }));
+                            }))
                         }}
                         fill="white"
                         viewBox="0 0 24 24"
@@ -615,7 +614,7 @@ const Index = () => {
       </Wrapper>
       <Footer />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Index);
+export default withRouter(Index)

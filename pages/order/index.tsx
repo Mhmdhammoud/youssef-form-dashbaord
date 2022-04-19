@@ -1,7 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import JsBarcode from 'jsbarcode';
-import moment from 'moment';
-import { useRouter } from 'next/router';
+import {
+  DownloadIcon,
+  InformationCircleIcon,
+  PencilIcon,
+  PrinterIcon,
+} from '@heroicons/react/solid'
+import JsBarcode from 'jsbarcode'
+import moment from 'moment'
+import { useRouter } from 'next/router'
+import React, { useCallback, useEffect, useState } from 'react'
+//@ts-ignore
+import STLViewer from 'stl-viewer'
 import {
   BTEOrderTable,
   Footer,
@@ -11,66 +19,344 @@ import {
   MonitoringOrderTable,
   MusicPlugsTable,
   NightOrderTable,
+  Notification,
   OrderStepper,
+  RejectModal,
   SkyOrderTable,
   SwimmingOrderTable,
+  UploadModelModal,
+  StatusModal,
   Wrapper,
-} from '../../components';
+} from '../../components'
+import { AllImages, CordColors } from '../../data'
+import { withRouter } from '../../hoc'
 import {
+  CreateOrderInput,
   Order,
   OrderDirection,
   OrderStatus,
   OrderType,
+  useChangeOrderStatusMutation,
   useGetOrderQuery,
   useMeQuery,
+  useRejectOrderMutation,
   UserRole,
-} from '../../src/generated/graphql';
-
-import {
-  DownloadIcon,
-  InformationCircleIcon,
-  PencilIcon,
-  PrinterIcon,
-} from '@heroicons/react/solid';
-//@ts-ignore
-import STLViewer from 'stl-viewer';
-import { CordColors } from '../../data';
-import { ToUpperFirst } from '../../utils';
-import { withRouter } from '../../hoc';
+  useUpdateOrderMutation,
+} from '../../src/generated/graphql'
+import { ToUpperFirst } from '../../utils'
 
 const Index = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const [logModalOpen, setLogModalOpen] = useState<boolean>(false);
+  const router = useRouter()
+  const { id } = router.query
+  const [logModalOpen, setLogModalOpen] = useState<boolean>(false)
+  const [editOrderOpen, setEditOrderOpen] = useState<boolean>(false)
+  const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
+  const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false)
+  const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false)
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
+  const [notificationToast, setNotificationToast] = useState({
+    message: '',
+    title: 'Success',
+  })
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>(
+    OrderStatus.Placed
+  )
+  const [BTEOrder, setBTEOrder] = useState<CreateOrderInput>({
+    product: {
+      left: {
+        haModel: '',
+        serialNumber: '',
+        style: '',
+        canalLength: '',
+        cymbaLength: '',
+        ventSize: 'No Vent',
+        quantity: 0,
+        color: '',
+        surface: '',
+        soundTube: '',
+        canal: '',
+        manufacturer: '',
+        markingDots: false,
+        model: '',
+        hasEngraving: false,
+        engraving: '',
+      },
+      right: {
+        haModel: '',
+        serialNumber: '',
+        style: '',
+        canalLength: '',
+        cymbaLength: '',
+        ventSize: 'No Vent',
+        quantity: 0,
+        color: '',
+        surface: '',
+        soundTube: '',
+        canal: '',
+        manufacturer: '',
+        markingDots: false,
+        model: '',
+        hasEngraving: false,
+        engraving: '',
+      },
+    },
+    deliveryDetails: {
+      standard: false,
+      urgent: false,
+      invoiceNumber: '',
+    },
+    extraDetails: {
+      accessories: '',
+      comment: '',
+    },
+    impressions: {
+      left: '',
+      right: '',
+    },
+    material: '',
+    bioporShore: '',
+    orderType: OrderType.Bte,
+    remake: false,
+    reason: '',
+    cordColor: '',
+    manufacturer: '',
+    hasCord: false,
+    filter: '',
+    direction: OrderDirection.Binaural,
+  })
 
   const { data, loading, refetch } = useGetOrderQuery({
     variables: {
       orderId: `order_${id as string}`,
     },
-  });
-  const { data: meData } = useMeQuery();
-  const order = data?.getOrder;
+  })
+  const { data: meData } = useMeQuery()
+  const order = data?.getOrder
+
+  const [rejectionReason, setRejectionReason] = useState<string>('')
+  const [rejectionType, setRejectionType] = useState<string>('')
+
+  const [submitRejection, { data: rejectionDataResponse }] =
+    useRejectOrderMutation({
+      variables: {
+        _id: order?._id as string,
+        rejectionReason: rejectionReason,
+      },
+    })
+
+  const handleReject = useCallback(() => {
+    submitRejection()
+      .then((res) => {
+        setRejectionReason('')
+        setNotificationOpen(true)
+        setNotificationToast({
+          message: 'Order has been rejected successfully',
+          title: 'Success',
+        })
+        refetch()
+      })
+      .catch((err) => {
+        if (err?.response) console.log(err?.response?.data)
+        else console.log(err)
+      })
+  }, [submitRejection, refetch])
+
+  const handleRejectionReason = useCallback(
+    (
+      event:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>
+    ) => {
+      setRejectionReason(event.target.value)
+    },
+    []
+  )
 
   const renderTableBasedOnOrderType = useCallback(() => {
     switch (order?.orderType) {
       case OrderType.SwimmingPlugs:
-        return <SwimmingOrderTable order={order as Order} />;
+        return <SwimmingOrderTable order={order as Order} />
       case OrderType.Bte:
-        return <BTEOrderTable order={order as Order} />;
+        return <BTEOrderTable order={order as Order} />
       case OrderType.MusicPlugs:
-        return <MusicPlugsTable order={order as Order} />;
+        return <MusicPlugsTable order={order as Order} />
       case OrderType.InEarMonitoring:
-        return <MonitoringOrderTable order={order as Order} />;
+        return <MonitoringOrderTable order={order as Order} />
       case OrderType.IndustrialPlugs:
-        return <IndustrialOrderTable order={order as Order} />;
+        return <IndustrialOrderTable order={order as Order} />
       case OrderType.SkyPlugs:
-        return <SkyOrderTable order={order as Order} />;
+        return <SkyOrderTable order={order as Order} />
       case OrderType.SleepPlugs:
-        return <NightOrderTable order={order as Order} />;
+        return <NightOrderTable order={order as Order} />
       default:
-        return;
+        return
     }
-  }, [order]);
+  }, [order])
+
+  const [cannelImagePlaceholderLeft, setCannelImagePlaceHolderLeft] = useState(
+    AllImages.cannel.left[AllImages.cannel.left.length - 1].img
+  )
+  const [cannelImagePlaceholderRight, setCannelImagePlaceHolderRight] =
+    useState(AllImages.cannel.right[AllImages.cannel.right.length - 1].img)
+
+  const [cymbaImagePlaceholderLeft, setCymbaImagePlaceHolderLeft] = useState(
+    AllImages.cymba.left[AllImages.cymba.left.length - 1].img
+  )
+  const [cymbaImagePlaceholderRight, setCymbaImagePlaceHolderRight] = useState(
+    AllImages.cymba.right[AllImages.cymba.right.length - 1].img
+  )
+
+  const [
+    submitOrderStatus,
+    { data: orderStatusData, error: orderStatusError },
+  ] = useChangeOrderStatusMutation({
+    variables: {
+      _id: order?._id!,
+      status: orderStatus,
+    },
+  })
+
+  const [submitUpdateOrder, { error: updateError, data: updateData }] =
+    useUpdateOrderMutation({
+      variables: {
+        _id: order?._id!,
+        input: BTEOrder,
+      },
+    })
+
+  const handleChangeOrderStatus = useCallback(() => {
+    submitOrderStatus()
+      .then((res) => {
+        router.push('/order?id=' + order?.orderId?.split('_')[1])
+      })
+      .catch((err) => {
+        if (err?.response) console.log(err.response.data)
+        else console.log(err)
+      })
+  }, [submitOrderStatus, router, order?.orderId])
+
+  const fixString = (str: string) => {
+    return (
+      str.charAt(0).toUpperCase() +
+      str.slice(1).toLocaleLowerCase().replace(/_/g, ' ')
+    )
+  }
+  const handleOrderStatusChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      event.target.value === fixString(OrderStatus.ImpressionEvaluation)
+        ? setOrderStatus(OrderStatus.ImpressionEvaluation)
+        : event.target.value === fixString(OrderStatus.Modeled)
+        ? setOrderStatus(OrderStatus.Modeled)
+        : event.target.value === fixString(OrderStatus.Modelling)
+        ? setOrderStatus(OrderStatus.Modelling)
+        : setOrderStatus(OrderStatus.Placed)
+    },
+    []
+  )
+
+  const handleSubmitModel = useCallback(() => {
+    submitUpdateOrder().then((res) => {
+      // router.push('/order?id=' + order?.orderId?.split('_')[1])
+      setNotificationToast({
+        message: 'Models updated successfully',
+        title: 'Success',
+      })
+      setNotificationOpen(true)
+      refetch()
+    })
+  }, [submitUpdateOrder, refetch])
+
+  const [modalFiles, setModalFiles] = useState({
+    left: '',
+    right: '',
+  })
+
+  useEffect(() => {
+    setBTEOrder({
+      product: {
+        left: {
+          haModel: order?.product?.left?.haModel!,
+          serialNumber: order?.product?.left?.serialNumber!,
+          style: order?.product?.left?.style!,
+          canalLength: order?.product?.left?.canalLength!,
+          cymbaLength: order?.product?.left?.cymbaLength!,
+          ventSize: order?.product?.left?.ventSize!,
+          quantity: order?.product?.left?.quantity!,
+          color: order?.product?.left?.color!,
+          surface: order?.product?.left?.surface!,
+          soundTube: order?.product?.left?.soundTube!,
+          canal: order?.product?.left?.canal!,
+          manufacturer: order?.product?.left?.manufacturer!,
+          markingDots: order?.product?.left?.markingDots!,
+          model: order?.product?.left?.model!,
+          hasEngraving: order?.product?.left?.hasEngraving!,
+          engraving: order?.product?.left?.engraving!,
+        },
+        right: {
+          haModel: order?.product?.right?.haModel!,
+          serialNumber: order?.product?.right?.serialNumber!,
+          style: order?.product?.right?.style!,
+          canalLength: order?.product?.right?.canalLength!,
+          cymbaLength: order?.product?.right?.cymbaLength!,
+          ventSize: order?.product?.right?.ventSize!,
+          quantity: order?.product?.right?.quantity!,
+          color: order?.product?.right?.color!,
+          surface: order?.product?.right?.surface!,
+          soundTube: order?.product?.right?.soundTube!,
+          canal: order?.product?.right?.canal!,
+          manufacturer: order?.product?.right?.manufacturer!,
+          markingDots: order?.product?.right?.markingDots!,
+          model: order?.product?.right?.model!,
+          hasEngraving: order?.product?.right?.hasEngraving!,
+          engraving: order?.product?.right?.engraving!,
+        },
+      },
+      deliveryDetails: {
+        standard: order?.deliveryDetails?.standard!,
+        urgent: order?.deliveryDetails?.urgent!,
+        invoiceNumber: order?.deliveryDetails?.invoiceNumber!,
+      },
+
+      extraDetails: {
+        accessories: order?.extraDetails?.accessories!,
+        comment: order?.extraDetails?.comment!,
+      },
+
+      impressions: {
+        left: order?.impressions?.left!,
+        right: order?.impressions?.right!,
+      },
+      material: order?.material!,
+      bioporShore: order?.bioporShore!,
+      orderType: order?.orderType!,
+
+      remake: order?.remake!,
+      reason: order?.reason!,
+      manufacturer: order?.manufacturer!,
+      hasCord: order?.hasCord!,
+      filter: order?.filter!,
+      direction: order?.direction!,
+      cordColor: order?.cordColor!,
+    })
+    const cannelImageLeft = AllImages?.cannel?.left?.find(
+      (item) => item.value === order?.product?.left?.canalLength
+    )?.img
+    const cannelImageRight = AllImages?.cannel?.right?.find(
+      (item) => item.value === order?.product?.right?.canalLength
+    )?.img
+    const cymbaImageLeft = AllImages?.cymba?.left?.find(
+      (item) => item.value === order?.product?.left?.cymbaLength
+    )?.img
+    const cymbaImageRight = AllImages?.cymba?.right?.find(
+      (item) => item.value === order?.product?.right?.cymbaLength
+    )?.img
+    if (cannelImageLeft) {
+      setCannelImagePlaceHolderLeft(cannelImageLeft)
+      setCannelImagePlaceHolderRight(cannelImageRight)
+      setCymbaImagePlaceHolderLeft(cymbaImageLeft)
+      setCymbaImagePlaceHolderRight(cymbaImageRight)
+    }
+  }, [id, order])
 
   useEffect(() => {
     JsBarcode('#barcode', order?.orderId?.split('order_')[1]!, {
@@ -80,8 +366,8 @@ const Index = () => {
       width: 1.5,
       height: 40,
       displayValue: false,
-    });
-  }, [id, order]);
+    })
+  }, [id, order])
   return (
     <React.Fragment>
       <Header />
@@ -183,18 +469,46 @@ const Index = () => {
                         order?.status === OrderStatus?.ImpressionEvaluation ||
                         order?.status === OrderStatus?.Modelling ||
                         order?.status === OrderStatus?.Modeled) && (
-                        <button
-                          onClick={() =>
-                            router.push(`/edit-order?id=${order?.orderId}`)
-                          }
-                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
-                        >
-                          Edit
-                          <PencilIcon className="ml-2 h-4 w-4" />
-                        </button>
+                        <div className="flex flex-wrap">
+                          <button
+                            onClick={() => setEditOrderOpen(!editOrderOpen)}
+                            className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                          >
+                            Edit
+                            <PencilIcon className="ml-2 h-4 w-4" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
+                  <div className="flex justify-end mt-3 print:hidden">
+                    {editOrderOpen && (
+                      <React.Fragment>
+                        {(order?.status === OrderStatus?.ImpressionEvaluation ||
+                          order?.status === OrderStatus?.Modelling) && (
+                          <button
+                            onClick={() => setRejectModalOpen(true)}
+                            className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                          >
+                            Reject
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => setUploadModalOpen(true)}
+                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                        >
+                          Upload Model
+                        </button>
+                        <button
+                          onClick={() => setStatusModalOpen(true)}
+                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                        >
+                          Change Status
+                        </button>
+                      </React.Fragment>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -521,10 +835,11 @@ const Index = () => {
                             <div>
                               {
                                 //@ts-ignore
-                                (meData?.me.user.role === UserRole.Technician ||
+                                (meData?.me.admin.role ===
+                                  UserRole.Technician ||
                                   //@ts-ignore
 
-                                  meData?.me.user.role === UserRole.Admin) && (
+                                  meData?.me.admin.role === UserRole.Admin) && (
                                   <a
                                     download
                                     href={order?.product?.left?.model!}
@@ -560,9 +875,10 @@ const Index = () => {
                             <div>
                               {
                                 //@ts-ignore
-                                (meData?.me.user.role === UserRole.Technician ||
+                                (meData?.me.admin.role ===
+                                  UserRole.Technician ||
                                   //@ts-ignore
-                                  meData?.me.user.role === UserRole.Admin) && (
+                                  meData?.me.admin.role === UserRole.Admin) && (
                                   <a
                                     download
                                     href={order?.product?.right?.model!}
@@ -596,6 +912,39 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        <Notification
+          message={notificationToast.message}
+          title={notificationToast.title}
+          open={notificationOpen}
+          setOpen={setNotificationOpen}
+        />
+        <RejectModal
+          open={rejectModalOpen}
+          setOpen={setRejectModalOpen}
+          action={handleReject}
+          handleRejectionReason={handleRejectionReason}
+          rejectionReason={rejectionReason}
+          rejectionType={rejectionType}
+          setRejectionType={setRejectionType}
+          orderStatus={order?.status!}
+        />
+        <UploadModelModal
+          BTEOrder={BTEOrder}
+          open={uploadModalOpen}
+          setOpen={setUploadModalOpen}
+          action={handleSubmitModel}
+          setBTEOrder={setBTEOrder}
+          setModalFiles={setModalFiles}
+        />
+
+        <StatusModal
+          open={statusModalOpen}
+          setOpen={setStatusModalOpen}
+          action={handleChangeOrderStatus}
+          handleOrderStatusChange={handleOrderStatusChange}
+        />
+
         {order && order?.logs && (
           <LogModal
             logs={order?.logs}
@@ -606,7 +955,7 @@ const Index = () => {
       </Wrapper>
       <Footer />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Index);
+export default withRouter(Index)
