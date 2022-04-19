@@ -1,35 +1,15 @@
 /* This example requires Tailwind CSS v2.0+ */
+import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useRef } from 'react'
-import { AllRejectionReasons } from '../../data'
-import { OrderStatus } from '../../src/generated/graphql'
-import Select from '../common/Select'
-import OrderLayout from '../Layout/OrderLayout'
+import { CheckIcon } from '@heroicons/react/outline'
+
 interface IProps {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   action: () => any
-  rejectionType: string
-  setRejectionType: React.Dispatch<React.SetStateAction<string>>
-  handleRejectionReason: (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => void
-  rejectionReason: string
-  orderStatus: string
 }
 
-const Index: React.FC<IProps> = ({
-  open,
-  setOpen,
-  action,
-  setRejectionType,
-  rejectionType,
-  rejectionReason,
-  handleRejectionReason,
-  orderStatus,
-}) => {
+const Index: React.FC<IProps> = ({ open, setOpen, action }) => {
   const cancelButtonRef = useRef(null)
 
   return (
@@ -69,46 +49,8 @@ const Index: React.FC<IProps> = ({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
-              <div>
-                <OrderLayout title={'Reject'} cols={2}>
-                  <OrderLayout.Item className={'text-center'}>
-                    <Select
-                      id="rejectionType"
-                      direction="binaural"
-                      options={
-                        orderStatus === OrderStatus.ImpressionEvaluation
-                          ? ['Impression']
-                          : ['Modeling']
-                      }
-                      onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                        setRejectionType(event.target.value)
-                      }
-                      value={rejectionType}
-                    />
-                  </OrderLayout.Item>
-
-                  <OrderLayout.Item className={'text-center'}>
-                    {rejectionType === 'Impression' ? (
-                      <Select
-                        direction="binaural"
-                        id="rejectionReason"
-                        onChange={handleRejectionReason}
-                        options={AllRejectionReasons?.impression}
-                        value={rejectionReason}
-                      />
-                    ) : (
-                      <Select
-                        direction="binaural"
-                        id="rejectionReason"
-                        onChange={handleRejectionReason}
-                        options={AllRejectionReasons?.modeling}
-                        value={rejectionReason}
-                      />
-                    )}
-                  </OrderLayout.Item>
-                </OrderLayout>
-              </div>
+            <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+              <div></div>
               <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                 <button
                   type="button"
@@ -117,7 +59,7 @@ const Index: React.FC<IProps> = ({
                     action(), setOpen(false)
                   }}
                 >
-                  Confirm
+                  Submit
                 </button>
                 <button
                   type="button"

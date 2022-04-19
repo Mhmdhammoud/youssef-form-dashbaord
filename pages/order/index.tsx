@@ -425,10 +425,7 @@ const Index = () => {
                         order?.status === OrderStatus?.Modeled) && (
                         <div className="flex flex-wrap">
                           <button
-                            onClick={() =>
-                              // router.push(`/edit-order?id=${order?.orderId}`)
-                              setEditOrderOpen(!editOrderOpen)
-                            }
+                            onClick={() => setEditOrderOpen(!editOrderOpen)}
                             className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                           >
                             Edit
@@ -441,12 +438,16 @@ const Index = () => {
                   <div className="flex justify-end mt-3 print:hidden">
                     {editOrderOpen && (
                       <React.Fragment>
-                        <button
-                          onClick={() => setRejectModalOpen(true)}
-                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                        >
-                          Reject
-                        </button>
+                        {(order?.status === OrderStatus?.ImpressionEvaluation ||
+                          order?.status === OrderStatus?.Modelling) && (
+                          <button
+                            onClick={() => setRejectModalOpen(true)}
+                            className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                          >
+                            Reject
+                          </button>
+                        )}
+
                         <button
                           onClick={() => setUploadModalOpen(true)}
                           className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
@@ -880,6 +881,7 @@ const Index = () => {
           rejectionReason={rejectionReason}
           rejectionType={rejectionType}
           setRejectionType={setRejectionType}
+          orderStatus={order?.status!}
         />
         <UploadModelModal
           BTEOrder={BTEOrder}
