@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import JsBarcode from 'jsbarcode';
-import moment from 'moment';
-import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react'
+import JsBarcode from 'jsbarcode'
+import moment from 'moment'
+import { useRouter } from 'next/router'
 import {
   BTEOrderTable,
   Footer,
@@ -15,7 +15,11 @@ import {
   SkyOrderTable,
   SwimmingOrderTable,
   Wrapper,
-} from '../../components';
+  Notification,
+  OrderLayout,
+  Select,
+  RejectModal,
+} from '../../components'
 import {
   Order,
   OrderDirection,
@@ -23,54 +27,94 @@ import {
   OrderType,
   useGetOrderQuery,
   useMeQuery,
+  useRejectOrderMutation,
   UserRole,
-} from '../../src/generated/graphql';
+} from '../../src/generated/graphql'
 
 import {
   DownloadIcon,
   InformationCircleIcon,
   PencilIcon,
   PrinterIcon,
-} from '@heroicons/react/solid';
+} from '@heroicons/react/solid'
 //@ts-ignore
-import STLViewer from 'stl-viewer';
-import { CordColors } from '../../data';
-import { ToUpperFirst } from '../../utils';
-import { withRouter } from '../../hoc';
+import STLViewer from 'stl-viewer'
+import { AllRejectionReasons, CordColors } from '../../data'
+import { ToUpperFirst } from '../../utils'
+import { withRouter } from '../../hoc'
 
 const Index = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const [logModalOpen, setLogModalOpen] = useState<boolean>(false);
+  const router = useRouter()
+  const { id } = router.query
+  const [logModalOpen, setLogModalOpen] = useState<boolean>(false)
+  const [editOrderOpen, setEditOrderOpen] = useState<boolean>(false)
+  const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
+
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
 
   const { data, loading, refetch } = useGetOrderQuery({
     variables: {
       orderId: `order_${id as string}`,
     },
-  });
-  const { data: meData } = useMeQuery();
-  const order = data?.getOrder;
+  })
+  const { data: meData } = useMeQuery()
+  const order = data?.getOrder
+
+  const [rejectionReason, setRejectionReason] = useState<string>('')
+  const [rejectionType, setRejectionType] = useState<string>('')
+
+  const [submitRejection, { data: rejectionDataResponse }] =
+    useRejectOrderMutation({
+      variables: {
+        _id: order?._id as string,
+        rejectionReason: rejectionReason,
+      },
+    })
+
+  const handleReject = useCallback(() => {
+    submitRejection()
+      .then((res) => {
+        setRejectionReason('')
+        setNotificationOpen(true)
+        refetch()
+      })
+      .catch((err) => {
+        if (err?.response) console.log(err?.response?.data)
+        else console.log(err)
+      })
+  }, [submitRejection, refetch])
+
+  const handleRejectionReason = useCallback(
+    (
+      event:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>
+    ) => {
+      setRejectionReason(event.target.value)
+    },
+    []
+  )
 
   const renderTableBasedOnOrderType = useCallback(() => {
     switch (order?.orderType) {
       case OrderType.SwimmingPlugs:
-        return <SwimmingOrderTable order={order as Order} />;
+        return <SwimmingOrderTable order={order as Order} />
       case OrderType.Bte:
-        return <BTEOrderTable order={order as Order} />;
+        return <BTEOrderTable order={order as Order} />
       case OrderType.MusicPlugs:
-        return <MusicPlugsTable order={order as Order} />;
+        return <MusicPlugsTable order={order as Order} />
       case OrderType.InEarMonitoring:
-        return <MonitoringOrderTable order={order as Order} />;
+        return <MonitoringOrderTable order={order as Order} />
       case OrderType.IndustrialPlugs:
-        return <IndustrialOrderTable order={order as Order} />;
+        return <IndustrialOrderTable order={order as Order} />
       case OrderType.SkyPlugs:
-        return <SkyOrderTable order={order as Order} />;
+        return <SkyOrderTable order={order as Order} />
       case OrderType.SleepPlugs:
-        return <NightOrderTable order={order as Order} />;
+        return <NightOrderTable order={order as Order} />
       default:
-        return;
+        return
     }
-  }, [order]);
+  }, [order])
 
   useEffect(() => {
     JsBarcode('#barcode', order?.orderId?.split('order_')[1]!, {
@@ -80,8 +124,8 @@ const Index = () => {
       width: 1.5,
       height: 40,
       displayValue: false,
-    });
-  }, [id, order]);
+    })
+  }, [id, order])
   return (
     <React.Fragment>
       <Header />
@@ -183,18 +227,45 @@ const Index = () => {
                         order?.status === OrderStatus?.ImpressionEvaluation ||
                         order?.status === OrderStatus?.Modelling ||
                         order?.status === OrderStatus?.Modeled) && (
-                        <button
-                          onClick={() =>
-                            router.push(`/edit-order?id=${order?.orderId}`)
-                          }
-                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
-                        >
-                          Edit
-                          <PencilIcon className="ml-2 h-4 w-4" />
-                        </button>
+                        <div className="flex flex-wrap">
+                          <button
+                            onClick={() =>
+                              // router.push(`/edit-order?id=${order?.orderId}`)
+                              setEditOrderOpen(!editOrderOpen)
+                            }
+                            className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                          >
+                            Edit
+                            <PencilIcon className="ml-2 h-4 w-4" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
+                  <div className="flex justify-end mt-3">
+                    {editOrderOpen && (
+                      <React.Fragment>
+                        <button
+                          onClick={() => setRejectModalOpen(true)}
+                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                        >
+                          Reject
+                        </button>
+                        <button
+                          onClick={() => setEditOrderOpen(true)}
+                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                        >
+                          Upload Modal
+                        </button>
+                        <button
+                          onClick={() => setEditOrderOpen(true)}
+                          className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                        >
+                          Change Status
+                        </button>
+                      </React.Fragment>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -596,6 +667,22 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        <Notification
+          message="Order Rejected Successfully"
+          open={notificationOpen}
+          setOpen={setNotificationOpen}
+          title="Success"
+        />
+        <RejectModal
+          open={rejectModalOpen}
+          setOpen={setRejectModalOpen}
+          action={handleReject}
+          handleRejectionReason={handleRejectionReason}
+          rejectionReason={rejectionReason}
+          rejectionType={rejectionType}
+          setRejectionType={setRejectionType}
+        />
         {order && order?.logs && (
           <LogModal
             logs={order?.logs}
@@ -606,7 +693,7 @@ const Index = () => {
       </Wrapper>
       <Footer />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Index);
+export default withRouter(Index)
