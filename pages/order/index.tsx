@@ -1,7 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import {
+  DownloadIcon,
+  InformationCircleIcon,
+  PencilIcon,
+  PrinterIcon,
+} from '@heroicons/react/solid'
 import JsBarcode from 'jsbarcode'
 import moment from 'moment'
 import { useRouter } from 'next/router'
+import React, { useCallback, useEffect, useState } from 'react'
+//@ts-ignore
+import STLViewer from 'stl-viewer'
 import {
   BTEOrderTable,
   Footer,
@@ -11,16 +19,16 @@ import {
   MonitoringOrderTable,
   MusicPlugsTable,
   NightOrderTable,
+  Notification,
   OrderStepper,
+  RejectModal,
   SkyOrderTable,
   SwimmingOrderTable,
-  Wrapper,
-  Notification,
-  OrderLayout,
-  Select,
-  RejectModal,
   UploadModelModal,
+  Wrapper,
 } from '../../components'
+import { AllImages, CordColors } from '../../data'
+import { withRouter } from '../../hoc'
 import {
   CreateOrderInput,
   Order,
@@ -33,18 +41,7 @@ import {
   UserRole,
   useUpdateOrderMutation,
 } from '../../src/generated/graphql'
-
-import {
-  DownloadIcon,
-  InformationCircleIcon,
-  PencilIcon,
-  PrinterIcon,
-} from '@heroicons/react/solid'
-//@ts-ignore
-import STLViewer from 'stl-viewer'
-import { AllImages, AllRejectionReasons, CordColors } from '../../data'
 import { ToUpperFirst } from '../../utils'
-import { withRouter } from '../../hoc'
 
 const Index = () => {
   const router = useRouter()
@@ -54,7 +51,10 @@ const Index = () => {
   const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
   const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
-
+  const [notificationToast, setNotificationToast] = useState({
+    message: '',
+    title: 'Success',
+  })
   const [BTEOrder, setBTEOrder] = useState<CreateOrderInput>({
     product: {
       left: {
@@ -143,6 +143,10 @@ const Index = () => {
       .then((res) => {
         setRejectionReason('')
         setNotificationOpen(true)
+        setNotificationToast({
+          message: 'Order has been rejected successfully',
+          title: 'Success',
+        })
         refetch()
       })
       .catch((err) => {
@@ -206,9 +210,15 @@ const Index = () => {
 
   const handleSubmitModel = useCallback(() => {
     submitUpdateOrder().then((res) => {
-      router.push('/order?id=' + order?.orderId?.split('_')[1])
+      // router.push('/order?id=' + order?.orderId?.split('_')[1])
+      setNotificationToast({
+        message: 'Models updated successfully',
+        title: 'Success',
+      })
+      setNotificationOpen(true)
+      refetch()
     })
-  }, [submitUpdateOrder, order?.orderId, router])
+  }, [submitUpdateOrder, refetch])
 
   const [modalFiles, setModalFiles] = useState({
     left: '',
@@ -428,7 +438,7 @@ const Index = () => {
                       )}
                     </div>
                   )}
-                  <div className="flex justify-end mt-3">
+                  <div className="flex justify-end mt-3 print:hidden">
                     {editOrderOpen && (
                       <React.Fragment>
                         <button
@@ -857,10 +867,10 @@ const Index = () => {
         </div>
 
         <Notification
-          message="Order Rejected Successfully"
+          message={notificationToast.message}
+          title={notificationToast.title}
           open={notificationOpen}
           setOpen={setNotificationOpen}
-          title="Success"
         />
         <RejectModal
           open={rejectModalOpen}
