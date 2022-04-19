@@ -375,7 +375,11 @@ const Index = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-6xl">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6 print:portrait:py-2">
-              <OrderStepper orderStatus={order?.status!} />
+              <OrderStepper
+                orderStatus={order?.status!}
+                order_id={order?._id as string}
+                refetch={refetch}
+              />
               <div className="grid gap-6 grid-cols-2 p-2 print:grid-cols-3">
                 <div className="col-span-1 rounded-lg pb-2 print:col-span-2">
                   <p className="text-lg leading-6 font-medium text-gray-900">
