@@ -368,6 +368,9 @@ const Index = () => {
       displayValue: false,
     })
   }, [id, order])
+
+  console.log(order)
+
   return (
     <React.Fragment>
       <Header />
@@ -375,7 +378,11 @@ const Index = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-6xl">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6 print:portrait:py-2">
-              <OrderStepper orderStatus={order?.status!} />
+              <OrderStepper
+                orderStatus={order?.status!}
+                order_id={order?._id as string}
+                refetch={refetch}
+              />
               <div className="grid gap-6 grid-cols-2 p-2 print:grid-cols-3">
                 <div className="col-span-1 rounded-lg pb-2 print:col-span-2">
                   <p className="text-lg leading-6 font-medium text-gray-900">
@@ -471,17 +478,16 @@ const Index = () => {
                         order?.status === OrderStatus?.Modeled) && (
                         <div className="flex flex-wrap">
                           <button
-                            onClick={() => setEditOrderOpen(!editOrderOpen)}
+                            onClick={() => setUploadModalOpen(true)}
                             className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                           >
-                            Edit
-                            <PencilIcon className="ml-2 h-4 w-4" />
+                            Upload Model
                           </button>
                         </div>
                       )}
                     </div>
                   )}
-                  <div className="flex justify-end mt-3 print:hidden">
+                  {/* <div className="flex justify-end mt-3 print:hidden">
                     {editOrderOpen && (
                       <React.Fragment>
                         {(order?.status === OrderStatus?.ImpressionEvaluation ||
@@ -508,7 +514,7 @@ const Index = () => {
                         </button>
                       </React.Fragment>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -533,6 +539,44 @@ const Index = () => {
                     </dt>
                     <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
                       {order?.reason}
+                    </dd>
+                  </div>
+                )}
+                {order?.logs?.filter((item) =>
+                  item?.message?.includes('Order was reject')
+                )?.length! > 0 && (
+                  <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
+                    <dt className="text-sm font-medium text-gray-900">
+                      <span className="print:hidden text-red-700">
+                        Rejected
+                      </span>
+                      <div className="hidden print:grid print:grid-cols-2">
+                        <div
+                          className={
+                            'text-sm font-medium text-red-700 print:col-span-1'
+                          }
+                        >
+                          Rejected:
+                        </div>
+                        <div className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1">
+                          {
+                            order?.logs
+                              .filter((item) =>
+                                item?.message?.includes('Order was reject')
+                              )
+                              ?.at(-1)?.message
+                          }
+                        </div>
+                      </div>
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
+                      {
+                        order?.logs
+                          .filter((item) =>
+                            item?.message?.includes('Order was reject')
+                          )
+                          ?.at(-1)?.message
+                      }
                     </dd>
                   </div>
                 )}
