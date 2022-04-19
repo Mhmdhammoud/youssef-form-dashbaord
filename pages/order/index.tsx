@@ -19,8 +19,10 @@ import {
   OrderLayout,
   Select,
   RejectModal,
+  UploadModelModal,
 } from '../../components'
 import {
+  CreateOrderInput,
   Order,
   OrderDirection,
   OrderStatus,
@@ -29,6 +31,7 @@ import {
   useMeQuery,
   useRejectOrderMutation,
   UserRole,
+  useUpdateOrderMutation,
 } from '../../src/generated/graphql'
 
 import {
@@ -39,7 +42,7 @@ import {
 } from '@heroicons/react/solid'
 //@ts-ignore
 import STLViewer from 'stl-viewer'
-import { AllRejectionReasons, CordColors } from '../../data'
+import { AllImages, AllRejectionReasons, CordColors } from '../../data'
 import { ToUpperFirst } from '../../utils'
 import { withRouter } from '../../hoc'
 
@@ -49,8 +52,72 @@ const Index = () => {
   const [logModalOpen, setLogModalOpen] = useState<boolean>(false)
   const [editOrderOpen, setEditOrderOpen] = useState<boolean>(false)
   const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
-
+  const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
+
+  const [BTEOrder, setBTEOrder] = useState<CreateOrderInput>({
+    product: {
+      left: {
+        haModel: '',
+        serialNumber: '',
+        style: '',
+        canalLength: '',
+        cymbaLength: '',
+        ventSize: 'No Vent',
+        quantity: 0,
+        color: '',
+        surface: '',
+        soundTube: '',
+        canal: '',
+        manufacturer: '',
+        markingDots: false,
+        model: '',
+        hasEngraving: false,
+        engraving: '',
+      },
+      right: {
+        haModel: '',
+        serialNumber: '',
+        style: '',
+        canalLength: '',
+        cymbaLength: '',
+        ventSize: 'No Vent',
+        quantity: 0,
+        color: '',
+        surface: '',
+        soundTube: '',
+        canal: '',
+        manufacturer: '',
+        markingDots: false,
+        model: '',
+        hasEngraving: false,
+        engraving: '',
+      },
+    },
+    deliveryDetails: {
+      standard: false,
+      urgent: false,
+      invoiceNumber: '',
+    },
+    extraDetails: {
+      accessories: '',
+      comment: '',
+    },
+    impressions: {
+      left: '',
+      right: '',
+    },
+    material: '',
+    bioporShore: '',
+    orderType: OrderType.Bte,
+    remake: false,
+    reason: '',
+    cordColor: '',
+    manufacturer: '',
+    hasCord: false,
+    filter: '',
+    direction: OrderDirection.Binaural,
+  })
 
   const { data, loading, refetch } = useGetOrderQuery({
     variables: {
@@ -115,6 +182,125 @@ const Index = () => {
         return
     }
   }, [order])
+
+  const [cannelImagePlaceholderLeft, setCannelImagePlaceHolderLeft] = useState(
+    AllImages.cannel.left[AllImages.cannel.left.length - 1].img
+  )
+  const [cannelImagePlaceholderRight, setCannelImagePlaceHolderRight] =
+    useState(AllImages.cannel.right[AllImages.cannel.right.length - 1].img)
+
+  const [cymbaImagePlaceholderLeft, setCymbaImagePlaceHolderLeft] = useState(
+    AllImages.cymba.left[AllImages.cymba.left.length - 1].img
+  )
+  const [cymbaImagePlaceholderRight, setCymbaImagePlaceHolderRight] = useState(
+    AllImages.cymba.right[AllImages.cymba.right.length - 1].img
+  )
+
+  const [submitUpdateOrder, { error: updateError, data: updateData }] =
+    useUpdateOrderMutation({
+      variables: {
+        _id: order?._id!,
+        input: BTEOrder,
+      },
+    })
+
+  const handleSubmitModel = useCallback(() => {
+    submitUpdateOrder().then((res) => {
+      router.push('/order?id=' + order?.orderId?.split('_')[1])
+    })
+  }, [submitUpdateOrder, order?.orderId, router])
+
+  const [modalFiles, setModalFiles] = useState({
+    left: '',
+    right: '',
+  })
+
+  useEffect(() => {
+    setBTEOrder({
+      product: {
+        left: {
+          haModel: order?.product?.left?.haModel!,
+          serialNumber: order?.product?.left?.serialNumber!,
+          style: order?.product?.left?.style!,
+          canalLength: order?.product?.left?.canalLength!,
+          cymbaLength: order?.product?.left?.cymbaLength!,
+          ventSize: order?.product?.left?.ventSize!,
+          quantity: order?.product?.left?.quantity!,
+          color: order?.product?.left?.color!,
+          surface: order?.product?.left?.surface!,
+          soundTube: order?.product?.left?.soundTube!,
+          canal: order?.product?.left?.canal!,
+          manufacturer: order?.product?.left?.manufacturer!,
+          markingDots: order?.product?.left?.markingDots!,
+          model: order?.product?.left?.model!,
+          hasEngraving: order?.product?.left?.hasEngraving!,
+          engraving: order?.product?.left?.engraving!,
+        },
+        right: {
+          haModel: order?.product?.right?.haModel!,
+          serialNumber: order?.product?.right?.serialNumber!,
+          style: order?.product?.right?.style!,
+          canalLength: order?.product?.right?.canalLength!,
+          cymbaLength: order?.product?.right?.cymbaLength!,
+          ventSize: order?.product?.right?.ventSize!,
+          quantity: order?.product?.right?.quantity!,
+          color: order?.product?.right?.color!,
+          surface: order?.product?.right?.surface!,
+          soundTube: order?.product?.right?.soundTube!,
+          canal: order?.product?.right?.canal!,
+          manufacturer: order?.product?.right?.manufacturer!,
+          markingDots: order?.product?.right?.markingDots!,
+          model: order?.product?.right?.model!,
+          hasEngraving: order?.product?.right?.hasEngraving!,
+          engraving: order?.product?.right?.engraving!,
+        },
+      },
+      deliveryDetails: {
+        standard: order?.deliveryDetails?.standard!,
+        urgent: order?.deliveryDetails?.urgent!,
+        invoiceNumber: order?.deliveryDetails?.invoiceNumber!,
+      },
+
+      extraDetails: {
+        accessories: order?.extraDetails?.accessories!,
+        comment: order?.extraDetails?.comment!,
+      },
+
+      impressions: {
+        left: order?.impressions?.left!,
+        right: order?.impressions?.right!,
+      },
+      material: order?.material!,
+      bioporShore: order?.bioporShore!,
+      orderType: order?.orderType!,
+
+      remake: order?.remake!,
+      reason: order?.reason!,
+      manufacturer: order?.manufacturer!,
+      hasCord: order?.hasCord!,
+      filter: order?.filter!,
+      direction: order?.direction!,
+      cordColor: order?.cordColor!,
+    })
+    const cannelImageLeft = AllImages?.cannel?.left?.find(
+      (item) => item.value === order?.product?.left?.canalLength
+    )?.img
+    const cannelImageRight = AllImages?.cannel?.right?.find(
+      (item) => item.value === order?.product?.right?.canalLength
+    )?.img
+    const cymbaImageLeft = AllImages?.cymba?.left?.find(
+      (item) => item.value === order?.product?.left?.cymbaLength
+    )?.img
+    const cymbaImageRight = AllImages?.cymba?.right?.find(
+      (item) => item.value === order?.product?.right?.cymbaLength
+    )?.img
+    if (cannelImageLeft) {
+      setCannelImagePlaceHolderLeft(cannelImageLeft)
+      setCannelImagePlaceHolderRight(cannelImageRight)
+      setCymbaImagePlaceHolderLeft(cymbaImageLeft)
+      setCymbaImagePlaceHolderRight(cymbaImageRight)
+    }
+  }, [id, order])
 
   useEffect(() => {
     JsBarcode('#barcode', order?.orderId?.split('order_')[1]!, {
@@ -252,10 +438,10 @@ const Index = () => {
                           Reject
                         </button>
                         <button
-                          onClick={() => setEditOrderOpen(true)}
+                          onClick={() => setUploadModalOpen(true)}
                           className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                         >
-                          Upload Modal
+                          Upload Model
                         </button>
                         <button
                           onClick={() => setEditOrderOpen(true)}
@@ -592,10 +778,11 @@ const Index = () => {
                             <div>
                               {
                                 //@ts-ignore
-                                (meData?.me.user.role === UserRole.Technician ||
+                                (meData?.me.admin.role ===
+                                  UserRole.Technician ||
                                   //@ts-ignore
 
-                                  meData?.me.user.role === UserRole.Admin) && (
+                                  meData?.me.admin.role === UserRole.Admin) && (
                                   <a
                                     download
                                     href={order?.product?.left?.model!}
@@ -631,9 +818,10 @@ const Index = () => {
                             <div>
                               {
                                 //@ts-ignore
-                                (meData?.me.user.role === UserRole.Technician ||
+                                (meData?.me.admin.role ===
+                                  UserRole.Technician ||
                                   //@ts-ignore
-                                  meData?.me.user.role === UserRole.Admin) && (
+                                  meData?.me.admin.role === UserRole.Admin) && (
                                   <a
                                     download
                                     href={order?.product?.right?.model!}
@@ -682,6 +870,14 @@ const Index = () => {
           rejectionReason={rejectionReason}
           rejectionType={rejectionType}
           setRejectionType={setRejectionType}
+        />
+        <UploadModelModal
+          BTEOrder={BTEOrder}
+          open={uploadModalOpen}
+          setOpen={setUploadModalOpen}
+          action={handleSubmitModel}
+          setBTEOrder={setBTEOrder}
+          setModalFiles={setModalFiles}
         />
         {order && order?.logs && (
           <LogModal
