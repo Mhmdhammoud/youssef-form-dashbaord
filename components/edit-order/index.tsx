@@ -410,22 +410,21 @@ const Index = () => {
                         //@ts-ignore
                         handleUpload(e)
                           .then((file) => {
-                            setModalFiles((prevState) => ({
-                              ...prevState,
-                              left: file!,
-                            }))
-
-                            console.log({ file })
-                            setBTEOrder((prevState) => ({
-                              ...prevState,
-                              product: {
-                                ...prevState.product,
-                                left: {
-                                  ...prevState.product.left,
-                                  model: file!,
-                                },
-                              },
-                            }))
+                            // setModalFiles((prevState) => ({
+                            //   ...prevState,
+                            //   left: file!,
+                            // }))
+                            // console.log({ file })
+                            // setBTEOrder((prevState) => ({
+                            //   ...prevState,
+                            //   product: {
+                            //     ...prevState.product,
+                            //     left: {
+                            //       ...prevState.product.left,
+                            //       model: file!,
+                            //     },
+                            //   },
+                            // }))
                           })
                           .catch((err) => {
                             if (err.response) console.log(err.response.data)
@@ -490,21 +489,20 @@ const Index = () => {
                       onChange={(e) =>
                         //@ts-ignore
                         handleUpload(e).then((file) => {
-                          setModalFiles((prevState) => ({
-                            ...prevState,
-                            right: file!,
-                          }))
-
-                          setBTEOrder((prevState) => ({
-                            ...prevState,
-                            product: {
-                              ...prevState.product,
-                              right: {
-                                ...prevState.product.right,
-                                model: file!,
-                              },
-                            },
-                          }))
+                          // setModalFiles((prevState) => ({
+                          //   ...prevState,
+                          //   right: file!,
+                          // }))
+                          // setBTEOrder((prevState) => ({
+                          //   ...prevState,
+                          //   product: {
+                          //     ...prevState.product,
+                          //     right: {
+                          //       ...prevState.product.right,
+                          //       model: file!,
+                          //     },
+                          //   },
+                          // }))
                         })
                       }
                       id="right"
