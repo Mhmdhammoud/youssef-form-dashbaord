@@ -25,6 +25,7 @@ import {
   SkyOrderTable,
   SwimmingOrderTable,
   UploadModelModal,
+  StatusModal,
   Wrapper,
 } from '../../components'
 import { AllImages, CordColors } from '../../data'
@@ -35,6 +36,7 @@ import {
   OrderDirection,
   OrderStatus,
   OrderType,
+  useChangeOrderStatusMutation,
   useGetOrderQuery,
   useMeQuery,
   useRejectOrderMutation,
@@ -50,11 +52,15 @@ const Index = () => {
   const [editOrderOpen, setEditOrderOpen] = useState<boolean>(false)
   const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
   const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false)
+  const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
   const [notificationToast, setNotificationToast] = useState({
     message: '',
     title: 'Success',
   })
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>(
+    OrderStatus.Placed
+  )
   const [BTEOrder, setBTEOrder] = useState<CreateOrderInput>({
     product: {
       left: {
@@ -200,6 +206,16 @@ const Index = () => {
     AllImages.cymba.right[AllImages.cymba.right.length - 1].img
   )
 
+  const [
+    submitOrderStatus,
+    { data: orderStatusData, error: orderStatusError },
+  ] = useChangeOrderStatusMutation({
+    variables: {
+      _id: order?._id!,
+      status: orderStatus,
+    },
+  })
+
   const [submitUpdateOrder, { error: updateError, data: updateData }] =
     useUpdateOrderMutation({
       variables: {
@@ -207,6 +223,36 @@ const Index = () => {
         input: BTEOrder,
       },
     })
+
+  const handleChangeOrderStatus = useCallback(() => {
+    submitOrderStatus()
+      .then((res) => {
+        router.push('/order?id=' + order?.orderId?.split('_')[1])
+      })
+      .catch((err) => {
+        if (err?.response) console.log(err.response.data)
+        else console.log(err)
+      })
+  }, [submitOrderStatus, router, order?.orderId])
+
+  const fixString = (str: string) => {
+    return (
+      str.charAt(0).toUpperCase() +
+      str.slice(1).toLocaleLowerCase().replace(/_/g, ' ')
+    )
+  }
+  const handleOrderStatusChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      event.target.value === fixString(OrderStatus.ImpressionEvaluation)
+        ? setOrderStatus(OrderStatus.ImpressionEvaluation)
+        : event.target.value === fixString(OrderStatus.Modeled)
+        ? setOrderStatus(OrderStatus.Modeled)
+        : event.target.value === fixString(OrderStatus.Modelling)
+        ? setOrderStatus(OrderStatus.Modelling)
+        : setOrderStatus(OrderStatus.Placed)
+    },
+    []
+  )
 
   const handleSubmitModel = useCallback(() => {
     submitUpdateOrder().then((res) => {
@@ -455,7 +501,7 @@ const Index = () => {
                           Upload Model
                         </button>
                         <button
-                          onClick={() => setEditOrderOpen(true)}
+                          onClick={() => setStatusModalOpen(true)}
                           className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                         >
                           Change Status
@@ -891,6 +937,14 @@ const Index = () => {
           setBTEOrder={setBTEOrder}
           setModalFiles={setModalFiles}
         />
+
+        <StatusModal
+          open={statusModalOpen}
+          setOpen={setStatusModalOpen}
+          action={handleChangeOrderStatus}
+          handleOrderStatusChange={handleOrderStatusChange}
+        />
+
         {order && order?.logs && (
           <LogModal
             logs={order?.logs}

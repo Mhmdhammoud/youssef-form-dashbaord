@@ -11,7 +11,7 @@ import {
   Select,
   Uploader,
   Wrapper,
-} from '../../components'
+} from '..'
 import { AllImages, AllRejectionReasons } from '../../data'
 import { useUpload } from '../../hooks'
 import {
