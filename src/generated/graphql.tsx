@@ -85,6 +85,14 @@ export type AllOrdersResponse = {
   orders?: Maybe<Array<Order>>;
 };
 
+export type AllPrintJobs = {
+  __typename?: 'AllPrintJobs';
+  errors: Array<FieldError>;
+  hasMore: Scalars['Boolean'];
+  length: Scalars['Float'];
+  print_jobs?: Maybe<Array<PrintJob>>;
+};
+
 export type AllUsersResponse = {
   __typename?: 'AllUsersResponse';
   errors: Array<FieldError>;
@@ -255,6 +263,12 @@ export type CreateOrderInput = {
   remake: Scalars['Boolean'];
 };
 
+export type CreatePrintJobInput = {
+  company_id: Scalars['ID'];
+  orders: Array<OrderEarInput>;
+  print_file: Scalars['String'];
+};
+
 export type CreateProductInput = {
   left: CreateBteEar;
   right: CreateBteEar;
@@ -275,6 +289,12 @@ export type DeliveryDetails = {
   standard: Scalars['Boolean'];
   urgent: Scalars['Boolean'];
 };
+
+/** Describes whether the order is for the left or the right ear */
+export enum Ear {
+  Left = 'LEFT',
+  Right = 'RIGHT'
+}
 
 export type EditUserInput = {
   _id: Scalars['String'];
@@ -321,6 +341,7 @@ export type Mutation = {
   /** Create a new admin account with the given email and password. Returns the created admin deactivated. */
   createAdmin: AdminResponse;
   createCompany: SingleCompanyResponse;
+  createJob: PrintResponse;
   createUser: UserResponse;
   editCompany: CompanyResponse;
   editUser: UserResponse;
@@ -355,6 +376,11 @@ export type MutationCreateAdminArgs = {
 export type MutationCreateCompanyArgs = {
   admin: CreateCompanyAdminInput;
   company: CreateCompanyInput;
+};
+
+
+export type MutationCreateJobArgs = {
+  input: CreatePrintJobInput;
 };
 
 
@@ -456,6 +482,17 @@ export enum OrderDirection {
   Right = 'RIGHT'
 }
 
+export type OrderEar = {
+  __typename?: 'OrderEar';
+  ear: Ear;
+  order: Order;
+};
+
+export type OrderEarInput = {
+  _id: Scalars['ID'];
+  ear: Ear;
+};
+
 export type OrderResponses = {
   __typename?: 'OrderResponses';
   errors: Array<FieldError>;
@@ -487,6 +524,25 @@ export enum OrderType {
   SwimmingPlugs = 'SWIMMING_PLUGS'
 }
 
+export type PrintJob = {
+  __typename?: 'PrintJob';
+  _id: Scalars['ID'];
+  company: Company;
+  createdAt: Scalars['DateTime'];
+  creator: Admin;
+  orders: Array<OrderEar>;
+  printId: Scalars['String'];
+  print_file: Scalars['String'];
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type PrintResponse = {
+  __typename?: 'PrintResponse';
+  errors: Array<FieldError>;
+  print_job?: Maybe<PrintJob>;
+};
+
 export type Product = {
   __typename?: 'Product';
   left: BteEar;
@@ -498,13 +554,17 @@ export type Query = {
   getAllAdmins: AllAdminsResponse;
   getAllCompanies: AllCompaniesResponse;
   getAllOrders: AllOrdersResponse;
+  /** Get company print jobs */
+  getAllPrintJobs: AllPrintJobs;
   getAllUsers: AllUsersResponse;
   /** Get company by id with all of its employees */
   getCompany?: Maybe<SingleCompanyResponse>;
   /** Get order by id */
   getOrder?: Maybe<Order>;
+  /** Get company print jobs */
+  getPrintJob: PrintResponse;
   /** Get company print jobs grouped by colors */
-  getPrintJobs: AllOrdersResponse;
+  getPrintableOrders: AllOrdersResponse;
   getSingleAdmin: NonAdminResponse;
   /** Get user by id */
   getUser?: Maybe<UserResponse>;
@@ -531,6 +591,14 @@ export type QueryGetAllOrdersArgs = {
 };
 
 
+export type QueryGetAllPrintJobsArgs = {
+  company_id: Scalars['ID'];
+  limit: Scalars['Int'];
+  page: Scalars['Int'];
+  sort: Sorting;
+};
+
+
 export type QueryGetAllUsersArgs = {
   limit: Scalars['Float'];
   page: Scalars['Float'];
@@ -547,7 +615,12 @@ export type QueryGetOrderArgs = {
 };
 
 
-export type QueryGetPrintJobsArgs = {
+export type QueryGetPrintJobArgs = {
+  print_id: Scalars['ID'];
+};
+
+
+export type QueryGetPrintableOrdersArgs = {
   company_id: Scalars['ID'];
 };
 
@@ -629,6 +702,13 @@ export type CreateCompanyMutationVariables = Exact<{
 
 
 export type CreateCompanyMutation = { __typename?: 'Mutation', createCompany: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, manufacturers: Array<string>, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null } | null, admin?: { __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any } | null } };
+
+export type CreatePrintJobMutationVariables = Exact<{
+  input: CreatePrintJobInput;
+}>;
+
+
+export type CreatePrintJobMutation = { __typename?: 'Mutation', createJob: { __typename?: 'PrintResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, print_job?: { __typename?: 'PrintJob', _id: string, title: string, printId: string, createdAt: any, updatedAt: any, creator: { __typename?: 'Admin', fullName: string }, company: { __typename?: 'Company', title: string }, orders: Array<{ __typename?: 'OrderEar', ear: Ear, order: { __typename?: 'Order', orderId: string } }> } | null } };
 
 export type EditCompanyMutationVariables = Exact<{
   _id: Scalars['ID'];
@@ -744,12 +824,29 @@ export type GetOrderQueryVariables = Exact<{
 
 export type GetOrderQuery = { __typename?: 'Query', getOrder?: { __typename?: 'Order', _id: string, material: string, bioporShore: string, createdAt: any, updatedAt: any, orderId: string, remake: boolean, orderType: OrderType, reason: string, status: OrderStatus, direction: OrderDirection, manufacturer: string, filter: string, cordColor: string, hasCord: boolean, creator: { __typename?: 'User', fullName: string, email: string, role: UserRole, userId: string, isActive: boolean }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model: string, engraving: string, hasEngraving: boolean }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model: string, engraving: string, hasEngraving: boolean } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string } }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }> } | null };
 
+export type GetPrintJobQueryVariables = Exact<{
+  print_id: Scalars['ID'];
+}>;
+
+
+export type GetPrintJobQuery = { __typename?: 'Query', getPrintJob: { __typename?: 'PrintResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, print_job?: { __typename?: 'PrintJob', _id: string, title: string, printId: string, print_file: string, createdAt: any, updatedAt: any, creator: { __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }, orders: Array<{ __typename?: 'OrderEar', ear: Ear, order: { __typename?: 'Order', _id: string, orderType: OrderType, status: OrderStatus, hasCord: boolean, remake: boolean, reason: string, orderId: string, updatedAt: any, bioporShore: string, cordColor: string, material: string, direction: OrderDirection, rejectionReason: string, reOrder: boolean, manufacturer: string, filter: string, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, manufacturer: string, markingDots: boolean, hasEngraving: boolean, engraving: string, shellId: string, model: string }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, manufacturer: string, markingDots: boolean, hasEngraving: boolean, engraving: string, shellId: string, model: string } } } }> } | null } };
+
+export type GetAllPrintJobsQueryVariables = Exact<{
+  company_id: Scalars['ID'];
+  page: Scalars['Int'];
+  limit: Scalars['Int'];
+  sort: Sorting;
+}>;
+
+
+export type GetAllPrintJobsQuery = { __typename?: 'Query', getAllPrintJobs: { __typename?: 'AllPrintJobs', hasMore: boolean, length: number, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, print_jobs?: Array<{ __typename?: 'PrintJob', _id: string, title: string, printId: string, print_file: string, createdAt: any, updatedAt: any, creator: { __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }, orders: Array<{ __typename?: 'OrderEar', ear: Ear, order: { __typename?: 'Order', _id: string, orderType: OrderType, status: OrderStatus, hasCord: boolean, remake: boolean, reason: string, orderId: string, updatedAt: any, bioporShore: string, cordColor: string, material: string, direction: OrderDirection, rejectionReason: string, reOrder: boolean, manufacturer: string, filter: string, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, manufacturer: string, markingDots: boolean, hasEngraving: boolean, engraving: string, shellId: string, model: string }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, manufacturer: string, markingDots: boolean, hasEngraving: boolean, engraving: string, shellId: string, model: string } } } }> }> | null } };
+
 export type GetPrintJobsQueryVariables = Exact<{
   company_id: Scalars['ID'];
 }>;
 
 
-export type GetPrintJobsQuery = { __typename?: 'Query', getPrintJobs: { __typename?: 'AllOrdersResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
+export type GetPrintJobsQuery = { __typename?: 'Query', getPrintableOrders: { __typename?: 'AllOrdersResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
 
 export type GetSingleAdminQueryVariables = Exact<{
   adminId: Scalars['ID'];
@@ -1002,6 +1099,61 @@ export function useCreateCompanyMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCompanyMutationHookResult = ReturnType<typeof useCreateCompanyMutation>;
 export type CreateCompanyMutationResult = Apollo.MutationResult<CreateCompanyMutation>;
 export type CreateCompanyMutationOptions = Apollo.BaseMutationOptions<CreateCompanyMutation, CreateCompanyMutationVariables>;
+export const CreatePrintJobDocument = gql`
+    mutation CreatePrintJob($input: CreatePrintJobInput!) {
+  createJob(input: $input) {
+    errors {
+      field
+      message
+    }
+    print_job {
+      _id
+      title
+      printId
+      creator {
+        fullName
+      }
+      company {
+        title
+      }
+      orders {
+        ear
+        order {
+          orderId
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type CreatePrintJobMutationFn = Apollo.MutationFunction<CreatePrintJobMutation, CreatePrintJobMutationVariables>;
+
+/**
+ * __useCreatePrintJobMutation__
+ *
+ * To run a mutation, you first call `useCreatePrintJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePrintJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPrintJobMutation, { data, loading, error }] = useCreatePrintJobMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePrintJobMutation(baseOptions?: Apollo.MutationHookOptions<CreatePrintJobMutation, CreatePrintJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePrintJobMutation, CreatePrintJobMutationVariables>(CreatePrintJobDocument, options);
+      }
+export type CreatePrintJobMutationHookResult = ReturnType<typeof useCreatePrintJobMutation>;
+export type CreatePrintJobMutationResult = Apollo.MutationResult<CreatePrintJobMutation>;
+export type CreatePrintJobMutationOptions = Apollo.BaseMutationOptions<CreatePrintJobMutation, CreatePrintJobMutationVariables>;
 export const EditCompanyDocument = gql`
     mutation EditCompany($_id: ID!, $input: CreateCompanyInput!) {
   editCompany(_id: $_id, input: $input) {
@@ -2007,9 +2159,315 @@ export function useGetOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetOrderQueryHookResult = ReturnType<typeof useGetOrderQuery>;
 export type GetOrderLazyQueryHookResult = ReturnType<typeof useGetOrderLazyQuery>;
 export type GetOrderQueryResult = Apollo.QueryResult<GetOrderQuery, GetOrderQueryVariables>;
+export const GetPrintJobDocument = gql`
+    query GetPrintJob($print_id: ID!) {
+  getPrintJob(print_id: $print_id) {
+    errors {
+      field
+      message
+    }
+    print_job {
+      _id
+      title
+      printId
+      creator {
+        _id
+        fullName
+        fname
+        lname
+        email
+        role
+        adminId
+        isActive
+        createdAt
+        updatedAt
+      }
+      company {
+        _id
+        title
+        companyId
+        createdAt
+        updatedAt
+        contactPerson {
+          fullName
+          email
+          phoneNumber
+          customerAccount
+        }
+        street
+        postCode
+        country
+      }
+      orders {
+        order {
+          _id
+          deliveryDetails {
+            urgent
+            standard
+            invoiceNumber
+          }
+          extraDetails {
+            comment
+            accessories
+          }
+          orderType
+          status
+          hasCord
+          remake
+          reason
+          orderId
+          updatedAt
+          bioporShore
+          cordColor
+          material
+          direction
+          impressions {
+            left
+            right
+          }
+          rejectionReason
+          reOrder
+          manufacturer
+          filter
+          product {
+            left {
+              haModel
+              serialNumber
+              style
+              canalLength
+              cymbaLength
+              ventSize
+              quantity
+              color
+              surface
+              soundTube
+              canal
+              manufacturer
+              markingDots
+              hasEngraving
+              engraving
+              shellId
+              model
+            }
+            right {
+              haModel
+              serialNumber
+              style
+              canalLength
+              cymbaLength
+              ventSize
+              quantity
+              color
+              surface
+              soundTube
+              canal
+              manufacturer
+              markingDots
+              hasEngraving
+              engraving
+              shellId
+              model
+            }
+          }
+        }
+        ear
+      }
+      print_file
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPrintJobQuery__
+ *
+ * To run a query within a React component, call `useGetPrintJobQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPrintJobQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPrintJobQuery({
+ *   variables: {
+ *      print_id: // value for 'print_id'
+ *   },
+ * });
+ */
+export function useGetPrintJobQuery(baseOptions: Apollo.QueryHookOptions<GetPrintJobQuery, GetPrintJobQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPrintJobQuery, GetPrintJobQueryVariables>(GetPrintJobDocument, options);
+      }
+export function useGetPrintJobLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPrintJobQuery, GetPrintJobQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPrintJobQuery, GetPrintJobQueryVariables>(GetPrintJobDocument, options);
+        }
+export type GetPrintJobQueryHookResult = ReturnType<typeof useGetPrintJobQuery>;
+export type GetPrintJobLazyQueryHookResult = ReturnType<typeof useGetPrintJobLazyQuery>;
+export type GetPrintJobQueryResult = Apollo.QueryResult<GetPrintJobQuery, GetPrintJobQueryVariables>;
+export const GetAllPrintJobsDocument = gql`
+    query GetAllPrintJobs($company_id: ID!, $page: Int!, $limit: Int!, $sort: Sorting!) {
+  getAllPrintJobs(
+    sort: $sort
+    limit: $limit
+    page: $page
+    company_id: $company_id
+  ) {
+    errors {
+      field
+      message
+    }
+    hasMore
+    length
+    print_jobs {
+      _id
+      title
+      printId
+      creator {
+        _id
+        fullName
+        fname
+        lname
+        email
+        role
+        adminId
+        isActive
+        createdAt
+        updatedAt
+      }
+      company {
+        _id
+        title
+        companyId
+        createdAt
+        updatedAt
+        contactPerson {
+          fullName
+          email
+          phoneNumber
+          customerAccount
+        }
+        street
+        postCode
+        country
+      }
+      orders {
+        order {
+          _id
+          deliveryDetails {
+            urgent
+            standard
+            invoiceNumber
+          }
+          extraDetails {
+            comment
+            accessories
+          }
+          orderType
+          status
+          hasCord
+          remake
+          reason
+          orderId
+          updatedAt
+          bioporShore
+          cordColor
+          material
+          direction
+          impressions {
+            left
+            right
+          }
+          rejectionReason
+          reOrder
+          manufacturer
+          filter
+          product {
+            left {
+              haModel
+              serialNumber
+              style
+              canalLength
+              cymbaLength
+              ventSize
+              quantity
+              color
+              surface
+              soundTube
+              canal
+              manufacturer
+              markingDots
+              hasEngraving
+              engraving
+              shellId
+              model
+            }
+            right {
+              haModel
+              serialNumber
+              style
+              canalLength
+              cymbaLength
+              ventSize
+              quantity
+              color
+              surface
+              soundTube
+              canal
+              manufacturer
+              markingDots
+              hasEngraving
+              engraving
+              shellId
+              model
+            }
+          }
+        }
+        ear
+      }
+      print_file
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllPrintJobsQuery__
+ *
+ * To run a query within a React component, call `useGetAllPrintJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPrintJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPrintJobsQuery({
+ *   variables: {
+ *      company_id: // value for 'company_id'
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetAllPrintJobsQuery(baseOptions: Apollo.QueryHookOptions<GetAllPrintJobsQuery, GetAllPrintJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllPrintJobsQuery, GetAllPrintJobsQueryVariables>(GetAllPrintJobsDocument, options);
+      }
+export function useGetAllPrintJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPrintJobsQuery, GetAllPrintJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllPrintJobsQuery, GetAllPrintJobsQueryVariables>(GetAllPrintJobsDocument, options);
+        }
+export type GetAllPrintJobsQueryHookResult = ReturnType<typeof useGetAllPrintJobsQuery>;
+export type GetAllPrintJobsLazyQueryHookResult = ReturnType<typeof useGetAllPrintJobsLazyQuery>;
+export type GetAllPrintJobsQueryResult = Apollo.QueryResult<GetAllPrintJobsQuery, GetAllPrintJobsQueryVariables>;
 export const GetPrintJobsDocument = gql`
     query GetPrintJobs($company_id: ID!) {
-  getPrintJobs(company_id: $company_id) {
+  getPrintableOrders(company_id: $company_id) {
     errors {
       field
       message

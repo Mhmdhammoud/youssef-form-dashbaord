@@ -1,0 +1,27 @@
+mutation CreatePrintJob($input: CreatePrintJobInput!) {
+  createJob(input: $input) {
+    errors {
+      field
+      message
+    }
+    print_job {
+      _id
+      title
+      printId
+      creator {
+        fullName
+      }
+      company {
+        title
+      }
+      orders {
+        ear
+        order {
+          orderId
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}

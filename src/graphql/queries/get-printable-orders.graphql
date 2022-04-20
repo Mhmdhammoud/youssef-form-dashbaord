@@ -1,0 +1,78 @@
+query GetPrintJobs($company_id: ID!) {
+  getPrintableOrders(company_id: $company_id) {
+    errors {
+      field
+      message
+    }
+    orders {
+      direction
+      _id
+      deliveryDetails {
+        urgent
+        standard
+        invoiceNumber
+      }
+      extraDetails {
+        comment
+        accessories
+      }
+
+      impressions {
+        left
+        right
+      }
+
+      logs {
+        message
+        createdAt
+      }
+
+      product {
+        left {
+          haModel
+          shellId
+          serialNumber
+          style
+          canalLength
+          manufacturer
+          cymbaLength
+          ventSize
+          quantity
+          color
+          surface
+          soundTube
+          canal
+          markingDots
+        }
+        right {
+          haModel
+          shellId
+          serialNumber
+          style
+          canalLength
+          manufacturer
+          cymbaLength
+          ventSize
+          quantity
+          color
+          surface
+          soundTube
+          canal
+          markingDots
+        }
+      }
+
+      orderType
+      status
+      remake
+      reason
+      orderId
+      bioporShore
+      material
+      rejectionReason
+      reOrder
+      createdAt
+      updatedAt
+    }
+  }
+}
