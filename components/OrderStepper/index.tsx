@@ -4,13 +4,15 @@ import {
   OrderStatus,
   useChangeOrderStatusMutation,
   useMeQuery,
+  useRejectOrderMutation,
   UserRole,
 } from '../../src/generated/graphql'
 import ConfirmationModal from '../ConfirmationModal'
 import ErrorToast from '../common/ErrorToast'
 import { ToUpperFirst } from '../../utils'
 import { XIcon } from '@heroicons/react/outline'
-
+import RejectModal from '../RejectModal'
+import Notification from '../common/Notification'
 interface IProps {
   orderStatus: OrderStatus
   order_id: string
@@ -30,7 +32,17 @@ const Index: React.FC<IProps> = (props) => {
   const meData = data?.me?.admin
   const [changeStatus, {}] = useChangeOrderStatusMutation()
   const [accessDeniedShow, setAccessDeniedShow] = useState<boolean>(false)
-
+  const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
+  const [rejectionReason, setRejectionReason] = useState<string>('')
+  const [rejectionType, setRejectionType] = useState<string>('')
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
+  const [orderStatusToChange, setOrderStatusToChange] = useState<OrderStatus>(
+    OrderStatus.Placed
+  )
+  const [notificationToast, setNotificationToast] = useState({
+    message: '',
+    title: 'Success',
+  })
   const [steps, setSteps] = useState<IStep[]>([
     {
       id: 'Step 1',
@@ -303,18 +315,51 @@ const Index: React.FC<IProps> = (props) => {
     OrderStatus.Placed
   )
 
+  const [submitRejection, { data: rejectionDataResponse }] =
+    useRejectOrderMutation({
+      variables: {
+        _id: order_id as string,
+        rejectionReason: rejectionReason,
+      },
+    })
+
+  const handleReject = useCallback(() => {
+    submitRejection()
+      .then((res) => {
+        setRejectionReason('')
+        setNotificationOpen(true)
+        setNotificationToast({
+          message: 'Order has been rejected successfully',
+          title: 'Success',
+        })
+        refetch()
+      })
+      .catch((err) => {
+        if (err?.response) console.log(err?.response?.data)
+        else console.log(err)
+      })
+  }, [submitRejection, refetch])
+
+  const handleRejectionReason = useCallback(
+    (
+      event:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLSelectElement>
+    ) => {
+      setRejectionReason(event.target.value)
+    },
+    []
+  )
+
   const handleChangeStatus = (step: IStep) => {
     const indexOfStep = steps.indexOf(step)
     const orderStep = steps.find((item) => item.name === orderStatus)
     const indexOfOrderStatus = steps.indexOf(orderStep!)
+
     if (step.disabled) {
       setAccessDeniedShow(true)
     } else {
       if (indexOfStep - indexOfOrderStatus === 0) {
-        return
-      }
-      if (indexOfStep - indexOfOrderStatus < 0) {
-        setAccessDeniedShow(true)
         return
       }
 
@@ -346,17 +391,20 @@ const Index: React.FC<IProps> = (props) => {
     })
   }
 
-  const handleFailPrint = useCallback(() => {
-    setShowConfirmationPrintFailModal(false)
-    changeStatus({
-      variables: {
-        _id: order_id,
-        status: OrderStatus.Modeled,
-      },
-    }).then(() => {
-      refetch()
-    })
-  }, [changeStatus, order_id, refetch])
+  const handleFailPrint = useCallback(
+    (orderStatus: OrderStatus) => {
+      setRejectModalOpen(false)
+      changeStatus({
+        variables: {
+          _id: order_id,
+          status: orderStatus,
+        },
+      }).then(() => {
+        refetch()
+      })
+    },
+    [changeStatus, order_id, refetch]
+  )
 
   return (
     <nav aria-label="Progress" className="mb-5 print:hidden">
@@ -377,7 +425,8 @@ const Index: React.FC<IProps> = (props) => {
                   </span>
                 </a>
               ) : step.status === 'current' ? (
-                step.name === OrderStatus.Printing ? (
+                step.name === OrderStatus.ImpressionEvaluation ||
+                step.name === OrderStatus.Modelling ? (
                   <div>
                     <a
                       className="pl-4 py-2 flex flex-col border-l-4 border-indigo-600 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4 hover:border-t-[1.5rem] duration-700 ease-in-out cursor-pointer"
@@ -388,13 +437,11 @@ const Index: React.FC<IProps> = (props) => {
                         {step?.id}
                         <div
                           className={'mr-2'}
-                          onClick={() =>
-                            setShowConfirmationPrintFailModal(true)
-                          }
+                          onClick={() => setRejectModalOpen(true)}
                         >
                           <XIcon
                             className={
-                              'w-6 h-6 cursor-pointer rounded-md border-2 border-red-200 border text-gray-600'
+                              'w-6 h-6 cursor-pointer rounded-md border-2 border-red-200 text-gray-600'
                             }
                           />
                         </div>
@@ -446,12 +493,12 @@ const Index: React.FC<IProps> = (props) => {
       <ConfirmationModal
         title={'Print fail'}
         text={
-          'Confirming this operation will lead to sending back the order to the modeled stage. Are you sure you want to proceed?'
+          'Confirming this operation will lead to sending back the order to the stage before. Are you sure you want to proceed?'
         }
         variant={'Info'}
         open={showConfirmationPrintFailModal}
         buttonText={'Proceed'}
-        action={handleFailPrint}
+        action={() => handleFailPrint(orderStatusToChange)}
         setOpen={setShowConfirmationPrintFailModal}
       />
       <ErrorToast
@@ -461,6 +508,22 @@ const Index: React.FC<IProps> = (props) => {
           'You are not allowed to change the order status to the following step'
         }
         title={'Access denied'}
+      />
+      <RejectModal
+        orderStatus={orderStatus}
+        setOpen={setRejectModalOpen}
+        open={rejectModalOpen}
+        action={handleReject}
+        handleRejectionReason={handleRejectionReason}
+        rejectionReason={rejectionReason}
+        rejectionType={rejectionType}
+        setRejectionType={setRejectionType}
+      />
+      <Notification
+        message={notificationToast.message}
+        title={notificationToast.title}
+        open={notificationOpen}
+        setOpen={setNotificationOpen}
       />
     </nav>
   )

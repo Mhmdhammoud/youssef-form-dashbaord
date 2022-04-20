@@ -1,33 +1,33 @@
-import React, { Fragment, useRef } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { ExclamationIcon } from '@heroicons/react/outline';
-import classNames from 'classnames';
+import React, { Fragment, useRef } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { ExclamationIcon } from '@heroicons/react/outline'
+import classNames from 'classnames'
 
 interface IProps {
-  title: string;
-  text: string;
-  variant: 'Info' | 'Warning' | 'Success';
-  open: boolean;
-  buttonText: string;
-  action: () => any;
-  setOpen: any;
+  title: string
+  text: string
+  variant: 'Info' | 'Warning' | 'Success'
+  open: boolean
+  buttonText: string
+  action: () => any
+  setOpen: any
 }
 
 const ConfirmationModal: React.FC<IProps> = (props) => {
-  const { title, open, setOpen, buttonText, text, variant, action } = props;
+  const { title, open, setOpen, buttonText, text, variant, action } = props
   const colorMe = (variant: string) => {
     switch (variant) {
       case 'Warning':
-        return 'bg-red-500 hover:bg-red-600';
+        return 'bg-red-500 hover:bg-red-600'
       case 'Success':
-        return 'bg-green-500 hover:bg-green-600';
+        return 'bg-green-500 hover:bg-green-600'
       case 'Info':
-        return 'bg-indigo-500 hover:bg-indigo-600';
+        return 'bg-indigo-500 hover:bg-indigo-600'
       default:
-        return 'bg-indigo-500 hover:bg-red-600';
+        return 'bg-indigo-500 hover:bg-red-600'
     }
-  };
-  const cancelButtonRef = useRef(null);
+  }
+  const cancelButtonRef = useRef(null)
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -110,6 +110,6 @@ const ConfirmationModal: React.FC<IProps> = (props) => {
         </div>
       </Dialog>
     </Transition.Root>
-  );
-};
-export default ConfirmationModal;
+  )
+}
+export default ConfirmationModal
