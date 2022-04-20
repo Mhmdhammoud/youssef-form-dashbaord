@@ -6,6 +6,8 @@ import {
   useGetAllCompaniesQuery,
   Company,
   useGetPrintJobsLazyQuery,
+  PrintJob,
+  useGetAllPrintJobsLazyQuery,
 } from '../../src/generated/graphql'
 import { handleError } from '../../utils'
 import { PlusIcon } from '@heroicons/react/solid'
@@ -20,8 +22,8 @@ const Index = () => {
 
   const allCompanies = data?.getAllCompanies?.companies
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>('')
-  const [fetchPrintJobs] = useGetPrintJobsLazyQuery()
-  const [printOrders, setPrintOrders] = useState({})
+  const [fetchPrintJobs] = useGetAllPrintJobsLazyQuery()
+  const [allPrintJobs, setAllPrintJobs] = useState<PrintJob[]>([])
   const handleChangeCompany = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedCompanyId(event.target.value)
@@ -34,54 +36,14 @@ const Index = () => {
       fetchPrintJobs({
         variables: {
           company_id: companyId,
+          page: 0,
+          limit: 999,
+          sort: Sorting.Desc,
         },
       })
         .then(({ data }) => {
-          const orders = data?.getPrintJobs?.orders
-          let colors = {}
-          if (orders) {
-            orders.map((item) => {
-              const { product } = item
-              const { left, right } = product
-              console.log(item)
-              if (item.material === 'fototec') {
-                if (!colors[left.color]) {
-                  colors = {
-                    ...colors,
-                    [left.color]: [left],
-                  }
-                } else {
-                  colors[left.color] = [...colors[left.color], left]
-                }
-                if (!colors[right.color]) {
-                  colors = {
-                    ...colors,
-                    [right.color]: [right],
-                  }
-                } else {
-                  colors[right.color] = [...colors[right.color], right]
-                }
-              } else {
-                const { left: castLeft, right: castRight } = product
-                if (colors['cast']) {
-                  colors = {
-                    ...colors,
-                    cast: [...colors['cast'], castLeft],
-                  }
-                  colors = {
-                    ...colors,
-                    cast: [...colors['cast'], castRight],
-                  }
-                } else {
-                  colors = {
-                    ...colors,
-                    cast: [castLeft, castRight],
-                  }
-                }
-              }
-            })
-          }
-          setPrintOrders(colors)
+          const printJobs = data?.getAllPrintJobs?.print_jobs
+          setAllPrintJobs(printJobs as PrintJob[])
         })
         .catch(handleError)
     },
@@ -118,24 +80,7 @@ const Index = () => {
               Print Job
             </button>
           </div>
-          <OrderLayout item cols={4} title="">
-            {selectedCompanyId &&
-              Object.keys(printOrders).map((key) => {
-                return (
-                  <OrderLayout.Item key={key}>
-                    <OrderLayout title={key} cols={4}>
-                      {printOrders[key].map((item) => {
-                        return (
-                          <OrderLayout.Item key={item.shellId}>
-                            {item.shellId}
-                          </OrderLayout.Item>
-                        )
-                      })}
-                    </OrderLayout>
-                  </OrderLayout.Item>
-                )
-              })}
-          </OrderLayout>
+          {/* Insert print jobs table here */}
         </div>
       </Wrapper>
       <Footer />

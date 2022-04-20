@@ -1,22 +1,10 @@
-query GetAllPrintJobs(
-  $company_id: ID!
-  $page: Int!
-  $limit: Int!
-  $sort: Sorting!
-) {
-  getAllPrintJobs(
-    sort: $sort
-    limit: $limit
-    page: $page
-    company_id: $company_id
-  ) {
+query GetPrintJob($print_id: ID!) {
+  getPrintJob(print_id: $print_id) {
     errors {
       field
       message
     }
-    hasMore
-    length
-    print_jobs {
+    print_job {
       _id
       title
       printId
