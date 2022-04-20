@@ -1,17 +1,17 @@
-import { Fragment, useCallback, useState } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import Image from 'next/image';
-import { useDispatch } from 'react-redux';
+import { Fragment, useCallback, useState } from 'react'
+import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import Image from 'next/image'
+import { useDispatch } from 'react-redux'
 
-import Link from 'next/link';
-import { logout } from '../../actions';
-import { useRouter } from 'next/router';
-import Cookies from 'universal-cookie';
+import Link from 'next/link'
+import { logout } from '../../actions'
+import { useRouter } from 'next/router'
+import Cookies from 'universal-cookie'
 
 //@ts-ignore
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(' ')
 }
 
 const Index = () => {
@@ -22,22 +22,20 @@ const Index = () => {
     { name: 'All Orders', href: 'all-orders', current: false },
     { name: 'All Admins', href: 'all-admins', current: false },
     { name: 'Create Admin', href: 'create-admin', current: false },
-  ]);
+    { name: 'Print Jobs', href: 'print-jobs', current: false },
+  ])
 
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const router = useRouter()
+  const dispatch = useDispatch()
 
   const handleLogout = useCallback(() => {
-    const cookies = new Cookies();
-
-    cookies.remove('token');
-    cookies.remove('isAuthenticated');
-    cookies.set('isAuthenticated', false, { path: '/' });
-
-    dispatch(logout());
-
-    router.push('/sign-in');
-  }, [dispatch, router]);
+    const cookies = new Cookies()
+    cookies.remove('token')
+    cookies.remove('isAuthenticated')
+    cookies.set('isAuthenticated', false, { path: '/' })
+    dispatch(logout())
+    router.push('/sign-in')
+  }, [dispatch, router])
 
   // const handleClick = useCallback((item) => {
   //   setNavigation((prevState) => ({
@@ -193,6 +191,6 @@ const Index = () => {
         </>
       )}
     </Disclosure>
-  );
-};
-export default Index;
+  )
+}
+export default Index
