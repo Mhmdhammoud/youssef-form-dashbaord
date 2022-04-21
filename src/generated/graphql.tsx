@@ -841,12 +841,12 @@ export type GetAllPrintJobsQueryVariables = Exact<{
 
 export type GetAllPrintJobsQuery = { __typename?: 'Query', getAllPrintJobs: { __typename?: 'AllPrintJobs', hasMore: boolean, length: number, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, print_jobs?: Array<{ __typename?: 'PrintJob', _id: string, title: string, printId: string, print_file: string, createdAt: any, updatedAt: any, creator: { __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }, orders: Array<{ __typename?: 'OrderEar', ear: Ear, order: { __typename?: 'Order', _id: string, orderType: OrderType, status: OrderStatus, hasCord: boolean, remake: boolean, reason: string, orderId: string, updatedAt: any, bioporShore: string, cordColor: string, material: string, direction: OrderDirection, rejectionReason: string, reOrder: boolean, manufacturer: string, filter: string, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, manufacturer: string, markingDots: boolean, hasEngraving: boolean, engraving: string, shellId: string, model: string }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, manufacturer: string, markingDots: boolean, hasEngraving: boolean, engraving: string, shellId: string, model: string } } } }> }> | null } };
 
-export type GetPrintJobsQueryVariables = Exact<{
+export type GetPrintableOrdersQueryVariables = Exact<{
   company_id: Scalars['ID'];
 }>;
 
 
-export type GetPrintJobsQuery = { __typename?: 'Query', getPrintableOrders: { __typename?: 'AllOrdersResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
+export type GetPrintableOrdersQuery = { __typename?: 'Query', getPrintableOrders: { __typename?: 'AllOrdersResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
 
 export type GetSingleAdminQueryVariables = Exact<{
   adminId: Scalars['ID'];
@@ -2465,8 +2465,8 @@ export function useGetAllPrintJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetAllPrintJobsQueryHookResult = ReturnType<typeof useGetAllPrintJobsQuery>;
 export type GetAllPrintJobsLazyQueryHookResult = ReturnType<typeof useGetAllPrintJobsLazyQuery>;
 export type GetAllPrintJobsQueryResult = Apollo.QueryResult<GetAllPrintJobsQuery, GetAllPrintJobsQueryVariables>;
-export const GetPrintJobsDocument = gql`
-    query GetPrintJobs($company_id: ID!) {
+export const GetPrintableOrdersDocument = gql`
+    query GetPrintableOrders($company_id: ID!) {
   getPrintableOrders(company_id: $company_id) {
     errors {
       field
@@ -2543,32 +2543,32 @@ export const GetPrintJobsDocument = gql`
     `;
 
 /**
- * __useGetPrintJobsQuery__
+ * __useGetPrintableOrdersQuery__
  *
- * To run a query within a React component, call `useGetPrintJobsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPrintJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPrintableOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPrintableOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPrintJobsQuery({
+ * const { data, loading, error } = useGetPrintableOrdersQuery({
  *   variables: {
  *      company_id: // value for 'company_id'
  *   },
  * });
  */
-export function useGetPrintJobsQuery(baseOptions: Apollo.QueryHookOptions<GetPrintJobsQuery, GetPrintJobsQueryVariables>) {
+export function useGetPrintableOrdersQuery(baseOptions: Apollo.QueryHookOptions<GetPrintableOrdersQuery, GetPrintableOrdersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPrintJobsQuery, GetPrintJobsQueryVariables>(GetPrintJobsDocument, options);
+        return Apollo.useQuery<GetPrintableOrdersQuery, GetPrintableOrdersQueryVariables>(GetPrintableOrdersDocument, options);
       }
-export function useGetPrintJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPrintJobsQuery, GetPrintJobsQueryVariables>) {
+export function useGetPrintableOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPrintableOrdersQuery, GetPrintableOrdersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPrintJobsQuery, GetPrintJobsQueryVariables>(GetPrintJobsDocument, options);
+          return Apollo.useLazyQuery<GetPrintableOrdersQuery, GetPrintableOrdersQueryVariables>(GetPrintableOrdersDocument, options);
         }
-export type GetPrintJobsQueryHookResult = ReturnType<typeof useGetPrintJobsQuery>;
-export type GetPrintJobsLazyQueryHookResult = ReturnType<typeof useGetPrintJobsLazyQuery>;
-export type GetPrintJobsQueryResult = Apollo.QueryResult<GetPrintJobsQuery, GetPrintJobsQueryVariables>;
+export type GetPrintableOrdersQueryHookResult = ReturnType<typeof useGetPrintableOrdersQuery>;
+export type GetPrintableOrdersLazyQueryHookResult = ReturnType<typeof useGetPrintableOrdersLazyQuery>;
+export type GetPrintableOrdersQueryResult = Apollo.QueryResult<GetPrintableOrdersQuery, GetPrintableOrdersQueryVariables>;
 export const GetSingleAdminDocument = gql`
     query GetSingleAdmin($adminId: ID!) {
   getSingleAdmin(adminId: $adminId) {
