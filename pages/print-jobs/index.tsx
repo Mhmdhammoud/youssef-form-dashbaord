@@ -1,18 +1,23 @@
-import React, { useCallback, useState } from 'react'
-import { Footer, Header, OrderLayout, Select, Wrapper } from '../../components'
-import { withRouter } from '../../hoc'
-import {
-  Sorting,
-  useGetAllCompaniesQuery,
-  Company,
-  useGetPrintJobsLazyQuery,
-  PrintJob,
-  useGetAllPrintJobsLazyQuery,
-} from '../../src/generated/graphql'
-import { handleError } from '../../utils'
 import { PlusIcon } from '@heroicons/react/solid'
 import moment from 'moment'
 import Link from 'next/link'
+import React, { useCallback, useState } from 'react'
+import {
+  Footer,
+  Header,
+  PrintJobModal,
+  Select,
+  Wrapper,
+} from '../../components'
+import { withRouter } from '../../hoc'
+import {
+  PrintJob,
+  Sorting,
+  useGetAllCompaniesQuery,
+  useGetAllPrintJobsLazyQuery,
+} from '../../src/generated/graphql'
+import { handleError } from '../../utils'
+
 const Index = () => {
   const [page, setPage] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(false)
@@ -29,13 +34,14 @@ const Index = () => {
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>('')
   const [fetchPrintJobs] = useGetAllPrintJobsLazyQuery()
   const [allPrintJobs, setAllPrintJobs] = useState<PrintJob[]>([])
+  const [printJobModalOpen, setPrintJobModalOpen] = useState<boolean>(false)
 
   const handleChangeCompany = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedCompanyId(event.target.value)
       const companyId = allCompanies?.find(
         (item) => item.title === event.target.value
       )?._id
+      setSelectedCompanyId(companyId as string)
       if (!companyId) {
         return
       }
@@ -59,8 +65,6 @@ const Index = () => {
   )
   const newPrintDisabled = Boolean(selectedCompanyId === '')
 
-  console.log(allPrintJobs)
-
   return (
     <React.Fragment>
       <Header />
@@ -81,6 +85,7 @@ const Index = () => {
               focus:ring-indigo-500 ${
                 newPrintDisabled ? 'bg-gray-600' : 'bg-indigo-600'
               }`}
+              onClick={() => setPrintJobModalOpen(true)}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <PlusIcon
@@ -244,7 +249,13 @@ const Index = () => {
             </div>
           )}
         </div>
+        <PrintJobModal
+          open={printJobModalOpen}
+          setOpen={setPrintJobModalOpen}
+          companyId={selectedCompanyId}
+        />
       </Wrapper>
+
       <Footer />
     </React.Fragment>
   )

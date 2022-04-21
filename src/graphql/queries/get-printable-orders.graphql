@@ -1,4 +1,4 @@
-query GetPrintJobs($company_id: ID!) {
+query GetPrintableOrders($company_id: ID!) {
   getPrintableOrders(company_id: $company_id) {
     errors {
       field
