@@ -20,3 +20,4 @@ export { default as MonitoringOrderTable } from './OrderTables/MonitoringOrderTa
 export { default as RejectModal } from './RejectModal'
 export { default as UploadModelModal } from './uploadModelModal'
 export { default as StatusModal } from './StatusModal'
+export { default as PrintJobModal } from './PrintJobModal'
