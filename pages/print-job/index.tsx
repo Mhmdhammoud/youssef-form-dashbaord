@@ -5,6 +5,7 @@ import { Wrapper, Header, Footer } from '../../components'
 import { PaperClipIcon } from '@heroicons/react/solid'
 import { useGetPrintJobQuery } from '../../src/generated/graphql'
 import STLViewer from 'stl-viewer'
+import Link from 'next/link'
 
 const Index = () => {
   const router = useRouter()
@@ -75,30 +76,43 @@ const Index = () => {
                     role="list"
                     className="border border-gray-200 rounded-md divide-y divide-gray-200"
                   >
-                    <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                      <div className="w-0 flex-1 flex items-center">
-                        <span className="ml-2 flex-1 w-0 truncate">
-                          {printJob?.orders?.map((item, index) => {
-                            return (
-                              <div key={index}>
+                    {printJob?.orders?.map((item, index) => {
+                      return (
+                        <React.Fragment key={index}>
+                          <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                            <div className="w-0 flex-1 flex items-center">
+                              <span
+                                className="ml-2 flex-1 w-0 truncate"
+                                key={index}
+                              >
+                                <b>Color</b> :{' '}
                                 {
                                   item?.order?.product[item?.ear.toLowerCase()]
                                     .color
                                 }
-                              </div>
-                            )
-                          })}
-                        </span>
-                      </div>
-                      <div className="ml-4 flex-shrink-0">
-                        <a
-                          href="#"
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                          Download
-                        </a>
-                      </div>
-                    </li>
+                                <br />
+                                <b>Shell ID</b> :{' '}
+                                {
+                                  item?.order?.product[item?.ear.toLowerCase()]
+                                    .shellId
+                                }
+                              </span>
+                            </div>
+                            <div className="ml-4 flex-shrink-0">
+                              <Link
+                                href={`/order?id=${
+                                  item?.order?.orderId.split('_')[1]
+                                }`}
+                              >
+                                <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                                  View Order
+                                </a>
+                              </Link>
+                            </div>
+                          </li>
+                        </React.Fragment>
+                      )
+                    })}
                   </ul>
                 </dd>
               </div>
