@@ -1,17 +1,28 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment, useState } from 'react';
-import { Transition } from '@headlessui/react';
-import { CheckCircleIcon } from '@heroicons/react/outline';
-import { XIcon } from '@heroicons/react/solid';
+import React, { Fragment, useState } from 'react'
+import { Transition } from '@headlessui/react'
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/outline'
+import { XIcon } from '@heroicons/react/solid'
 
 interface IProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  open: boolean;
-  title: string;
-  message: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  title: string
+  message: string
+  variant?: 'success' | 'error' | 'info'
 }
 
-const Index: React.FC<IProps> = ({ setOpen, open, title, message }) => {
+const Index: React.FC<IProps> = ({
+  setOpen,
+  open,
+  title,
+  message,
+  variant = 'success',
+}) => {
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}
@@ -35,10 +46,22 @@ const Index: React.FC<IProps> = ({ setOpen, open, title, message }) => {
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <CheckCircleIcon
-                      className="h-6 w-6 text-green-400"
-                      aria-hidden="true"
-                    />
+                    {variant === 'success' ? (
+                      <CheckCircleIcon
+                        className="h-6 w-6 text-green-400"
+                        aria-hidden="true"
+                      />
+                    ) : variant === 'error' ? (
+                      <XCircleIcon
+                        className="h-6 w-6 text-red-400"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <InformationCircleIcon
+                        className="h-6 w-6 text-orange-400"
+                        aria-hidden="true"
+                      />
+                    )}
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
                     <p className="text-sm font-medium text-gray-900">{title}</p>
@@ -48,7 +71,7 @@ const Index: React.FC<IProps> = ({ setOpen, open, title, message }) => {
                     <button
                       className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       onClick={() => {
-                        setOpen(false);
+                        setOpen(false)
                       }}
                     >
                       <span className="sr-only">Close</span>
@@ -62,6 +85,6 @@ const Index: React.FC<IProps> = ({ setOpen, open, title, message }) => {
         </div>
       </div>
     </>
-  );
-};
-export default Index;
+  )
+}
+export default Index

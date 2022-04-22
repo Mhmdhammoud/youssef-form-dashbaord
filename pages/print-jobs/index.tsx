@@ -5,6 +5,7 @@ import React, { useCallback, useState } from 'react'
 import {
   Footer,
   Header,
+  Notification,
   PrintJobModal,
   Select,
   Wrapper,
@@ -32,9 +33,16 @@ const Index = () => {
 
   const allCompanies = data?.getAllCompanies?.companies
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>('')
-  const [fetchPrintJobs] = useGetAllPrintJobsLazyQuery()
+  const [fetchPrintJobs, { refetch }] = useGetAllPrintJobsLazyQuery({
+    notifyOnNetworkStatusChange: true,
+  })
   const [allPrintJobs, setAllPrintJobs] = useState<PrintJob[]>([])
   const [printJobModalOpen, setPrintJobModalOpen] = useState<boolean>(false)
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
+  const [notificationData, setNotificationData] = useState({
+    message: '',
+    title: '',
+  })
 
   const handleChangeCompany = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -48,8 +56,8 @@ const Index = () => {
       fetchPrintJobs({
         variables: {
           company_id: companyId,
-          page: 0,
-          limit: 999,
+          page: page,
+          limit: 10,
           sort: Sorting.Desc,
         },
       })
@@ -61,7 +69,27 @@ const Index = () => {
         })
         .catch(handleError)
     },
-    [allCompanies, fetchPrintJobs]
+    [allCompanies, fetchPrintJobs, page]
+  )
+  const refetchJobs = useCallback(
+    (innerPage: number) => {
+      fetchPrintJobs({
+        variables: {
+          company_id: selectedCompanyId,
+          page: innerPage,
+          limit: 10,
+          sort: Sorting.Desc,
+        },
+      })
+        .then(({ data }) => {
+          const printJobs = data?.getAllPrintJobs?.print_jobs
+          setAllPrintJobs(printJobs as PrintJob[])
+          setHasMore(data?.getAllPrintJobs?.hasMore ? true : false)
+          setLength(data?.getAllPrintJobs?.length as number)
+        })
+        .catch(handleError)
+    },
+    [fetchPrintJobs, selectedCompanyId]
   )
   const newPrintDisabled = Boolean(selectedCompanyId === '')
 
@@ -73,7 +101,10 @@ const Index = () => {
           <div className="flex items-center justify-evenly space-x-2">
             <Select
               options={allCompanies?.map((item) => item.title) || []}
-              value={selectedCompanyId}
+              value={
+                allCompanies?.find((item) => item._id === selectedCompanyId)
+                  ?.title
+              }
               onChange={handleChangeCompany}
               id="company-select"
             />
@@ -221,11 +252,12 @@ const Index = () => {
                 <div className="flex-1 flex justify-between sm:justify-end">
                   {page > 0 && (
                     <a
-                      onClick={() =>
+                      onClick={() => {
                         setPage((prevState) => {
                           return prevState - 1
                         })
-                      }
+                        refetchJobs(page - 1)
+                      }}
                       className="cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
                       Previous
@@ -234,11 +266,12 @@ const Index = () => {
 
                   {hasMore && (
                     <a
-                      onClick={() =>
+                      onClick={() => {
                         setPage((prevState) => {
                           return prevState + 1
                         })
-                      }
+                        refetchJobs(page + 1)
+                      }}
                       className="cursor-pointer ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
                       Next
@@ -253,6 +286,16 @@ const Index = () => {
           open={printJobModalOpen}
           setOpen={setPrintJobModalOpen}
           companyId={selectedCompanyId}
+          setNotificationOpen={setNotificationOpen}
+          setNotificationData={setNotificationData}
+          refetchJobs={refetchJobs}
+          page={page}
+        />
+        <Notification
+          open={notificationOpen}
+          setOpen={setNotificationOpen}
+          message={notificationData.message}
+          title={notificationData.title}
         />
       </Wrapper>
 
