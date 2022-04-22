@@ -10,6 +10,7 @@ import React, {
 } from 'react'
 import {
   Ear,
+  OrderDirection,
   useCreatePrintJobMutation,
   useGetPrintableOrdersLazyQuery,
 } from '../../src/generated/graphql'
@@ -67,54 +68,91 @@ const Index: React.FC<IProps> = ({
           let colors = {}
           if (orders) {
             orders.map((item) => {
-              const { product, _id, orderId, createdAt } = item
+              const { product, _id, orderId, createdAt, direction } = item
               const { left, right } = product
               if (item.material === 'fototec') {
-                if (!colors[left.color]) {
-                  colors = {
-                    ...colors,
-                    [left.color]: [{ ...left, _id, orderId, createdAt }],
+                if (direction === OrderDirection.Left) {
+                  if (!colors[left.color]) {
+                    colors = {
+                      ...colors,
+                      [left.color]: [
+                        { ...left, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors[left.color] = [
+                      ...colors[left.color],
+                      { ...left, _id, orderId, createdAt, direction },
+                    ]
+                  }
+                } else if (direction === OrderDirection.Right) {
+                  if (!colors[right.color]) {
+                    colors = {
+                      ...colors,
+                      [right.color]: [
+                        { ...right, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors[right.color] = [
+                      ...colors[right.color],
+                      { ...right, _id, orderId, createdAt },
+                    ]
                   }
                 } else {
-                  colors[left.color] = [
-                    ...colors[left.color],
-                    { ...left, _id, orderId, createdAt },
-                  ]
-                }
-                if (!colors[right.color]) {
-                  colors = {
-                    ...colors,
-                    [right.color]: [{ ...right, _id, orderId, createdAt }],
+                  if (!colors[left.color]) {
+                    colors = {
+                      ...colors,
+                      [left.color]: [
+                        { ...left, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors[left.color] = [
+                      ...colors[left.color],
+                      { ...left, _id, orderId, createdAt, direction },
+                    ]
                   }
-                } else {
-                  colors[right.color] = [
-                    ...colors[right.color],
-                    { ...right, _id, orderId, createdAt },
-                  ]
+                  if (!colors[right.color]) {
+                    colors = {
+                      ...colors,
+                      [right.color]: [
+                        { ...right, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors[right.color] = [
+                      ...colors[right.color],
+                      { ...right, _id, orderId, createdAt, direction },
+                    ]
+                  }
                 }
               } else {
                 const { left: castLeft, right: castRight } = product
-                if (colors['cast']) {
-                  colors = {
-                    ...colors,
-                    cast: [
-                      ...colors['cast'],
-                      { ...castLeft, _id, orderId, createdAt },
-                    ],
+                if (direction === OrderDirection.Left) {
+                  if (colors['cast']) {
+                    colors = {
+                      ...colors,
+                      cast: [
+                        ...colors['cast'],
+                        { ...castLeft, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
+                } else if (direction === OrderDirection.Right) {
                   colors = {
                     ...colors,
                     cast: [
                       ...colors['cast'],
-                      { ...castRight, _id, orderId, createdAt },
+                      { ...castRight, _id, orderId, createdAt, direction },
                     ],
                   }
                 } else {
                   colors = {
                     ...colors,
                     cast: [
-                      { ...castLeft, _id, orderId, createdAt },
-                      { ...castRight, _id, orderId, createdAt },
+                      { ...castLeft, _id, orderId, createdAt, direction },
+                      { ...castRight, _id, orderId, createdAt, direction },
                     ],
                   }
                 }
@@ -225,6 +263,8 @@ const Index: React.FC<IProps> = ({
   }, [])
 
   const disabledSubmit = Boolean(selectedOrders?.length === 0)
+
+  console.log('all colors', allColors)
 
   return (
     <Transition.Root show={open} as={Fragment}>
