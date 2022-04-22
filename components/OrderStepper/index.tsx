@@ -66,7 +66,7 @@ const Index: React.FC<IProps> = (props) => {
       id: 'Step 4',
       name: OrderStatus.Modeled,
       status: 'upcoming',
-      disabled: true,
+      disabled: false,
     },
     {
       id: 'Step 5',

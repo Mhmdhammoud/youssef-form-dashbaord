@@ -160,7 +160,7 @@ const Index: React.FC<IProps> = ({
       variables: {
         input: {
           company_id: companyId,
-          print_file: '',
+          print_file: stlFile,
           orders: selectedOrders?.map((item) => ({
             _id: item?._id,
             ear: item?.ear,
@@ -205,6 +205,7 @@ const Index: React.FC<IProps> = ({
     setNotificationData,
     setNotificationOpen,
     setOpen,
+    stlFile,
   ])
 
   const selectAllOrders = useCallback(() => {
