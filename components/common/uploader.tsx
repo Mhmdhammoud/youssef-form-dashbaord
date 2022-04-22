@@ -1,5 +1,5 @@
-import { CameraIcon } from '@heroicons/react/solid';
-import React, { useRef } from 'react';
+import { CameraIcon } from '@heroicons/react/solid'
+import React, { useRef } from 'react'
 
 type FileTypes =
   | 'document'
@@ -8,18 +8,18 @@ type FileTypes =
   | 'source'
   | 'video'
   | 'all'
-  | 'model';
+  | 'model'
 
 interface IProps {
-  text?: string;
-  disabled?: boolean;
-  id: string;
+  text?: string
+  disabled?: boolean
+  id: string
   //@ts-ignore
-  onChange: (event) => void;
-  classNames?: string;
-  accept: FileTypes;
-  hidden?: boolean;
-  variant?: 'button' | 'svg';
+  onChange: (event) => void
+  classNames?: string
+  accept: FileTypes
+  hidden?: boolean
+  variant?: 'button' | 'svg'
 }
 
 const UploadButtons: React.FC<IProps> = (props) => {
@@ -32,26 +32,26 @@ const UploadButtons: React.FC<IProps> = (props) => {
     accept,
     hidden,
     variant = 'button',
-  } = props;
+  } = props
   const returnAcceptType = () => {
     switch (accept) {
       case 'document':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/pdf';
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/pdf'
       case 'image':
-        return 'image/png,image/jpeg,image/webp';
+        return 'image/png,image/jpeg,image/webp'
       case 'presentation':
-        return 'application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf';
+        return 'application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf'
       case 'source':
-        return 'application/json,text/javascript,text/html,text/css';
+        return 'application/json,text/javascript,text/html,text/css'
       case 'video':
-        return 'video/mp4';
+        return 'video/mp4'
       case 'model':
-        return 'model/stl';
+        return 'model/stl'
       default:
-        return '*';
+        return '*'
     }
-  };
-  const uploadRef = useRef<HTMLInputElement>();
+  }
+  const uploadRef = useRef<HTMLInputElement>()
   if (variant === 'svg') {
     return (
       <div
@@ -94,12 +94,12 @@ const UploadButtons: React.FC<IProps> = (props) => {
                 ref={uploadRef}
               />
             </label>
-            <p className="pr-1">{text}</p>
+            <p className="pr-1 w-full text-center">{text}</p>
           </div>
           <p className="text-xs text-gray-500">PNG, JPG, GIF, STL up to 10MB</p>
         </div>
       </div>
-    );
+    )
   }
   return (
     <div>
@@ -125,7 +125,7 @@ const UploadButtons: React.FC<IProps> = (props) => {
         </button>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default UploadButtons;
+export default UploadButtons
