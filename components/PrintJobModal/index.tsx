@@ -19,6 +19,7 @@ import Select from '../common/Select'
 import { useUpload } from '../../hooks'
 import Uploader from '../common/uploader'
 import STLViewer from 'stl-viewer'
+import { AllPrinters } from '../../data'
 
 interface IProps {
   open: boolean
@@ -49,6 +50,7 @@ const Index: React.FC<IProps> = ({
   const [getPrintableOrders, {}] = useGetPrintableOrdersLazyQuery()
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [stlFile, setStlFile] = useState<string>('')
+  const [printer, setPrinter] = useState<string>('')
 
   const [selectedOrders, setSelectedOrders] = useState<any[]>([])
 
@@ -165,6 +167,13 @@ const Index: React.FC<IProps> = ({
     }
   }, [companyId, getPrintableOrders])
 
+  const handlePrinterChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setPrinter(event.target.value)
+    },
+    []
+  )
+
   const handleColorsChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       const { value } = event.target
@@ -199,6 +208,7 @@ const Index: React.FC<IProps> = ({
         input: {
           company_id: companyId,
           print_file: stlFile,
+          printer: printer,
           orders: selectedOrders?.map((item) => ({
             _id: item?._id,
             ear: item?.ear,
@@ -264,8 +274,6 @@ const Index: React.FC<IProps> = ({
 
   const disabledSubmit = Boolean(selectedOrders?.length === 0)
 
-  console.log('all colors', allColors)
-
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -307,11 +315,22 @@ const Index: React.FC<IProps> = ({
               <div className="grid grid-cols-6">
                 <div className="col-span-4">
                   <div>
+                    <h1 className="font-md text-sm mt-3">Color</h1>
                     <Select
                       id="order-select"
                       options={Object.keys(allColors)}
                       onChange={handleColorsChange}
                       value={selectedColor}
+                    />
+                  </div>
+                  <div>
+                    <h1 className="font-md text-sm mt-3">Printer Name</h1>
+                    <Select
+                      id="printer"
+                      options={AllPrinters}
+                      onChange={handlePrinterChange}
+                      value={printer}
+                      hasNoDefaultOption={false}
                     />
                   </div>
                   <div className="max-h-[60vh] overflow-y-auto p-3 mt-3">

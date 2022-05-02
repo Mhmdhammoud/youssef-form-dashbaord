@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { withRouter } from '../../hoc'
 import { Wrapper, Header, Footer } from '../../components'
-import { PaperClipIcon } from '@heroicons/react/solid'
+import { PaperClipIcon, DownloadIcon } from '@heroicons/react/solid'
 import { useGetPrintJobQuery } from '../../src/generated/graphql'
 import STLViewer from 'stl-viewer'
 import Link from 'next/link'
@@ -55,18 +55,33 @@ const Index = () => {
                 </dd>
               </div>
               <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Printer</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {printJob?.printer}
+                </dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">
                   Print File
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  <STLViewer
-                    url={printJob?.print_file}
-                    modelColor="rgb(115, 194, 251)"
-                    backgroundColor={'#fff'}
-                    rotate={true}
-                    orbitControls={true}
-                    model={printJob?.print_file}
-                  />
+                  <div className="relative">
+                    <a
+                      download={printJob?.print_file}
+                      href={printJob?.print_file}
+                      className="absolute top-0 right-0"
+                    >
+                      <DownloadIcon className=" h-5 w-5 text-gray-700" />
+                    </a>
+                    <STLViewer
+                      url={printJob?.print_file}
+                      modelColor="rgb(115, 194, 251)"
+                      backgroundColor={'#fff'}
+                      rotate={true}
+                      orbitControls={true}
+                      model={printJob?.print_file}
+                    />
+                  </div>
                 </dd>
               </div>
               <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
