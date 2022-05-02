@@ -1,10 +1,10 @@
-import React from 'react';
-import { MusicPlugs, NightColors } from '../../data';
-import { Order, OrderDirection } from '../../src/generated/graphql';
-import { NightMaterial } from '../../types';
+import React from 'react'
+import { MusicPlugs, NightColors } from '../../data'
+import { Order, OrderDirection } from '../../src/generated/graphql'
+import { NightMaterial } from '../../types'
 
 interface IProps {
-  order: Order;
+  order: Order
 }
 
 const SwimmingPlugsOrderTable: React.FC<IProps> = ({ order }) => {
@@ -43,6 +43,24 @@ const SwimmingPlugsOrderTable: React.FC<IProps> = ({ order }) => {
                 </tr>
               </thead>
               <tbody>
+                <tr className={'bg-white'}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    Ear Mold Serial Number
+                  </td>
+                  {(order?.direction === OrderDirection.Left ||
+                    order?.direction === OrderDirection.Binaural) && (
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {order?.product?.left?.ear_mould_sn}
+                    </td>
+                  )}
+
+                  {(order?.direction === OrderDirection.Right ||
+                    order?.direction === OrderDirection.Binaural) && (
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {order?.product?.right?.ear_mould_sn}
+                    </td>
+                  )}
+                </tr>
                 <tr className={'bg-white'}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     Shell ID
@@ -302,7 +320,7 @@ const SwimmingPlugsOrderTable: React.FC<IProps> = ({ order }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SwimmingPlugsOrderTable;
+export default SwimmingPlugsOrderTable

@@ -47,6 +47,7 @@ query GetOrder($orderId: ID!) {
         model
         engraving
         hasEngraving
+        ear_mould_sn
       }
       right {
         haModel
@@ -66,6 +67,7 @@ query GetOrder($orderId: ID!) {
         model
         engraving
         hasEngraving
+        ear_mould_sn
       }
     }
 
