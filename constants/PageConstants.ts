@@ -65,5 +65,9 @@ const PageConstants: IRoute[] = [
     route: '/print-jobs',
     isPrivate: true,
   },
+  {
+    route: '/print-job',
+    isPrivate: true,
+  },
 ]
 export default PageConstants
