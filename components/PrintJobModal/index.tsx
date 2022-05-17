@@ -247,13 +247,14 @@ const Index: React.FC<IProps> = ({
   }, [
     createPrintJob,
     companyId,
+    stlFile,
+    printer,
     selectedOrders,
     refetchJobs,
     page,
     setNotificationData,
     setNotificationOpen,
     setOpen,
-    stlFile,
   ])
 
   const selectAllOrders = useCallback(() => {
