@@ -1,6 +1,6 @@
-import type { NextPage } from 'next';
-import { Header, Footer, Wrapper } from '../components';
-import { useGetAllOrdersQuery, OrderStatus } from '../src/generated/graphql';
+import type { NextPage } from 'next'
+import { Header, Footer, Wrapper } from '../components'
+import { useGetAllOrdersQuery, OrderStatus } from '../src/generated/graphql'
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -12,9 +12,9 @@ import {
   Tooltip,
   ArcElement,
   BarElement,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import {withRouter} from "../hoc";
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+import { withRouter } from '../hoc'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,14 +25,14 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-);
+)
 const Home: NextPage = () => {
   const { data, loading, error } = useGetAllOrdersQuery({
     variables: {
       limit: 9999999,
       page: 0,
     },
-  });
+  })
   const labels = [
     'Checked',
     'Impression Evaluation',
@@ -43,44 +43,44 @@ const Home: NextPage = () => {
     'Printed',
     'Printing',
     'Shipped',
-  ];
+  ]
 
-  const allOrders = data?.getAllOrders?.orders;
+  const allOrders = data?.getAllOrders?.orders
 
   const CheckedOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Checked
-  ).length;
+  ).length
 
   const ImpressionEvaluationOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.ImpressionEvaluation
-  ).length;
+  ).length
 
   const ModeledOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Modeled
-  ).length;
+  ).length
 
   const ModellingOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Modelling
-  ).length;
+  ).length
 
   const MountingOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Mounted
-  ).length;
+  ).length
 
   const PlacedOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Placed
-  ).length;
+  ).length
 
   const PrintedOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Printed
-  ).length;
+  ).length
 
   const PrintingOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Printing
-  ).length;
+  ).length
   const ShippedOrders = allOrders?.filter(
     (item) => item?.status === OrderStatus.Shipped
-  ).length;
+  ).length
 
   const barData = {
     labels,
@@ -111,7 +111,7 @@ const Home: NextPage = () => {
         hoverOffset: 4,
       },
     ],
-  };
+  }
   const options = {
     responsive: true,
     plugins: {
@@ -124,7 +124,7 @@ const Home: NextPage = () => {
         text: 'Orders Per Status',
       },
     },
-  };
+  }
 
   return (
     <div>
@@ -145,7 +145,7 @@ const Home: NextPage = () => {
       </Wrapper>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default withRouter(Home);
+export default withRouter(Home)
