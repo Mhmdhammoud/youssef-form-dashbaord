@@ -42,6 +42,7 @@ const Index = () => {
   const [editMode, setEditMode] = useState<boolean>(false)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
   const [companyData, setCompanyData] = useState({
+    canDownload: false,
     contactPerson: {
       fullName: '',
       email: '',
@@ -187,6 +188,7 @@ const Index = () => {
         country: company?.country,
         postCode: company?.postCode,
         street: company?.street,
+        canDownload: company?.canDownload!,
         title: company?.title,
         manufacturers: company?.manufacturers,
         assigned: company.assigned
@@ -258,7 +260,23 @@ const Index = () => {
     },
     []
   )
+  const handleCanDownloadChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) {
+        setCompanyData((prevState) => ({
+          ...prevState,
 
+          canDownload: true,
+        }))
+      } else {
+        setCompanyData((prevState) => ({
+          ...prevState,
+          canDownload: false,
+        }))
+      }
+    },
+    []
+  )
   const handleSubmit = useCallback(() => {
     setNotificationOpen(true)
     submit({
@@ -345,6 +363,32 @@ const Index = () => {
                       onChange={handleContactPersonChange}
                       className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                     />
+                  </span>
+                )}
+              </dd>
+            </div>
+            <div className="flex items-center py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-gray-500">
+                Can Download
+              </dt>
+              <dd className="mt-1 flex items-center text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <span className="flex-grow">
+                  {company?.canDownload ? 'Yes' : 'No'}
+                </span>
+                {editMode && (
+                  <span className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="canDownload"
+                      id="canDownload"
+                      autoComplete="nope"
+                      checked={companyData?.canDownload}
+                      onChange={handleCanDownloadChange}
+                      className="rounded-sm"
+                    />
+                    <label htmlFor="canDownload" className="ml-2">
+                      Can Download
+                    </label>
                   </span>
                 )}
               </dd>
