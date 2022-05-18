@@ -26,6 +26,7 @@ const Index = () => {
         phoneNumber: '',
         fullName: '',
       },
+      canDownload: false,
       manufacturers: [],
       country: '',
       postCode: '',
@@ -93,6 +94,30 @@ const Index = () => {
     },
     []
   )
+
+  const handleCanDownloadChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) {
+        setCompany((prevState) => ({
+          ...prevState,
+          company: {
+            ...prevState.company,
+            canDownload: true,
+          },
+        }))
+      } else {
+        setCompany((prevState) => ({
+          ...prevState,
+          company: {
+            ...prevState.company,
+            canDownload: false,
+          },
+        }))
+      }
+    },
+    []
+  )
+
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault()
@@ -358,6 +383,29 @@ const Index = () => {
                             </div>
                           )
                         })}
+                      </div>
+                    </div>
+                    <div className="col-span-6 sm:col-span-6">
+                      <label
+                        htmlFor="street-address"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Download eligible
+                      </label>
+                      <div className="flex flex-wrap items-center">
+                        <div className="p-2 flex items-center">
+                          <input
+                            name={'canDownload'}
+                            className="rounded-sm"
+                            type={'checkbox'}
+                            id={'canDownload'}
+                            onChange={handleCanDownloadChange}
+                            defaultChecked={company?.company?.canDownload}
+                          />
+                          <label className="ml-2" htmlFor="canDownload">
+                            Can download modal file
+                          </label>
+                        </div>
                       </div>
                     </div>
                     <div className="col-span-6 sm:col-span-6">

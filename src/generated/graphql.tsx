@@ -138,6 +138,7 @@ export type Company = {
   __typename?: 'Company';
   _id: Scalars['String'];
   assigned: Array<Admin>;
+  canDownload?: Maybe<Scalars['Boolean']>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
   country: Scalars['String'];
@@ -160,6 +161,7 @@ export type CompanyWithEmployees = {
   __typename?: 'CompanyWithEmployees';
   _id: Scalars['String'];
   assigned?: Maybe<Array<Admin>>;
+  canDownload?: Maybe<Scalars['Boolean']>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
   country: Scalars['String'];
@@ -216,6 +218,7 @@ export type CreateCompanyAdminInput = {
 
 export type CreateCompanyInput = {
   assigned: Array<Scalars['ID']>;
+  canDownload: Scalars['Boolean'];
   contactPerson: CreateContactPersonInput;
   country: Scalars['String'];
   manufacturers: Array<Scalars['String']>;
