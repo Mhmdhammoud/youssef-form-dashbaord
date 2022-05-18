@@ -20,6 +20,7 @@ query GetAllCompanies($limit: Float!, $page: Float!, $sort: Sorting!) {
       postCode
       manufacturers
       country
+      canDownload
       assigned {
         _id
         fullName

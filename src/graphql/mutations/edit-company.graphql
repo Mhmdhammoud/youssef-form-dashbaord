@@ -4,6 +4,7 @@ mutation EditCompany($_id: ID!, $input: CreateCompanyInput!) {
       _id
       title
       companyId
+      canDownload
       contactPerson {
         fullName
         email
