@@ -520,6 +520,27 @@ const Index = () => {
             </div>
             <div className="border-t border-gray-200 px-4 py-5 print:py-0 sm:p-0 print:mt-[-10px] print:border-t-0">
               <dl className="sm:divide-y sm:divide-gray-200">
+                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
+                  <dt className="text-sm font-medium text-gray-900">
+                    <span className="print:hidden">Patient Name</span>
+                    <div className="hidden print:grid print:grid-cols-2">
+                      <div
+                        className={
+                          'text-sm font-medium text-gray-900 print:col-span-1'
+                        }
+                      >
+                        {' '}
+                        Patient Name :
+                      </div>
+                      <div className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1">
+                        {order?.patient_name}
+                      </div>
+                    </div>
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
+                    {order?.patient_name}
+                  </dd>
+                </div>
                 {order?.remake && (
                   <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
                     <dt className="text-sm font-medium text-gray-900">
