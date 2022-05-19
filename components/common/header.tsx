@@ -27,7 +27,6 @@ const Index = () => {
   ])
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
-    { name: 'All Users', href: 'all-users', current: false },
     { name: 'All Companies', href: 'all-companies', current: false },
     { name: 'All Orders', href: 'all-orders', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
