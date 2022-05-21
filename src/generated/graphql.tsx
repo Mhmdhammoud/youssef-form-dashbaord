@@ -134,6 +134,12 @@ export type BteEar = {
   ventSize: Scalars['String'];
 };
 
+export type ChangePasswordResponse = {
+  __typename?: 'ChangePasswordResponse';
+  errors: Array<FieldError>;
+  success?: Maybe<Scalars['Boolean']>;
+};
+
 export type Company = {
   __typename?: 'Company';
   _id: Scalars['String'];
@@ -343,6 +349,7 @@ export type Mutation = {
   assignTechnician: BasicResponse;
   /** Change order status */
   changeOrderStatus?: Maybe<OrderResponses>;
+  changePassword: ChangePasswordResponse;
   /** Create a new admin account with the given email and password. Returns the created admin deactivated. */
   createAdmin: AdminResponse;
   createCompany: SingleCompanyResponse;
@@ -370,6 +377,13 @@ export type MutationAssignTechnicianArgs = {
 export type MutationChangeOrderStatusArgs = {
   _id: Scalars['ID'];
   status: OrderStatus;
+};
+
+
+export type MutationChangePasswordArgs = {
+  new_password: Scalars['String'];
+  old_password: Scalars['String'];
+  user_id: Scalars['ID'];
 };
 
 
@@ -703,6 +717,15 @@ export type ChangeOrderStatusMutationVariables = Exact<{
 
 export type ChangeOrderStatusMutation = { __typename?: 'Mutation', changeOrderStatus?: { __typename?: 'OrderResponses', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, order?: { __typename?: 'Order', _id: string, material: string, bioporShore: string, createdAt: any, updatedAt: any, orderId: string, remake: boolean, orderType: OrderType, reason: string, status: OrderStatus, impressions: { __typename?: 'Impressions', left: string, right: string }, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model: string }, right: { __typename?: 'BteEar', haModel: string, serialNumber: string, style: string, canalLength: string, cymbaLength: string, ventSize: string, quantity: number, canal: string, soundTube: string, surface: string, color: string, shellId: string, manufacturer: string, markingDots: boolean, model: string } }, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, company: { __typename?: 'Company', _id: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }> } | null } | null };
 
+export type ChangePasswordMutationVariables = Exact<{
+  user_id: Scalars['ID'];
+  old_password: Scalars['String'];
+  new_password: Scalars['String'];
+}>;
+
+
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'ChangePasswordResponse', success?: boolean | null, errors: Array<{ __typename?: 'FieldError', field: string, message: string }> } };
+
 export type CreateAdminMutationVariables = Exact<{
   input: CreateAdminInput;
 }>;
@@ -988,6 +1011,49 @@ export function useChangeOrderStatusMutation(baseOptions?: Apollo.MutationHookOp
 export type ChangeOrderStatusMutationHookResult = ReturnType<typeof useChangeOrderStatusMutation>;
 export type ChangeOrderStatusMutationResult = Apollo.MutationResult<ChangeOrderStatusMutation>;
 export type ChangeOrderStatusMutationOptions = Apollo.BaseMutationOptions<ChangeOrderStatusMutation, ChangeOrderStatusMutationVariables>;
+export const ChangePasswordDocument = gql`
+    mutation ChangePassword($user_id: ID!, $old_password: String!, $new_password: String!) {
+  changePassword(
+    new_password: $new_password
+    old_password: $old_password
+    user_id: $user_id
+  ) {
+    errors {
+      field
+      message
+    }
+    success
+  }
+}
+    `;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      user_id: // value for 'user_id'
+ *      old_password: // value for 'old_password'
+ *      new_password: // value for 'new_password'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const CreateAdminDocument = gql`
     mutation CreateAdmin($input: CreateAdminInput!) {
   createAdmin(input: $input) {
