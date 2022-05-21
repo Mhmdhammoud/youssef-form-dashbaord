@@ -293,7 +293,7 @@ const Index = () => {
                 </span>
                 {loading ? (
                   <Wrapper
-                    classes="h-4 w-4 my-2"
+                    loadingClasses="h-4 w-4 my-2"
                     color="white"
                     loading
                     full={false}
