@@ -1,6 +1,6 @@
-import { Fragment, useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
 import { useDispatch } from 'react-redux'
 
@@ -27,7 +27,6 @@ const Index = () => {
   ])
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
-    { name: 'All Users', href: 'all-users', current: false },
     { name: 'All Companies', href: 'all-companies', current: false },
     { name: 'All Orders', href: 'all-orders', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
@@ -36,14 +35,18 @@ const Index = () => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const handleLogout = useCallback(() => {
-    const cookies = new Cookies()
-    cookies.remove('token')
-    cookies.remove('isAuthenticated')
-    cookies.set('isAuthenticated', false, { path: '/' })
-    dispatch(logout())
-    router.push('/sign-in')
-  }, [dispatch, router])
+  const handleLogout = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault()
+      const cookies = new Cookies()
+      cookies.remove('token')
+      cookies.remove('isAuthenticated')
+      cookies.set('isAuthenticated', false, { path: '/' })
+      dispatch(logout())
+      router.push('/sign-in')
+    },
+    [dispatch, router]
+  )
 
   // const handleClick = useCallback((item) => {
   //   setNavigation((prevState) => ({
@@ -119,22 +122,27 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <div
-                onClick={handleLogout}
-                className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 cursor-pointer"
-              >
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
                   className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 >
-                  <span>Logout</span>
+                  <span className="sr-only">View notifications</span>
+                  <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
 
                 {/* Profile dropdown */}
-                <Menu as="div" className="ml-3 relative">
+                <Menu as="div" className="ml-3 relative z-10">
                   <div>
                     <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open user menu</span>
+                      <Image
+                        className="h-8 w-8 rounded-full"
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                        width={32}
+                        height={32}
+                      />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -162,21 +170,23 @@ const Index = () => {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm text-gray-700'
-                            )}
-                          >
-                            Settings
-                          </a>
+                          <Link href="/change-password">
+                            <a
+                              className={classNames(
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700'
+                              )}
+                            >
+                              Change password
+                            </a>
+                          </Link>
                         )}
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#"
+                            onClick={handleLogout}
                             className={classNames(
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-700'
@@ -225,7 +235,7 @@ const Index = () => {
                       )}
                       aria-current={item.current ? 'page' : undefined}
                     >
-                      {item.name}
+                      {item.name}asd
                     </Disclosure.Button>
                   ))}
             </div>

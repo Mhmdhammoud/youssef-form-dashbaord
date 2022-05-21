@@ -7,10 +7,18 @@ interface IProps {
   classes?: string
   full?: boolean
   [x: string]: any
+  color?: 'white' | 'indigo'
 }
 
 const Wrapper: React.FC<IProps> = (props) => {
-  const { loading, children, classes, full = true, ...restProp } = props
+  const {
+    loading,
+    children,
+    classes,
+    full = true,
+    color = 'indigo',
+    ...restProp
+  } = props
   if (loading) {
     return (
       <div
@@ -19,7 +27,11 @@ const Wrapper: React.FC<IProps> = (props) => {
           full ? ' h-screen' : ''
         )}
       >
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 my-5" />
+        <div
+          className={`animate-spin rounded-full h-8 w-8 border-b-2 ${
+            color === 'indigo' ? 'border-indigo-500' : 'border-white'
+          } ${classes}  my-5`}
+        />
       </div>
     )
   }

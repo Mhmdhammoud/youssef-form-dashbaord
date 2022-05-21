@@ -25,6 +25,8 @@ const Index = () => {
   const hasMore = data?.getAllOrders?.hasMore
   const allOrders = data?.getAllOrders
   const me = meData?.me?.admin
+  console.log(allOrders?.orders)
+
   return (
     <React.Fragment>
       <Header />
