@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { SVGProps, useCallback, useEffect, useState } from 'react'
 import {
   AdminRole,
   OrderStatus,
@@ -10,9 +10,20 @@ import {
 import ConfirmationModal from '../ConfirmationModal'
 import ErrorToast from '../common/ErrorToast'
 import { ToUpperFirst } from '../../utils'
-import { XIcon } from '@heroicons/react/outline'
+import {
+  CheckCircleIcon,
+  CubeIcon,
+  CubeTransparentIcon,
+  EyeIcon,
+  PaperClipIcon,
+  PrinterIcon,
+  PuzzleIcon,
+  TruckIcon,
+  XIcon,
+} from '@heroicons/react/outline'
 import RejectModal from '../RejectModal'
 import Notification from '../common/Notification'
+import { CheckIcon } from '@heroicons/react/outline'
 interface IProps {
   orderStatus: OrderStatus
   order_id: string
@@ -24,6 +35,7 @@ interface IStep {
   name: OrderStatus
   disabled: boolean
   status: string
+  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element
 }
 
 const Index: React.FC<IProps> = (props) => {
@@ -49,54 +61,63 @@ const Index: React.FC<IProps> = (props) => {
       name: OrderStatus.Placed,
       status: 'current',
       disabled: false,
+      icon: CheckIcon,
     },
     {
       id: 'Step 2',
       name: OrderStatus.ImpressionEvaluation,
       status: 'upcoming',
       disabled: false,
+      icon: EyeIcon,
     },
     {
       id: 'Step 3',
       name: OrderStatus.Modelling,
       status: 'upcoming',
       disabled: false,
+      icon: CubeTransparentIcon,
     },
     {
       id: 'Step 4',
       name: OrderStatus.Modeled,
       status: 'upcoming',
       disabled: false,
+      icon: CubeIcon,
     },
     {
       id: 'Step 5',
       name: OrderStatus.Printing,
       status: 'upcoming',
       disabled: true,
+      icon: PrinterIcon,
     },
     {
       id: 'Step 6',
       name: OrderStatus.Printed,
       status: 'upcoming',
       disabled: true,
+      icon: PuzzleIcon,
     },
     {
       id: 'Step 7',
       name: OrderStatus.Mounted,
       status: 'upcoming',
       disabled: true,
+      icon: PaperClipIcon,
     },
     {
       id: 'Step 8',
       name: OrderStatus.Checked,
       status: 'upcoming',
       disabled: true,
+      icon: CheckCircleIcon,
     },
     {
       id: 'Step 9',
       name: OrderStatus.Shipped,
       status: 'upcoming',
       disabled: true,
+      icon: TruckIcon,
     },
   ])
 
@@ -420,8 +441,8 @@ const Index: React.FC<IProps> = (props) => {
                   <span className="text-xs text-indigo-600 font-semibold tracking-wide uppercase group-hover:text-indigo-800">
                     {step?.id}
                   </span>
-                  <span className="text-sm font-medium">
-                    {ToUpperFirst(step?.name)}
+                  <span className="text-sm font-medium flex items-center justify-between">
+                    {ToUpperFirst(step?.name)} <step.icon className="h-6 w-6" />
                   </span>
                 </a>
               ) : step.status === 'current' ? (
@@ -446,8 +467,9 @@ const Index: React.FC<IProps> = (props) => {
                           />
                         </div>
                       </span>
-                      <span className="text-sm font-medium">
-                        {ToUpperFirst(step?.name)}
+                      <span className="text-sm font-medium flex items-center justify-between">
+                        {ToUpperFirst(step?.name)}{' '}
+                        <step.icon className="h-6 w-6" />
                       </span>
                     </a>
                   </div>
@@ -460,8 +482,9 @@ const Index: React.FC<IProps> = (props) => {
                     <span className="text-xs text-indigo-600 font-semibold tracking-wide uppercase">
                       {step?.id}
                     </span>
-                    <span className="text-sm font-medium">
-                      {ToUpperFirst(step?.name)}
+                    <span className="text-sm font-medium flex items-center justify-between">
+                      {ToUpperFirst(step?.name)}{' '}
+                      <step.icon className="h-6 w-6" />
                     </span>
                   </a>
                 )
@@ -473,8 +496,8 @@ const Index: React.FC<IProps> = (props) => {
                   <span className="text-xs text-gray-500 font-semibold tracking-wide uppercase group-hover:text-gray-700">
                     {step?.id}
                   </span>
-                  <span className="text-sm font-medium">
-                    {ToUpperFirst(step?.name)}
+                  <span className="text-sm font-medium flex items-center justify-between">
+                    {ToUpperFirst(step?.name)} <step.icon className="h-6 w-6" />
                   </span>
                 </a>
               )}
