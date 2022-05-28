@@ -9,7 +9,7 @@ import moment from 'moment'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 //@ts-ignore
-import STLViewer from 'stl-viewer'
+import STLViewer from 'meritt-stl-viewer'
 import {
   BTEOrderTable,
   Footer,
@@ -368,8 +368,6 @@ const Index = () => {
       displayValue: false,
     })
   }, [id, order])
-
-  console.log(order)
 
   return (
     <React.Fragment>
