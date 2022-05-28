@@ -1,8 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useRef } from 'react'
+import { Fragment, useCallback, useRef } from 'react'
 import STLViewer from 'meritt-stl-viewer'
 import { useUpload } from '../../hooks'
-import { CreateOrderInput } from '../../src/generated/graphql'
+import { CreateOrderInput, OrderDirection } from '../../src/generated/graphql'
 import Uploader from '../common/uploader'
 import OrderLayout from '../Layout/OrderLayout'
 interface IProps {
@@ -24,6 +24,186 @@ const Index: React.FC<IProps> = ({
 }) => {
   const cancelButtonRef = useRef(null)
   const { handleUpload } = useUpload()
+
+  const handleRenderSides = useCallback(() => {
+    const isLeftDirectionOrBinaural = Boolean(
+      BTEOrder?.direction === OrderDirection?.Left ||
+        BTEOrder?.direction === OrderDirection.Binaural
+    )
+
+    const isRightDirectionOrBinaural = Boolean(
+      BTEOrder?.direction === OrderDirection?.Right ||
+        BTEOrder?.direction === OrderDirection.Binaural
+    )
+
+    return (
+      <OrderLayout title="Upload Modal" cols={2}>
+        <OrderLayout.Item className={'text-center'}>
+          {isLeftDirectionOrBinaural &&
+            (BTEOrder?.product?.left?.model === '' ? (
+              <Uploader
+                onChange={(e) =>
+                  //@ts-ignore
+                  handleUpload(e)
+                    .then((file) => {
+                      setModalFiles((prevState) => ({
+                        ...prevState,
+                        left: file!,
+                      }))
+                      setBTEOrder((prevState) => ({
+                        ...prevState,
+                        product: {
+                          ...prevState.product,
+                          left: {
+                            ...prevState.product.left,
+                            model: file!,
+                          },
+                        },
+                      }))
+                    })
+                    .catch((err) => {
+                      if (err.response) console.log(err.response.data)
+                      else console.log(err)
+                    })
+                }
+                id="left"
+                variant="svg"
+                accept="all"
+                text="Upload Left Modal File"
+              />
+            ) : (
+              <div className="relative">
+                <STLViewer
+                  url={BTEOrder?.product?.left?.model}
+                  modelColor="rgb(115, 194, 251)"
+                  backgroundColor={'#fff'}
+                  rotate={true}
+                  orbitControls={true}
+                  model={BTEOrder?.product?.left?.model}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 absolute cursor-pointer"
+                  style={{
+                    top: 0,
+                    right: 0,
+                  }}
+                  onClick={() => {
+                    setModalFiles((prevState) => ({
+                      ...prevState,
+                      left: '',
+                    })),
+                      setBTEOrder((prevState) => ({
+                        ...prevState,
+                        product: {
+                          ...prevState.product,
+                          left: {
+                            ...prevState.product.left,
+                            model: '',
+                          },
+                        },
+                      }))
+                  }}
+                  fill="white"
+                  viewBox="0 0 24 24"
+                  stroke="red"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            ))}
+        </OrderLayout.Item>
+        <OrderLayout.Item className={'text-center'}>
+          {isRightDirectionOrBinaural &&
+            (BTEOrder?.product?.right?.model === '' ? (
+              <Uploader
+                onChange={(e) =>
+                  //@ts-ignore
+                  handleUpload(e).then((file) => {
+                    setModalFiles((prevState) => ({
+                      ...prevState,
+                      right: file!,
+                    }))
+
+                    setBTEOrder((prevState) => ({
+                      ...prevState,
+                      product: {
+                        ...prevState.product,
+                        right: {
+                          ...prevState.product.right,
+                          model: file!,
+                        },
+                      },
+                    }))
+                  })
+                }
+                id="right"
+                variant="svg"
+                accept="all"
+                text="Upload right Modal File"
+              />
+            ) : (
+              <div className="relative">
+                <STLViewer
+                  url={BTEOrder?.product?.right?.model}
+                  modelColor="rgb(255, 0, 48)"
+                  backgroundColor={'#fff'}
+                  rotate={true}
+                  orbitControls={true}
+                  model={BTEOrder?.product?.right?.model}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 absolute cursor-pointer"
+                  style={{
+                    top: 0,
+                    right: 0,
+                  }}
+                  onClick={() => {
+                    setModalFiles((prevState) => ({
+                      ...prevState,
+                      right: '',
+                    })),
+                      setBTEOrder((prevState) => ({
+                        ...prevState,
+                        product: {
+                          ...prevState.product,
+                          right: {
+                            ...prevState.product.right,
+                            model: '',
+                          },
+                        },
+                      }))
+                  }}
+                  fill="white"
+                  viewBox="0 0 24 24"
+                  stroke="red"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            ))}
+        </OrderLayout.Item>
+      </OrderLayout>
+    )
+  }, [
+    BTEOrder?.direction,
+    BTEOrder?.product?.left?.model,
+    BTEOrder?.product?.right?.model,
+    handleUpload,
+    setBTEOrder,
+    setModalFiles,
+  ])
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -63,164 +243,7 @@ const Index: React.FC<IProps> = ({
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full sm:p-6">
-              <div>
-                <OrderLayout title="Upload Modal" cols={2}>
-                  <OrderLayout.Item className={'text-center'}>
-                    {BTEOrder?.product?.left?.model === '' ? (
-                      <Uploader
-                        onChange={(e) =>
-                          //@ts-ignore
-                          handleUpload(e)
-                            .then((file) => {
-                              setModalFiles((prevState) => ({
-                                ...prevState,
-                                left: file!,
-                              }))
-                              setBTEOrder((prevState) => ({
-                                ...prevState,
-                                product: {
-                                  ...prevState.product,
-                                  left: {
-                                    ...prevState.product.left,
-                                    model: file!,
-                                  },
-                                },
-                              }))
-                            })
-                            .catch((err) => {
-                              if (err.response) console.log(err.response.data)
-                              else console.log(err)
-                            })
-                        }
-                        id="left"
-                        variant="svg"
-                        accept="all"
-                        text="Upload Left Modal File"
-                      />
-                    ) : (
-                      <div className="relative">
-                        <STLViewer
-                          url={BTEOrder?.product?.left?.model}
-                          modelColor="rgb(115, 194, 251)"
-                          backgroundColor={'#fff'}
-                          rotate={true}
-                          orbitControls={true}
-                          model={BTEOrder?.product?.left?.model}
-                        />
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-8 w-8 absolute cursor-pointer"
-                          style={{
-                            top: 0,
-                            right: 0,
-                          }}
-                          onClick={() => {
-                            setModalFiles((prevState) => ({
-                              ...prevState,
-                              left: '',
-                            })),
-                              setBTEOrder((prevState) => ({
-                                ...prevState,
-                                product: {
-                                  ...prevState.product,
-                                  left: {
-                                    ...prevState.product.left,
-                                    model: '',
-                                  },
-                                },
-                              }))
-                          }}
-                          fill="white"
-                          viewBox="0 0 24 24"
-                          stroke="red"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1}
-                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </OrderLayout.Item>
-                  <OrderLayout.Item className={'text-center'}>
-                    {BTEOrder?.product?.right?.model === '' ? (
-                      <Uploader
-                        onChange={(e) =>
-                          //@ts-ignore
-                          handleUpload(e).then((file) => {
-                            setModalFiles((prevState) => ({
-                              ...prevState,
-                              right: file!,
-                            }))
-
-                            setBTEOrder((prevState) => ({
-                              ...prevState,
-                              product: {
-                                ...prevState.product,
-                                right: {
-                                  ...prevState.product.right,
-                                  model: file!,
-                                },
-                              },
-                            }))
-                          })
-                        }
-                        id="right"
-                        variant="svg"
-                        accept="all"
-                        text="Upload right Modal File"
-                      />
-                    ) : (
-                      <div className="relative">
-                        <STLViewer
-                          url={BTEOrder?.product?.right?.model}
-                          modelColor="rgb(255, 0, 48)"
-                          backgroundColor={'#fff'}
-                          rotate={true}
-                          orbitControls={true}
-                          model={BTEOrder?.product?.right?.model}
-                        />
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-8 w-8 absolute cursor-pointer"
-                          style={{
-                            top: 0,
-                            right: 0,
-                          }}
-                          onClick={() => {
-                            setModalFiles((prevState) => ({
-                              ...prevState,
-                              right: '',
-                            })),
-                              setBTEOrder((prevState) => ({
-                                ...prevState,
-                                product: {
-                                  ...prevState.product,
-                                  right: {
-                                    ...prevState.product.right,
-                                    model: '',
-                                  },
-                                },
-                              }))
-                          }}
-                          fill="white"
-                          viewBox="0 0 24 24"
-                          stroke="red"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1}
-                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </OrderLayout.Item>
-                </OrderLayout>
-              </div>
+              <div>{handleRenderSides()}</div>
               <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                 <button
                   type="button"

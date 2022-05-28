@@ -61,26 +61,69 @@ const Index = () => {
                 </dd>
               </div>
               <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">
-                  Print File
-                </dt>
+                <dt className="text-sm font-medium text-gray-500">Print STL</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   <div className="relative">
                     <a
-                      download={printJob?.print_file}
-                      href={printJob?.print_file}
+                      download={printJob?.print_stl}
+                      href={printJob?.print_stl as string}
                       className="absolute top-0 right-0"
                     >
                       <DownloadIcon className=" h-5 w-5 text-gray-700" />
                     </a>
                     <STLViewer
-                      url={printJob?.print_file}
+                      url={printJob?.print_stl}
                       modelColor="rgb(115, 194, 251)"
                       backgroundColor={'#fff'}
                       rotate={true}
                       orbitControls={true}
-                      model={printJob?.print_file}
+                      model={printJob?.print_stl}
                     />
+                  </div>
+                </dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">
+                  Print Image
+                </dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <div className="relative">
+                    {printJob?.print_image && printJob?.print_image !== '' && (
+                      <a
+                        download={printJob?.print_image}
+                        href={printJob?.print_image as string}
+                        className="absolute top-0 right-0"
+                      >
+                        <DownloadIcon className=" h-5 w-5 text-gray-700" />
+                      </a>
+                    )}
+                    <img
+                      src={printJob?.print_image as string}
+                      alt={`print Image ${print_id}`}
+                      width={'200px'}
+                      height={'200px'}
+                    />
+                  </div>
+                </dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">
+                  Print File
+                </dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <div className="relative">
+                    {printJob?.print_file && printJob?.print_file !== '' && (
+                      <div className="flex items-center justify-between  ">
+                        <span>{printJob?.print_file}</span>
+                        <a
+                          download={printJob?.print_file}
+                          href={printJob?.print_file as string}
+                          className="absolute top-0 right-0"
+                        >
+                          <DownloadIcon className=" h-5 w-5 text-gray-700 cursor-pointer" />
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </dd>
               </div>

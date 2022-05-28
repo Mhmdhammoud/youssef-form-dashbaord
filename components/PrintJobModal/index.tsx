@@ -20,6 +20,7 @@ import { useUpload } from '../../hooks'
 import Uploader from '../common/uploader'
 import STLViewer from 'meritt-stl-viewer'
 import { AllPrinters } from '../../data'
+import { XIcon } from '@heroicons/react/solid'
 
 interface IProps {
   open: boolean
@@ -50,6 +51,8 @@ const Index: React.FC<IProps> = ({
   const [getPrintableOrders, {}] = useGetPrintableOrdersLazyQuery()
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [stlFile, setStlFile] = useState<string>('')
+  const [printFile, setPrintFile] = useState<string>('')
+  const [printImage, setPrintImage] = useState<string>('')
   const [printer, setPrinter] = useState<string>('')
 
   const [selectedOrders, setSelectedOrders] = useState<any[]>([])
@@ -207,7 +210,9 @@ const Index: React.FC<IProps> = ({
       variables: {
         input: {
           company_id: companyId,
-          print_file: stlFile,
+          print_stl: stlFile,
+          print_image: printImage,
+          print_file: printFile,
           printer: printer,
           orders: selectedOrders?.map((item) => ({
             _id: item?._id,
@@ -248,6 +253,8 @@ const Index: React.FC<IProps> = ({
     createPrintJob,
     companyId,
     stlFile,
+    printImage,
+    printFile,
     printer,
     selectedOrders,
     refetchJobs,
@@ -312,7 +319,7 @@ const Index: React.FC<IProps> = ({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full sm:p-6">
+            <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full sm:p-6">
               <div className="grid grid-cols-6">
                 <div className="col-span-4">
                   <div>
@@ -393,7 +400,7 @@ const Index: React.FC<IProps> = ({
                   </div>
                 </div>
 
-                <div className="col-span-2 text-center space-y-3 flex flex-col justify-between ml-4">
+                <div className="col-span-2 text-center space-y-3 flex flex-col justify-between ml-4 p-4">
                   <div className="flex flex-col space-y-3 ">
                     {stlFile === '' ? (
                       <Uploader
@@ -409,14 +416,82 @@ const Index: React.FC<IProps> = ({
                         text="Upload STL"
                       />
                     ) : (
-                      <STLViewer
-                        url={stlFile}
-                        modelColor="rgb(115, 194, 251)"
-                        backgroundColor={'#fff'}
-                        rotate={true}
-                        orbitControls={true}
-                        model={stlFile}
+                      <div className="relative">
+                        <div className="absolute top-0 right-0">
+                          <XIcon
+                            className="h-6 w-6 text-red-500 cursor-pointer"
+                            onClick={() => setStlFile('')}
+                          />
+                        </div>
+                        <STLViewer
+                          url={stlFile}
+                          modelColor="rgb(115, 194, 251)"
+                          backgroundColor={'#fff'}
+                          rotate={true}
+                          orbitControls={true}
+                          model={stlFile}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col space-y-3">
+                    {printImage === '' ? (
+                      <Uploader
+                        variant="svg"
+                        id="uploader"
+                        accept="all"
+                        onChange={(e) =>
+                          //@ts-ignore
+                          handleUpload(e).then((file) => {
+                            setPrintImage(file!)
+                          })
+                        }
+                        text="Print Image"
                       />
+                    ) : (
+                      <div className="flex items-center justify-center space-x-2  rounded-md py-2">
+                        <a
+                          href={printImage}
+                          target="download"
+                          className="text-center text-grey-500 font-medium text-lg"
+                        >
+                          Print image
+                        </a>
+                        <XIcon
+                          className="h-6 w-6 text-red-500 cursor-pointer"
+                          onClick={() => setPrintImage('')}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col space-y-3 ">
+                    {printFile === '' ? (
+                      <Uploader
+                        variant="svg"
+                        id="uploader"
+                        accept="all"
+                        onChange={(e) =>
+                          //@ts-ignore
+                          handleUpload(e).then((file) => {
+                            setPrintFile(file!)
+                          })
+                        }
+                        text="Print File"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center space-x-2  rounded-md py-2">
+                        <a
+                          href={printFile}
+                          target="download"
+                          className="text-center text-grey-500 font-medium text-lg"
+                        >
+                          Print file
+                        </a>
+                        <XIcon
+                          className="h-6 w-6 text-red-500 cursor-pointer"
+                          onClick={() => setPrintFile('')}
+                        />
+                      </div>
                     )}
                   </div>
                   <div className="flex flex-col space-y-3">
