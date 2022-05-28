@@ -10,6 +10,8 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 //@ts-ignore
 import STLViewer from 'meritt-stl-viewer'
+import Barcode from 'react-jsbarcode'
+
 import {
   BTEOrderTable,
   Footer,
@@ -135,6 +137,15 @@ const Index = () => {
 
   const [rejectionReason, setRejectionReason] = useState<string>('')
   const [rejectionType, setRejectionType] = useState<string>('')
+
+  const options = {
+    format: 'code128',
+    fontSize: 12,
+    lineColor: '#000',
+    width: 1.5,
+    height: 40,
+    displayValue: false,
+  }
 
   const [submitRejection, { data: rejectionDataResponse }] =
     useRejectOrderMutation({
@@ -358,17 +369,6 @@ const Index = () => {
     }
   }, [id, order])
 
-  useEffect(() => {
-    JsBarcode('#barcode', order?.orderId?.split('order_')[1]!, {
-      format: 'code128',
-      fontSize: 12,
-      lineColor: '#000',
-      width: 1.5,
-      height: 40,
-      displayValue: false,
-    })
-  }, [id, order])
-
   return (
     <React.Fragment>
       <Header />
@@ -421,9 +421,9 @@ const Index = () => {
                         {order?.creator?.fullName}
                       </span>
                     </div>
-                    <svg
-                      id={'barcode'}
-                      style={{ maxWidth: '250px' }}
+                    <Barcode
+                      value={order?.orderId?.split('order_')[1]!}
+                      options={options}
                       className="print:hidden"
                     />
                   </div>
@@ -447,9 +447,9 @@ const Index = () => {
                       Created At:{' '}
                       {moment(order?.createdAt).format('DD-MM-YYYY HH:MM')}
                     </p>
-                    <svg
-                      id={'barcode'}
-                      style={{ maxWidth: '250px' }}
+                    <Barcode
+                      value={order?.orderId?.split('order_')[1]!}
+                      options={options}
                       className="hidden print:block"
                     />
                   </div>
