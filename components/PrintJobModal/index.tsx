@@ -18,7 +18,7 @@ import { handleError } from '../../utils'
 import Select from '../common/Select'
 import { useUpload } from '../../hooks'
 import Uploader from '../common/uploader'
-import STLViewer from 'stl-viewer'
+import STLViewer from 'meritt-stl-viewer'
 import { AllPrinters } from '../../data'
 
 interface IProps {

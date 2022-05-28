@@ -4,7 +4,7 @@ import { withRouter } from '../../hoc'
 import { Wrapper, Header, Footer } from '../../components'
 import { PaperClipIcon, DownloadIcon } from '@heroicons/react/solid'
 import { useGetPrintJobQuery } from '../../src/generated/graphql'
-import STLViewer from 'stl-viewer'
+import STLViewer from 'meritt-stl-viewer'
 import Link from 'next/link'
 
 const Index = () => {

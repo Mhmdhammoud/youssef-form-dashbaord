@@ -14,9 +14,7 @@ const Index = () => {
   const [page, setPage] = useState<number>(0)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
 
-  const { data: meData, loading: meLoading } = useMeQuery()
-
-  const { data, refetch, loading, error } = useGetAllOrdersQuery({
+  const { data, loading } = useGetAllOrdersQuery({
     variables: {
       limit: 10,
       page: page,
@@ -24,14 +22,11 @@ const Index = () => {
   })
   const hasMore = data?.getAllOrders?.hasMore
   const allOrders = data?.getAllOrders
-  const me = meData?.me?.admin
-  console.log(allOrders?.orders)
-
   return (
     <React.Fragment>
       <Header />
       <Wrapper loading={loading}>
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-7xl">
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-[1600px]">
           <div
             className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 "
             style={{
