@@ -111,6 +111,8 @@ query GetPrintJob($print_id: ID!) {
         ear
       }
       print_file
+      print_stl
+      print_image
       printer
       createdAt
       updatedAt
