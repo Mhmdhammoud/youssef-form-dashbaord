@@ -47,6 +47,7 @@ import {
   useUpdateOrderMutation,
 } from '../../src/generated/graphql'
 import { ToUpperFirst } from '../../utils'
+import { UploadIcon } from '@heroicons/react/outline'
 
 const Index = () => {
   const router = useRouter()
@@ -475,7 +476,7 @@ const Index = () => {
                         onClick={() => setStickerModalOpen(true)}
                         className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                       >
-                        Download Summary
+                        Summary
                         <DownloadIcon className="ml-2 h-4 w-4" />
                       </button>
                       {(order?.status === OrderStatus?.Placed ||
@@ -487,7 +488,8 @@ const Index = () => {
                             onClick={() => setUploadModalOpen(true)}
                             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                           >
-                            Upload Model
+                            Model
+                            <UploadIcon className="ml-2 h-4 w-4" />
                           </button>
                         </div>
                       )}
