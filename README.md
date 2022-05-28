@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+`[![Deploy](https://github.com/Mhmdhammoud/youssef-form-dashbaord/actions/workflows/deploy.yml/badge.svg)](https://github.com/Mhmdhammoud/youssef-form-dashbaord/actions/workflows/deploy.yml)`
+
+```
+
+```
+
 First, run the development server:
 
 ```bash
