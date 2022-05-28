@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 //@ts-ignore
-import STLViewer from 'stl-viewer'
+import STLViewer from 'meritt-stl-viewer'
 import {
   ConfirmationModal,
   Footer,

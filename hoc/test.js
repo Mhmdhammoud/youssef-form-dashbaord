@@ -6,5 +6,3 @@ String.prototype.toUpperFirst = function () {
     .split('_')
     .join(' ')
 }
-
-console.log('what'.toUpperFirst())

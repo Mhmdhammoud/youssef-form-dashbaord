@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useRef } from 'react'
-import STLViewer from 'stl-viewer'
+import STLViewer from 'meritt-stl-viewer'
 import { useUpload } from '../../hooks'
 import { CreateOrderInput } from '../../src/generated/graphql'
 import Uploader from '../common/uploader'
@@ -76,8 +76,6 @@ const Index: React.FC<IProps> = ({
                                 ...prevState,
                                 left: file!,
                               }))
-
-                              console.log({ file })
                               setBTEOrder((prevState) => ({
                                 ...prevState,
                                 product: {
