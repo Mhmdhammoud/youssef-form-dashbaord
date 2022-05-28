@@ -29,6 +29,7 @@ import {
   UploadModelModal,
   StatusModal,
   Wrapper,
+  OrderStickerModal,
 } from '../../components'
 import { AllImages, CordColors } from '../../data'
 import { withRouter } from '../../hoc'
@@ -51,7 +52,7 @@ const Index = () => {
   const router = useRouter()
   const { id } = router.query
   const [logModalOpen, setLogModalOpen] = useState<boolean>(false)
-  const [editOrderOpen, setEditOrderOpen] = useState<boolean>(false)
+  const [stickerModalOpen, setStickerModalOpen] = useState<boolean>(false)
   const [rejectModalOpen, setRejectModalOpen] = useState<boolean>(false)
   const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false)
   const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false)
@@ -455,10 +456,10 @@ const Index = () => {
                   </div>
 
                   {order?.logs && order?.logs.length > 0 && (
-                    <div className="flex justify-end mt-3 print:hidden">
+                    <div className="flex justify-end mt-3 space-x-3 print:hidden">
                       <button
                         onClick={() => window.print()}
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700 mx-3"
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                       >
                         Print
                         <PrinterIcon className="ml-2 h-4 w-4" />
@@ -470,6 +471,13 @@ const Index = () => {
                         Logs
                         <InformationCircleIcon className="ml-2 h-4 w-4" />
                       </button>
+                      <button
+                        onClick={() => setStickerModalOpen(true)}
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                      >
+                        Download Summary
+                        <DownloadIcon className="ml-2 h-4 w-4" />
+                      </button>
                       {(order?.status === OrderStatus?.Placed ||
                         order?.status === OrderStatus?.ImpressionEvaluation ||
                         order?.status === OrderStatus?.Modelling ||
@@ -477,7 +485,7 @@ const Index = () => {
                         <div className="flex flex-wrap">
                           <button
                             onClick={() => setUploadModalOpen(true)}
-                            className="inline-flex items-center ml-4 px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-white-700"
                           >
                             Upload Model
                           </button>
@@ -1015,6 +1023,12 @@ const Index = () => {
             setOpen={setLogModalOpen}
           />
         )}
+        <OrderStickerModal
+          open={stickerModalOpen}
+          setOpen={setStickerModalOpen}
+          order={order as Order}
+          id={id}
+        />
       </Wrapper>
       <Footer />
     </React.Fragment>
