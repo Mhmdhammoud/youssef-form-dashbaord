@@ -17,7 +17,6 @@ const Index = () => {
     },
   })
   const printJob = data?.getPrintJob?.print_job
-  console.log(printJob)
   return (
     <React.Fragment>
       <Header />
@@ -114,7 +113,7 @@ const Index = () => {
                   <div className="relative">
                     {printJob?.print_file && printJob?.print_file !== '' && (
                       <div className="flex items-center justify-between  ">
-                        <span>{printJob?.print_file}</span>
+                        <span>{printJob?.print_file.split('assets/')[1]}</span>
                         <a
                           download={printJob?.print_file}
                           href={printJob?.print_file as string}
