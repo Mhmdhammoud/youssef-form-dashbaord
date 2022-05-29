@@ -74,8 +74,6 @@ const Index: React.FC<IProps> = ({
           let colors = {}
           if (orders) {
             orders.map((item, index) => {
-              console.log({ index })
-
               const { product, _id, orderId, createdAt, direction } = item
               const { left, right } = product
               if (item.material === 'fototec') {
@@ -219,6 +217,18 @@ const Index: React.FC<IProps> = ({
   )
 
   const handleSubmit = useCallback(() => {
+    console.log({
+      company_id: companyId,
+      print_stl: stlFile,
+      print_image: printImage,
+      print_file: printFile,
+      printer: printer,
+      orders: selectedOrders?.map((item) => ({
+        _id: item?._id,
+        ear: item?.ear,
+      })),
+    })
+
     createPrintJob({
       variables: {
         input: {
