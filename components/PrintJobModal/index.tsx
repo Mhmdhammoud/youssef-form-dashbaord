@@ -70,9 +70,12 @@ const Index: React.FC<IProps> = ({
       })
         .then((res) => {
           const orders = res?.data?.getPrintableOrders?.orders
+
           let colors = {}
           if (orders) {
-            orders.map((item) => {
+            orders.map((item, index) => {
+              console.log({ index })
+
               const { product, _id, orderId, createdAt, direction } = item
               const { left, right } = product
               if (item.material === 'fototec') {
@@ -145,12 +148,21 @@ const Index: React.FC<IProps> = ({
                     }
                   }
                 } else if (direction === OrderDirection.Right) {
-                  colors = {
-                    ...colors,
-                    cast: [
-                      ...colors['cast'],
-                      { ...castRight, _id, orderId, createdAt, direction },
-                    ],
+                  if (colors['cast']) {
+                    colors = {
+                      ...colors,
+                      cast: [
+                        ...colors['cast'],
+                        { ...castRight, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors = {
+                      ...colors,
+                      cast: [
+                        { ...castRight, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
                 } else {
                   colors = {
@@ -164,6 +176,7 @@ const Index: React.FC<IProps> = ({
               }
             })
           }
+
           setAllColors(colors)
         })
         .catch(handleError)
