@@ -30,6 +30,7 @@ import {
   StatusModal,
   Wrapper,
   OrderStickerModal,
+  ConfirmationModal,
 } from '../../components'
 import { AllImages, CordColors } from '../../data'
 import { withRouter } from '../../hoc'
@@ -46,8 +47,8 @@ import {
   UserRole,
   useUpdateOrderMutation,
 } from '../../src/generated/graphql'
-import { ToUpperFirst } from '../../utils'
-import { UploadIcon } from '@heroicons/react/outline'
+import { handleError, ToUpperFirst } from '../../utils'
+import { UploadIcon, XIcon } from '@heroicons/react/outline'
 
 const Index = () => {
   const router = useRouter()
@@ -283,6 +284,40 @@ const Index = () => {
     left: '',
     right: '',
   })
+  const [confirmCancelOrder, setConfirmCancelOrder] = useState<boolean>(false)
+  const handleCancelOrder = useCallback(() => {
+    submitOrderStatus({
+      variables: {
+        _id: order?._id!,
+        status: OrderStatus.Canceled,
+      },
+    })
+      .then((res) => {
+        if (
+          res.data?.changeOrderStatus?.errors &&
+          res.data?.changeOrderStatus?.errors.length > 0
+        ) {
+          setNotificationToast({
+            message: 'Something went wrong',
+            title: 'Error',
+          })
+          setNotificationOpen(true)
+        }
+        refetch()
+        setConfirmCancelOrder(false)
+        setNotificationToast({
+          message: 'Order has been canceled successfully',
+          title: 'Success',
+        })
+        setNotificationOpen(true)
+      })
+      .catch(handleError)
+      .finally(() => {
+        setTimeout(() => {
+          setNotificationOpen(false)
+        }, 3000)
+      })
+  }, [order, refetch, submitOrderStatus])
 
   useEffect(() => {
     setBTEOrder({
@@ -378,11 +413,13 @@ const Index = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-6xl">
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6 print:portrait:py-2">
-              <OrderStepper
-                orderStatus={order?.status!}
-                order_id={order?._id as string}
-                refetch={refetch}
-              />
+              {order?.status !== OrderStatus.Canceled && (
+                <OrderStepper
+                  orderStatus={order?.status!}
+                  order_id={order?._id as string}
+                  refetch={refetch}
+                />
+              )}
               <div className="grid gap-6 grid-cols-2 p-2 print:grid-cols-3">
                 <div className="col-span-1 rounded-lg pb-2 print:col-span-2">
                   <p className="text-lg leading-6 font-medium text-gray-900">
@@ -437,13 +474,14 @@ const Index = () => {
                       alignItems: 'flex-end',
                     }}
                   >
-                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800">
-                      {order?.status.length !== undefined &&
-                        order?.status.charAt(0).toUpperCase() +
-                          order?.status
-                            .slice(1)
-                            .toLocaleLowerCase()
-                            .replace(/_/g, ' ')}
+                    <span
+                      className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        order?.status === OrderStatus.Canceled
+                          ? 'bg-red-200 text-red-800'
+                          : 'bg-green-200 text-green-800'
+                      }`}
+                    >
+                      {order?.status.toUpperCase()}
                     </span>
                     <p className="mt-1 text-sm text-gray-500">
                       Created At:{' '}
@@ -490,6 +528,17 @@ const Index = () => {
                           >
                             Model
                             <UploadIcon className="ml-2 h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                      {order?.status === OrderStatus?.Placed && (
+                        <div className="flex flex-wrap">
+                          <button
+                            onClick={() => setConfirmCancelOrder(true)}
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                          >
+                            Cancel
+                            <XIcon className="ml-2 h-4 w-4" />
                           </button>
                         </div>
                       )}
@@ -1001,6 +1050,15 @@ const Index = () => {
           rejectionType={rejectionType}
           setRejectionType={setRejectionType}
           orderStatus={order?.status!}
+        />
+        <ConfirmationModal
+          open={confirmCancelOrder}
+          setOpen={setConfirmCancelOrder}
+          action={handleCancelOrder}
+          buttonText="Confirm"
+          text="Are you sure you want to cancel the order?"
+          variant="Warning"
+          title="Cancel order"
         />
         <UploadModelModal
           BTEOrder={BTEOrder}
