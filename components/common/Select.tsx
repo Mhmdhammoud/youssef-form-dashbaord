@@ -58,7 +58,7 @@ const Select: React.FC<IProps> = ({
               optionBackgrounds?.find((item) => item?.label === option).color,
           }}
         >
-          {option}
+          {option.toUpperFirst()}
         </option>
       ))}
     </select>
