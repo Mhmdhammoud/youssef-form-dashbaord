@@ -523,6 +523,7 @@ export type OrderResponses = {
 };
 
 export enum OrderStatus {
+  Canceled = 'CANCELED',
   Checked = 'CHECKED',
   ImpressionEvaluation = 'IMPRESSION_EVALUATION',
   Modeled = 'MODELED',
