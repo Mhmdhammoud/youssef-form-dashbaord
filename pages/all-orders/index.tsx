@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { Footer, Header, Notification, Wrapper } from '../../components'
 import {
   Order,
+  OrderStatus,
   OrderType,
   Sorting,
   useGetAllCompaniesQuery,
@@ -291,12 +292,14 @@ const Index = () => {
                             {order?.orderId?.split('order_')[1]!}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800">
-                              {order?.status.charAt(0).toUpperCase() +
-                                order?.status
-                                  .slice(1)
-                                  .toLocaleLowerCase()
-                                  .replace(/_/g, ' ')}
+                            <span
+                              className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                order?.status === OrderStatus.Canceled
+                                  ? 'bg-red-200 text-red-800'
+                                  : 'bg-green-200 text-green-800'
+                              }`}
+                            >
+                              {order?.status.toUpperFirst()}
                             </span>
                           </td>
 
