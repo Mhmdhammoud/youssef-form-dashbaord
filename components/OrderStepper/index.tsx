@@ -1,17 +1,6 @@
-import React, { SVGProps, useCallback, useEffect, useState } from 'react'
-import {
-  AdminRole,
-  OrderStatus,
-  useChangeOrderStatusMutation,
-  useMeQuery,
-  useRejectOrderMutation,
-  UserRole,
-} from '../../src/generated/graphql'
-import ConfirmationModal from '../ConfirmationModal'
-import ErrorToast from '../common/ErrorToast'
-import { ToUpperFirst } from '../../utils'
 import {
   CheckCircleIcon,
+  CheckIcon,
   CubeIcon,
   CubeTransparentIcon,
   EyeIcon,
@@ -21,9 +10,19 @@ import {
   TruckIcon,
   XIcon,
 } from '@heroicons/react/outline'
-import RejectModal from '../RejectModal'
+import React, { useCallback, useEffect, useState } from 'react'
+import {
+  AdminRole,
+  OrderStatus,
+  useChangeOrderStatusMutation,
+  useMeQuery,
+  useRejectOrderMutation,
+} from '../../src/generated/graphql'
+import { ToUpperFirst } from '../../utils'
+import ErrorToast from '../common/ErrorToast'
 import Notification from '../common/Notification'
-import { CheckIcon } from '@heroicons/react/outline'
+import ConfirmationModal from '../ConfirmationModal'
+import RejectModal from '../RejectModal'
 interface IProps {
   orderStatus: OrderStatus
   order_id: string
