@@ -85,6 +85,7 @@ const Index: React.FC<IProps> = ({
                         setRejectionType(event.target.value)
                       }
                       value={rejectionType}
+                      hasNoDefaultOption
                     />
                   </OrderLayout.Item>
 
@@ -96,6 +97,7 @@ const Index: React.FC<IProps> = ({
                         onChange={handleRejectionReason}
                         options={AllRejectionReasons?.impression}
                         value={rejectionReason}
+                        hasNoDefaultOption={true}
                       />
                     ) : (
                       <Select
@@ -104,6 +106,7 @@ const Index: React.FC<IProps> = ({
                         onChange={handleRejectionReason}
                         options={AllRejectionReasons?.modeling}
                         value={rejectionReason}
+                        hasNoDefaultOption={true}
                       />
                     )}
                   </OrderLayout.Item>
