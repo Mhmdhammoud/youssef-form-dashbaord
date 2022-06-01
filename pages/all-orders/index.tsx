@@ -9,7 +9,6 @@ import {
   useGetAllCompaniesQuery,
   useGetAllOrdersLazyQuery,
 } from '../../src/generated/graphql'
-
 import moment from 'moment'
 import toUpperFirst from '../../utils/ToUpperFirst'
 import { withRouter } from '../../hoc'
@@ -20,11 +19,21 @@ const Index = () => {
   const refScanner = useRef()
   const router = useRouter()
   const [value, setValue] = useState()
-  const [page, setPage] = useState<number>(0)
+  const [newPage, setNewPage] = useState<number>(0)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
   const [hasMore, setHasMore] = useState<boolean>(false)
   const [allOrders, setAllOrders] = useState<Order[]>([])
   const [selectedCompany, setSelectedCompany] = useState<string>('All')
+  const { page } = router.query
+  console.log(page)
+
+  useEffect(() => {
+    setNewPage(Number(page))
+
+    return () => {
+      setNewPage(Number(page))
+    }
+  }, [page])
 
   const [fetchOrders, { data, loading, refetch }] = useGetAllOrdersLazyQuery({})
   // const hasMore = data?.getAllOrders?.hasMore
@@ -33,7 +42,7 @@ const Index = () => {
     fetchOrders({
       variables: {
         limit: 10,
-        page: page,
+        page: newPage,
       },
     })
       .then(({ data }) => {
@@ -43,12 +52,12 @@ const Index = () => {
         setAllOrders(!allOrdersHolder ? [] : (allOrdersHolder as Order[]))
       })
       .catch(handleError)
-  }, [fetchOrders, page])
+  }, [fetchOrders, newPage])
 
   useEffect(() => {
     fetchOrdersHelper()
     return () => fetchOrdersHelper()
-  }, [fetchOrders, fetchOrdersHelper, page])
+  }, [fetchOrders, fetchOrdersHelper, newPage])
 
   const { data: AllCompaniesData } = useGetAllCompaniesQuery({
     variables: {
@@ -366,12 +375,10 @@ const Index = () => {
                   </p>
                 </div>
                 <div className="flex-1 flex justify-between sm:justify-end">
-                  {page > 0 && (
+                  {newPage > 0 && (
                     <a
                       onClick={() =>
-                        setPage((prevState) => {
-                          return prevState - 1
-                        })
+                        router.push(`/all-orders?page=${newPage - 1}`)
                       }
                       className="cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
@@ -382,9 +389,7 @@ const Index = () => {
                   {hasMore && (
                     <a
                       onClick={() =>
-                        setPage((prevState) => {
-                          return prevState + 1
-                        })
+                        router.push(`/all-orders?page=${newPage + 1}`)
                       }
                       className="cursor-pointer ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
