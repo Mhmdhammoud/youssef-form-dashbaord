@@ -39,7 +39,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
-    "sharp": "^0.30.0",
+    "sharp": "^0.30.5",
     "stl-viewer": "^0.12.0",
     "styled-components": "^5.3.3",
     "universal-cookie": "^4.0.4"
