@@ -12,6 +12,7 @@ export { default as SwimmingPlugsStyles } from './SwimmingPlugsStyles'
 export { default as MusicPlugs } from './musicPlugs'
 export { default as NightPlugs, NightColors } from './nightPlugs'
 export { default as AllPrinters } from './printers'
+export { default as industrialPlugsStyles } from './industrialPlugs'
 export {
   default as MonitoringPlugsColors,
   monitoringStyles as MonitoringStyles,
