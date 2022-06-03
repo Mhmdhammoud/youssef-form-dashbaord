@@ -1,5 +1,5 @@
 import React from 'react'
-import { MusicPlugs } from '../../data'
+import { industrialPlugsStyles, MusicPlugs } from '../../data'
 import { Order, OrderDirection } from '../../src/generated/graphql'
 
 interface IProps {
@@ -179,18 +179,22 @@ const IndustrialPlugsOrderTable: React.FC<IProps> = ({ order }) => {
                         <span
                           style={{
                             backgroundColor:
-                              MusicPlugs?.find(
-                                (item) => item.title === order.manufacturer
-                              )?.colors.find(
-                                (item) =>
-                                  item.label === order?.product.left.color
-                              ) &&
-                              MusicPlugs.find(
-                                (item) => item.title === order.manufacturer
-                              )?.colors.find(
-                                (item) =>
-                                  item.label === order?.product.left?.color
-                              )?.color,
+                              industrialPlugsStyles
+                                .find(
+                                  (item) => item.title === order.manufacturer
+                                )
+                                ?.colors.find(
+                                  (item) =>
+                                    item.label === order?.product.left.color
+                                ) &&
+                              industrialPlugsStyles
+                                .find(
+                                  (item) => item.title === order.manufacturer
+                                )
+                                ?.colors.find(
+                                  (item) =>
+                                    item.label === order?.product.left?.color
+                                )?.color,
                           }}
                           className={
                             'ml-4 p-1 w-6 h-6 rounded-full block border-[2px] border-black'
@@ -208,18 +212,22 @@ const IndustrialPlugsOrderTable: React.FC<IProps> = ({ order }) => {
                         <span
                           style={{
                             backgroundColor:
-                              MusicPlugs?.find(
-                                (item) => item.title === order.manufacturer
-                              )?.colors.find(
-                                (item) =>
-                                  item.label === order?.product.right.color
-                              ) &&
-                              MusicPlugs.find(
-                                (item) => item.title === order.manufacturer
-                              )?.colors.find(
-                                (item) =>
-                                  item.label === order?.product.right?.color
-                              )?.color,
+                              industrialPlugsStyles
+                                .find(
+                                  (item) => item.title === order.manufacturer
+                                )
+                                ?.colors.find(
+                                  (item) =>
+                                    item.label === order?.product.right.color
+                                ) &&
+                              industrialPlugsStyles
+                                .find(
+                                  (item) => item.title === order.manufacturer
+                                )
+                                ?.colors.find(
+                                  (item) =>
+                                    item.label === order?.product.right?.color
+                                )?.color,
                           }}
                           className={
                             'ml-4 p-1 w-6 h-6 rounded-full block border-[2px] border-black'
