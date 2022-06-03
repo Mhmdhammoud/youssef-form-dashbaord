@@ -134,7 +134,7 @@ const SwimmingPlugsOrderTable: React.FC<IProps> = ({ order }) => {
                     </td>
                   )}
                 </tr>
-                <tr className={'bg-white'}>
+                {/* <tr className={'bg-white'}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     Serial Number
                   </td>
@@ -150,7 +150,7 @@ const SwimmingPlugsOrderTable: React.FC<IProps> = ({ order }) => {
                       {order?.product?.right?.serialNumber}
                     </td>
                   )}
-                </tr>
+                </tr> */}
                 <tr className={'bg-white'}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     Style
