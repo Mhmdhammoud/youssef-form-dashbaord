@@ -2,13 +2,15 @@ import React, { Fragment, useCallback, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Link from 'next/link'
 import { logout } from '../../actions'
 import { useRouter } from 'next/router'
 import Cookies from 'universal-cookie'
 import { AdminRole, useMeQuery, UserRole } from '../../src/generated/graphql'
+import { AppState } from '../../reducers'
+import moment from 'moment'
 
 //@ts-ignore
 function classNames(...classes) {
@@ -16,11 +18,20 @@ function classNames(...classes) {
 }
 
 const Index = () => {
+  const { lastLogin } = useSelector((state: AppState) => state.auth)
+
+  let formattedFutureTime = moment(lastLogin).add(1, 'hour')
+
+  let nextLogoutTime = moment
+    .duration(formattedFutureTime.diff(moment()))
+    .asMinutes()
+    .toFixed(0)
+
   const [navigation, setNavigation] = useState([
     { name: 'Dashboard', href: '/', current: true },
     { name: 'All Users', href: 'all-users', current: false },
     { name: 'All Companies', href: 'all-companies', current: false },
-    { name: 'All Orders', href: 'all-orders?page=0', current: false },
+    { name: 'All Orders', href: 'all-orders?page=1', current: false },
     { name: 'All Admins', href: 'all-admins', current: false },
     { name: 'Create Admin', href: 'create-admin', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
@@ -28,7 +39,7 @@ const Index = () => {
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
     { name: 'All Companies', href: 'all-companies', current: false },
-    { name: 'All Orders', href: 'all-orders?page=0', current: false },
+    { name: 'All Orders', href: 'all-orders?page=1', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
   ])
 
@@ -127,8 +138,7 @@ const Index = () => {
                   type="button"
                   className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <span className="text-white">Logout in {nextLogoutTime}</span>
                 </button>
 
                 {/* Profile dropdown */}
