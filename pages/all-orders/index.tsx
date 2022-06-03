@@ -13,7 +13,11 @@ import moment from 'moment'
 import toUpperFirst from '../../utils/ToUpperFirst'
 import { withRouter } from '../../hoc'
 import { handleError } from '../../utils'
-import { TrashIcon } from '@heroicons/react/outline'
+import {
+  ArrowNarrowLeftIcon,
+  ArrowNarrowRightIcon,
+  TrashIcon,
+} from '@heroicons/react/outline'
 
 const Index = () => {
   const refScanner = useRef()
@@ -25,7 +29,28 @@ const Index = () => {
   const [allOrders, setAllOrders] = useState<Order[]>([])
   const [selectedCompany, setSelectedCompany] = useState<string>('All')
   const { page } = router.query
-  console.log(page)
+  const [selectedOrderType, setSelectedOrderType] = useState<string>('All')
+  const [pageNumbers, setPageNumbers] = useState<number[]>([])
+  const [productsPerPage, setProductsPerPage] = useState(10)
+  const [filteredProducts, setFilteredProducts] = useState<Order[]>([])
+
+  const indexOfLastProduct = newPage * productsPerPage
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
+
+  useEffect(() => {
+    setFilteredProducts(
+      allOrders?.slice(indexOfFirstProduct, indexOfLastProduct)!
+    )
+    const pageNumbers: number[] = []
+    for (
+      let i: number = 1;
+      i <= Math.ceil(allOrders?.length! / productsPerPage);
+      i++
+    ) {
+      pageNumbers.push(i)
+    }
+    setPageNumbers(pageNumbers)
+  }, [allOrders, indexOfFirstProduct, indexOfLastProduct, productsPerPage])
 
   useEffect(() => {
     setNewPage(Number(page))
@@ -36,13 +61,12 @@ const Index = () => {
   }, [page])
 
   const [fetchOrders, { data, loading, refetch }] = useGetAllOrdersLazyQuery({})
-  // const hasMore = data?.getAllOrders?.hasMore
-  // const allOrders = data?.getAllOrders
+
   const fetchOrdersHelper = useCallback(() => {
     fetchOrders({
       variables: {
-        limit: 10,
-        page: newPage,
+        limit: 999999,
+        page: 0,
       },
     })
       .then(({ data }) => {
@@ -52,7 +76,7 @@ const Index = () => {
         setAllOrders(!allOrdersHolder ? [] : (allOrdersHolder as Order[]))
       })
       .catch(handleError)
-  }, [fetchOrders, newPage])
+  }, [fetchOrders])
 
   useEffect(() => {
     fetchOrdersHelper()
@@ -67,6 +91,7 @@ const Index = () => {
     },
   })
   const allCompanies = AllCompaniesData?.getAllCompanies.companies
+
   const handleFilterOrders = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedCompany(event.target.value)
@@ -92,6 +117,7 @@ const Index = () => {
                     (item) => item?.company?._id === event.target.value
                   ) as Order[])
             )
+            console.log(allOrdersHolder)
           })
           .catch(handleError)
       }
@@ -100,6 +126,7 @@ const Index = () => {
   )
   const handleFilterOrdersType = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedOrderType(event.target.value)
       if (event.target.value === 'All') {
         refetch()
           .then(({ data }) => {
@@ -123,11 +150,14 @@ const Index = () => {
             const hasMoreHolder = data?.getAllOrders?.hasMore
             setHasMore(!hasMoreHolder ? false : true)
             const allOrdersHolder = data?.getAllOrders.orders
+            console.log('handleFilterOrdersType', allOrdersHolder)
             setAllOrders(
               !allOrdersHolder
                 ? []
                 : selectedCompany === 'All'
-                ? (allOrdersHolder as Order[])
+                ? (allOrdersHolder.filter(
+                    (item) => item?.orderType === OrderType[event.target.value]
+                  ) as Order[])
                 : (allOrdersHolder.filter(
                     (item) =>
                       item?.orderType === OrderType[event.target.value] &&
@@ -143,6 +173,8 @@ const Index = () => {
 
   const handleClearOption = useCallback(() => {
     setSelectedCompany('All')
+    setSelectedOrderType('All')
+
     fetchOrdersHelper()
   }, [fetchOrdersHelper])
 
@@ -190,6 +222,7 @@ const Index = () => {
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                   defaultValue="All"
                   onChange={handleFilterOrdersType}
+                  value={selectedOrderType}
                 >
                   <option value="All">All</option>
                   {Object.keys(OrderType).map((item) => {
@@ -295,7 +328,7 @@ const Index = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {allOrders?.map((order, index) => (
+                      {filteredProducts?.map((order, index) => (
                         <tr key={index}>
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
                             {order?.orderId?.split('order_')[1]!}
@@ -362,42 +395,62 @@ const Index = () => {
                 </div>
               </Wrapper>
 
-              <nav
-                className="bg-white py-3 flex items-center justify-between border-t border-gray-200"
-                aria-label="Pagination"
-              >
-                <div className="hidden sm:block">
-                  <p className="text-sm text-gray-700">
-                    Showing{' '}
-                    <span className="font-medium">{allOrders?.length}</span> of{' '}
-                    <span className="font-medium">{allOrders?.length}</span>{' '}
-                    results
-                  </p>
-                </div>
-                <div className="flex-1 flex justify-between sm:justify-end">
-                  {newPage > 0 && (
-                    <a
-                      onClick={() =>
-                        router.push(`/all-orders?page=${newPage - 1}`)
-                      }
-                      className="cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                  )}
-
-                  {hasMore && (
-                    <a
-                      onClick={() =>
-                        router.push(`/all-orders?page=${newPage + 1}`)
-                      }
-                      className="cursor-pointer ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  )}
-                </div>
-              </nav>
+              {filteredProducts && filteredProducts?.length > 0 && (
+                <nav className="border-t border-gray-200 px-4 flex items-center justify-between sm:px-0 mt-12">
+                  <div className="-mt-px w-0 flex-1 flex">
+                    {parseInt(page as string) > 1 && (
+                      <button
+                        onClick={() =>
+                          router.push(`/all-orders?page=${newPage - 1}`)
+                        }
+                        className="border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-indigo-500 hover:text-indigo-700 hover:border-indigo-300 cursor-pointer"
+                      >
+                        <ArrowNarrowLeftIcon
+                          className="mr-3 h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                        Previous
+                      </button>
+                    )}
+                  </div>
+                  <div className="hidden md:-mt-px md:flex">
+                    {pageNumbers.map((page, index) => {
+                      return (
+                        <a
+                          role="button"
+                          key={index}
+                          className={
+                            newPage === index + 1
+                              ? 'border-transparent text-indigo-500 hover:text-indigo-700 hover:border-indigo-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium cursor-pointer'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium cursor-pointer'
+                          }
+                          onClick={() =>
+                            router.push(`/all-orders?page=${index + 1}`)
+                          }
+                        >
+                          {index + 1}
+                        </a>
+                      )
+                    })}
+                  </div>
+                  <div className="-mt-px w-0 flex-1 flex justify-end">
+                    {parseInt(page as string) < pageNumbers.length && (
+                      <button
+                        onClick={() =>
+                          router.push(`/all-orders?page=${newPage + 1}`)
+                        }
+                        className="border-t-2 border-transparent pt-4 pl-1 inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:border-indigo-500 cursor-pointer"
+                      >
+                        Next
+                        <ArrowNarrowRightIcon
+                          className="ml-3 h-5 w-5 text-indigo-500"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    )}
+                  </div>
+                </nav>
+              )}
             </div>
           </div>
         </div>
