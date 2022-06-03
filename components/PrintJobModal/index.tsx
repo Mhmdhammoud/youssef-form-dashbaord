@@ -136,28 +136,28 @@ const Index: React.FC<IProps> = ({
               } else {
                 const { left: castLeft, right: castRight } = product
                 if (direction === OrderDirection.Left) {
-                  if (colors['cast']) {
+                  if (colors['21 Clear']) {
                     colors = {
                       ...colors,
-                      cast: [
-                        ...colors['cast'],
+                      '21 Clear': [
+                        ...colors['21 Clear'],
                         { ...castLeft, _id, orderId, createdAt, direction },
                       ],
                     }
                   }
                 } else if (direction === OrderDirection.Right) {
-                  if (colors['cast']) {
+                  if (colors['21 Clear']) {
                     colors = {
                       ...colors,
-                      cast: [
-                        ...colors['cast'],
+                      '21 Clear': [
+                        ...colors['21 Clear'],
                         { ...castRight, _id, orderId, createdAt, direction },
                       ],
                     }
                   } else {
                     colors = {
                       ...colors,
-                      cast: [
+                      '21 Clear': [
                         { ...castRight, _id, orderId, createdAt, direction },
                       ],
                     }
@@ -165,7 +165,7 @@ const Index: React.FC<IProps> = ({
                 } else {
                   colors = {
                     ...colors,
-                    cast: [
+                    '21 Clear': [
                       { ...castLeft, _id, orderId, createdAt, direction },
                       { ...castRight, _id, orderId, createdAt, direction },
                     ],
