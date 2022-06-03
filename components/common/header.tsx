@@ -20,7 +20,7 @@ const Index = () => {
     { name: 'Dashboard', href: '/', current: true },
     { name: 'All Users', href: 'all-users', current: false },
     { name: 'All Companies', href: 'all-companies', current: false },
-    { name: 'All Orders', href: 'all-orders?page=0', current: false },
+    { name: 'All Orders', href: 'all-orders?page=1', current: false },
     { name: 'All Admins', href: 'all-admins', current: false },
     { name: 'Create Admin', href: 'create-admin', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
@@ -28,7 +28,7 @@ const Index = () => {
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
     { name: 'All Companies', href: 'all-companies', current: false },
-    { name: 'All Orders', href: 'all-orders?page=0', current: false },
+    { name: 'All Orders', href: 'all-orders?page=1', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
   ])
 
