@@ -889,7 +889,7 @@ export type GetPrintableOrdersQueryVariables = Exact<{
 }>;
 
 
-export type GetPrintableOrdersQuery = { __typename?: 'Query', getPrintableOrders: { __typename?: 'AllOrdersResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
+export type GetPrintableOrdersQuery = { __typename?: 'Query', getPrintableOrders: { __typename?: 'AllOrdersResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean, model: string }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean, model: string } } }> | null } };
 
 export type GetSingleAdminQueryVariables = Exact<{
   adminId: Scalars['ID'];
@@ -2603,6 +2603,7 @@ export const GetPrintableOrdersDocument = gql`
           soundTube
           canal
           markingDots
+          model
         }
         right {
           haModel
@@ -2619,6 +2620,7 @@ export const GetPrintableOrdersDocument = gql`
           soundTube
           canal
           markingDots
+          model
         }
       }
       orderType
