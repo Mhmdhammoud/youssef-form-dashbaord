@@ -43,6 +43,7 @@ query GetPrintableOrders($company_id: ID!) {
           soundTube
           canal
           markingDots
+          model
         }
         right {
           haModel
@@ -59,6 +60,7 @@ query GetPrintableOrders($company_id: ID!) {
           soundTube
           canal
           markingDots
+          model
         }
       }
 

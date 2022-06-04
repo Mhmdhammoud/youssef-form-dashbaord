@@ -21,6 +21,7 @@ import Uploader from '../common/uploader'
 import STLViewer from 'meritt-stl-viewer'
 import { AllPrinters } from '../../data'
 import { XIcon } from '@heroicons/react/solid'
+import { DownloadIcon } from '@heroicons/react/outline'
 
 interface IProps {
   open: boolean
@@ -246,18 +247,6 @@ const Index: React.FC<IProps> = ({
   )
 
   const handleSubmit = useCallback(() => {
-    console.log({
-      company_id: companyId,
-      print_stl: stlFile,
-      print_image: printImage,
-      print_file: printFile,
-      printer: printer,
-      orders: selectedOrders?.map((item) => ({
-        _id: item?._id,
-        ear: item?.ear,
-      })),
-    })
-
     createPrintJob({
       variables: {
         input: {
@@ -430,6 +419,12 @@ const Index: React.FC<IProps> = ({
                                 </p>
                               </div>
                               <div className="ml-3 flex items-center h-5">
+                                <a
+                                  href={item.model}
+                                  className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white hover:bg-white-700"
+                                >
+                                  <DownloadIcon className="ml-2 h-4 w-4 text-black" />
+                                </a>
                                 <input
                                   id={`order-${index}`}
                                   aria-describedby="comments-description"
@@ -548,7 +543,6 @@ const Index: React.FC<IProps> = ({
                   </div>
                   <div className="flex flex-col space-y-3">
                     <div>
-                      {' '}
                       <button
                         type="button"
                         className=" items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-[100px] text-center"
