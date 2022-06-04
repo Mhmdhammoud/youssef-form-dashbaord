@@ -73,7 +73,7 @@ const Index: React.FC<IProps> = ({
 
           let colors = {}
           if (orders) {
-            orders.map((item, index) => {
+            orders.map((item) => {
               const { product, _id, orderId, createdAt, direction } = item
               const { left, right } = product
               if (item.material === 'fototec') {
@@ -86,10 +86,13 @@ const Index: React.FC<IProps> = ({
                       ],
                     }
                   } else {
-                    colors[left.color] = [
-                      ...colors[left.color],
-                      { ...left, _id, orderId, createdAt, direction },
-                    ]
+                    colors = {
+                      ...colors,
+                      [left.color]: [
+                        ...colors[left.color],
+                        { ...left, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
                 } else if (direction === OrderDirection.Right) {
                   if (!colors[right.color]) {
@@ -100,10 +103,13 @@ const Index: React.FC<IProps> = ({
                       ],
                     }
                   } else {
-                    colors[right.color] = [
-                      ...colors[right.color],
-                      { ...right, _id, orderId, createdAt },
-                    ]
+                    colors = {
+                      ...colors,
+                      [right.color]: [
+                        ...colors[right.color],
+                        { ...right, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
                 } else {
                   if (!colors[left.color]) {
@@ -114,10 +120,13 @@ const Index: React.FC<IProps> = ({
                       ],
                     }
                   } else {
-                    colors[left.color] = [
-                      ...colors[left.color],
-                      { ...left, _id, orderId, createdAt, direction },
-                    ]
+                    colors = {
+                      ...colors,
+                      [left.color]: [
+                        ...colors[left.color],
+                        { ...left, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
                   if (!colors[right.color]) {
                     colors = {
@@ -127,10 +136,13 @@ const Index: React.FC<IProps> = ({
                       ],
                     }
                   } else {
-                    colors[right.color] = [
-                      ...colors[right.color],
-                      { ...right, _id, orderId, createdAt, direction },
-                    ]
+                    colors = {
+                      ...colors,
+                      [right.color]: [
+                        ...colors[right.color],
+                        { ...right, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
                 }
               } else {
@@ -141,6 +153,13 @@ const Index: React.FC<IProps> = ({
                       ...colors,
                       '21 Clear': [
                         ...colors['21 Clear'],
+                        { ...castLeft, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors = {
+                      ...colors,
+                      '21 Clear': [
                         { ...castLeft, _id, orderId, createdAt, direction },
                       ],
                     }
@@ -163,18 +182,28 @@ const Index: React.FC<IProps> = ({
                     }
                   }
                 } else {
-                  colors = {
-                    ...colors,
-                    '21 Clear': [
-                      { ...castLeft, _id, orderId, createdAt, direction },
-                      { ...castRight, _id, orderId, createdAt, direction },
-                    ],
+                  if (colors['21 Clear']) {
+                    colors = {
+                      ...colors,
+                      '21 Clear': [
+                        ...colors['21 Clear'],
+                        { ...castLeft, _id, orderId, createdAt, direction },
+                        { ...castRight, _id, orderId, createdAt, direction },
+                      ],
+                    }
+                  } else {
+                    colors = {
+                      ...colors,
+                      '21 Clear': [
+                        { ...castLeft, _id, orderId, createdAt, direction },
+                        { ...castRight, _id, orderId, createdAt, direction },
+                      ],
+                    }
                   }
                 }
               }
             })
           }
-
           setAllColors(colors)
         })
         .catch(handleError)
