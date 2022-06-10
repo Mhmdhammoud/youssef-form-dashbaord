@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React, { useContext, useEffect } from 'react'
 import { Wrapper, Footer, Header } from '../../components'
 import { NotificationsContext } from '../../context'
+import { withRouter } from '../../hoc'
 import notificationsService from '../../services/store.service'
 const Index = () => {
   const { notifications, loading } = useContext(NotificationsContext)
@@ -119,4 +120,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default withRouter(Index)
