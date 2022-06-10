@@ -34,4 +34,4 @@ jobs:
             sudo git pull origin master
             sudo yarn
             sudo yarn build
-            sudo pm2 restart ${{secrets.PM2PROCESS}}
+            sudo pm2 restart all

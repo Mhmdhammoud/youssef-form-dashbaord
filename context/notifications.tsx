@@ -1,6 +1,11 @@
 import React, { createContext, useCallback, useEffect, useReducer } from 'react'
 import { NotificationsService } from '../services'
-import { NotificationsActions, INotificationsState } from '../types'
+import notificationsService from '../services/store.service'
+import {
+  INotification,
+  INotificationsState,
+  NotificationsActions,
+} from '../types'
 
 const initialState: INotificationsState = {
   notifications: [],
@@ -39,29 +44,25 @@ export const NotificationsProvider = ({
   children: React.ReactNode
 }) => {
   const [state, dispatch] = useReducer(notificationsReducer, initialState)
-  const initializeNotifications = useCallback(() => {
-    NotificationsService.getAll().then((notifications) => {
-      const totalUnRead = notifications.reduce(
-        (totalValue, currentItem) =>
-          !currentItem.isRead
-            ? (totalValue = totalValue + 1)
-            : (totalValue += 0),
-        0
-      )
-      dispatch({
-        type: 'INITIALIZE_NOTIFICATIONS',
-        payload: {
-          notifications: notifications,
-          length: totalUnRead,
-        },
-      })
+
+  const cb = (docs: INotification[]) => {
+    const totalUnRead = docs.reduce(
+      (totalValue, currentItem) =>
+        !currentItem.isRead ? (totalValue = totalValue + 1) : (totalValue += 0),
+      0
+    )
+    dispatch({
+      type: 'INITIALIZE_NOTIFICATIONS',
+      payload: {
+        notifications: docs,
+        length: totalUnRead,
+      },
     })
+  }
+  useEffect(() => {
+    notificationsService.snapShotEvents(cb)
   }, [])
 
-  useEffect(() => {
-    initializeNotifications()
-    return () => initializeNotifications()
-  }, [initializeNotifications])
   const markRead = async () => {
     await NotificationsService.clearNotifications(state.notifications)
     dispatch({
@@ -73,7 +74,6 @@ export const NotificationsProvider = ({
     notifications: state.notifications,
     length: state.length,
     loading: state.loading,
-    initialize: initializeNotifications,
     markRead,
   }
 

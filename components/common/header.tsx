@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useContext, useState } from 'react'
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
@@ -13,6 +19,9 @@ import { AppState } from '../../reducers'
 import moment from 'moment'
 import { NotificationsContext } from '../../context'
 import { Wrapper } from '..'
+import { INotification } from '../../types'
+import { onSnapshot } from 'firebase/firestore'
+import { storeCollections } from '../../utils'
 
 //@ts-ignore
 function classNames(...classes) {
