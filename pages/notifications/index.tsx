@@ -1,6 +1,8 @@
 import { BriefcaseIcon } from '@heroicons/react/outline'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Wrapper, Footer, Header } from '../../components'
+import { NotificationsContext } from '../../context'
+import notificationsService from '../../services/store.service'
 const Index = () => {
   const people = [
     {
@@ -183,10 +185,20 @@ const Index = () => {
     },
     // More items...
   ]
+  const { notifications, loading } = useContext(NotificationsContext)
+  useEffect(() => {
+    notificationsService.clearNotifications(notifications)
+    return () => {
+      notificationsService.clearNotifications(notifications)
+    }
+  }, [notifications])
   return (
     <React.Fragment>
       <Header />
-      <Wrapper classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-4xl">
+      <Wrapper
+        classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-4xl"
+        loading={loading}
+      >
         <div className="max-h-96 overflow-auto">
           <div className="shadow-inner h-2 w-full" />
 

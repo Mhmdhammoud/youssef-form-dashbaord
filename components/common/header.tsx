@@ -12,6 +12,7 @@ import { AdminRole, useMeQuery, UserRole } from '../../src/generated/graphql'
 import { AppState } from '../../reducers'
 import moment from 'moment'
 import { NotificationsContext } from '../../context'
+import { Wrapper } from '..'
 
 //@ts-ignore
 function classNames(...classes) {
@@ -160,7 +161,14 @@ const Index = () => {
                       className="cursor-pointer"
                       onClick={() => router.push('/notifications')}
                     >
-                      <BellIcon className="text-white h-6 w-6" />
+                      <Wrapper loading={loading} classes=" relative">
+                        <BellIcon className="text-white h-8 w-8" />
+                        <div className="bg-red-500 rounded-full absolute top-0 right-0 w-4 text-center">
+                          <p className="text-white font-bold text-sm">
+                            {length}
+                          </p>
+                        </div>
+                      </Wrapper>
                     </div>
                   </div>
                   <Transition
