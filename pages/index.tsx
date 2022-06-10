@@ -1,7 +1,6 @@
-import type { NextPage } from 'next'
-import { Header, Footer, Wrapper } from '../components'
-import { useGetAllOrdersQuery, OrderStatus } from '../src/generated/graphql'
 import {
+  ArcElement,
+  BarElement,
   CategoryScale,
   Chart as ChartJS,
   Legend,
@@ -10,11 +9,12 @@ import {
   PointElement,
   Title,
   Tooltip,
-  ArcElement,
-  BarElement,
 } from 'chart.js'
+import type { NextPage } from 'next'
 import { Bar } from 'react-chartjs-2'
+import { Footer, Header, Wrapper } from '../components'
 import { withRouter } from '../hoc'
+import { OrderStatus, useGetAllOrdersQuery } from '../src/generated/graphql'
 ChartJS.register(
   CategoryScale,
   LinearScale,

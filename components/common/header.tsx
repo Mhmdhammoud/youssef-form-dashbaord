@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useContext, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
@@ -11,6 +11,8 @@ import Cookies from 'universal-cookie'
 import { AdminRole, useMeQuery, UserRole } from '../../src/generated/graphql'
 import { AppState } from '../../reducers'
 import moment from 'moment'
+import { NotificationsContext } from '../../context'
+import { Wrapper } from '..'
 
 //@ts-ignore
 function classNames(...classes) {
@@ -35,6 +37,7 @@ const Index = () => {
     { name: 'All Admins', href: 'all-admins', current: false },
     { name: 'Create Admin', href: 'create-admin', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
+    { name: 'Notifications', href: 'notifications', current: false },
   ])
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
@@ -45,7 +48,7 @@ const Index = () => {
 
   const router = useRouter()
   const dispatch = useDispatch()
-
+  const { length, loading } = useContext(NotificationsContext)
   const handleLogout = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault()
@@ -143,7 +146,7 @@ const Index = () => {
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-3 relative z-10">
-                  <div>
+                  <div className="flex justify-between items-center space-x-4">
                     <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open user menu</span>
                       <Image
@@ -154,6 +157,19 @@ const Index = () => {
                         height={32}
                       />
                     </Menu.Button>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => router.push('/notifications')}
+                    >
+                      <Wrapper loading={loading} classes=" relative">
+                        <BellIcon className="text-white h-8 w-8" />
+                        <div className="bg-red-500 rounded-full absolute top-0 right-0 w-4 text-center">
+                          <p className="text-white font-bold text-sm">
+                            {length}
+                          </p>
+                        </div>
+                      </Wrapper>
+                    </div>
                   </div>
                   <Transition
                     as={Fragment}

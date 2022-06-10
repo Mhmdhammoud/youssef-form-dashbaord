@@ -34,3 +34,9 @@ export enum MonitoringMaterial {
   BIOPOR_60 = 'Biopor® AB 60 Shore A',
   FLUORESZENT = 'Biopor® AB fluoreszent 40 Shore A',
 }
+
+export enum NotificationType {
+  ORDER = 'ORDER',
+  PRINT_JOB = 'PRINT_JOB',
+  GENERAL = 'GENERAL',
+}

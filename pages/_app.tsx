@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
 import { Wrapper } from '../components'
 import { ApolloProvider } from '@apollo/client'
+import { NotificationsProvider } from '../context'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const isClient = typeof window !== 'undefined'
@@ -14,7 +15,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <PersistGate persistor={persistor} loading={<Wrapper loading />}>
           <ApolloProvider client={ApolloClient()}>
-            <Component {...pageProps} />
+            <NotificationsProvider>
+              <Component {...pageProps} />
+            </NotificationsProvider>
           </ApolloProvider>
         </PersistGate>
       </Provider>
@@ -23,7 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
       <Provider store={store}>
         <ApolloProvider client={ApolloClient()}>
-          <Component {...pageProps} />
+          <NotificationsProvider>
+            <Component {...pageProps} />
+          </NotificationsProvider>
         </ApolloProvider>
       </Provider>
     )
