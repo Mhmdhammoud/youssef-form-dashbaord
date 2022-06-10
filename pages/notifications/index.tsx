@@ -1,190 +1,10 @@
-import { BriefcaseIcon } from '@heroicons/react/outline'
+import { BriefcaseIcon, PrinterIcon } from '@heroicons/react/outline'
+import Link from 'next/link'
 import React, { useContext, useEffect } from 'react'
 import { Wrapper, Footer, Header } from '../../components'
 import { NotificationsContext } from '../../context'
 import notificationsService from '../../services/store.service'
 const Index = () => {
-  const people = [
-    {
-      name: 'Lindsay Walton',
-      imageUrl:
-        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80',
-    },
-    {
-      name: 'Lindsay Walton',
-      imageUrl:
-        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80',
-    },
-    {
-      name: 'Lindsay Walton',
-      imageUrl:
-        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80',
-    },
-    // More people...
-  ]
-  const activityItems = [
-    {
-      id: 1,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 2,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    {
-      id: 3,
-      person: people[0],
-      project: 'Workcation',
-      commit: '2d89f0c8',
-      environment: 'production',
-      time: '1h',
-    },
-    // More items...
-  ]
   const { notifications, loading } = useContext(NotificationsContext)
   useEffect(() => {
     notificationsService.clearNotifications(notifications)
@@ -196,40 +16,102 @@ const Index = () => {
     <React.Fragment>
       <Header />
       <Wrapper
-        classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-4xl"
+        classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-6xl"
         loading={loading}
       >
-        <div className="max-h-96 overflow-auto">
-          <div className="shadow-inner h-2 w-full" />
-
-          <ul role="list" className="divide-y divide-gray-200 px-4">
-            {activityItems.map((activityItem) => (
-              <li key={activityItem.id} className="py-4">
-                <div className="flex space-x-3">
-                  {/* <img
-                    className="h-6 w-6 rounded-full"
-                    src={activityItem.person.imageUrl}
-                    alt=""
-                  /> */}
-                  <BriefcaseIcon className="w-6 h-6 text-gray-700" />
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">
-                        {activityItem.person.name}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {activityItem.time}
-                      </p>
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      Deployed {activityItem.project} ({activityItem.commit} in
-                      master) to {activityItem.environment}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className="h-[500px] overflow-auto">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-1">
+              <h2 className="text-2xl text-center mb-6">Print Jobs</h2>
+              <ul role="list" className="divide-y divide-gray-200 px-4">
+                {notifications?.map((item, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      {item?.type === 'PRINT_JOB' && (
+                        <li className="py-4">
+                          <div className="flex space-x-3">
+                            <PrinterIcon className="w-6 h-6 text-gray-700" />
+                            <div className="flex-1 space-y-1">
+                              <div className="flex items-center justify-between">
+                                <h3 className="text-sm font-medium">
+                                  {item.message} by{' '}
+                                  <Link href={`company?id=${item?.company_id}`}>
+                                    <a className="text-indigo-500">
+                                      {item?.company_title}
+                                    </a>
+                                  </Link>
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                  {item.createdAt}
+                                </p>
+                              </div>
+                              <div>
+                                <p>
+                                  <Link
+                                    href={`print-job?print_id=${item?.print_id}`}
+                                  >
+                                    <a className="text-indigo-500 font-medium">
+                                      View print job
+                                    </a>
+                                  </Link>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
+              </ul>
+            </div>
+            <div className="col-span-1">
+              <ul role="list" className="divide-y divide-gray-200 px-4">
+                <h2 className="text-2xl text-center mb-6">Orders</h2>
+                {notifications?.map((item, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      {item?.type === 'ORDER' && (
+                        <li className="py-4">
+                          <div className="flex space-x-3">
+                            <BriefcaseIcon className="w-6 h-6 text-gray-700" />
+                            <div className="flex-1 space-y-1">
+                              <div className="flex items-center justify-between">
+                                <h3 className="text-sm font-medium">
+                                  {item.message} by{' '}
+                                  <Link href={`company?id=${item?.company_id}`}>
+                                    <a className="text-indigo-500">
+                                      {item?.company_title}
+                                    </a>
+                                  </Link>
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                  {item.createdAt}
+                                </p>
+                              </div>
+                              <div>
+                                <p>
+                                  <Link
+                                    href={`order?id=${
+                                      item?.order_id?.split('_')[1]
+                                    }`}
+                                  >
+                                    <a className="text-indigo-500 font-medium">
+                                      View order
+                                    </a>
+                                  </Link>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
         </div>
       </Wrapper>
       <Footer />
