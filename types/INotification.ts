@@ -30,6 +30,7 @@ export interface IInitializeNotifications {
 export interface INotificationsState {
   notifications: INotification[]
   length: number
+  loading: boolean
   initialize?: () => void
   markRead?: () => void
 }

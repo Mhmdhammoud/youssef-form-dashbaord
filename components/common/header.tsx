@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useContext, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Image from 'next/image'
@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie'
 import { AdminRole, useMeQuery, UserRole } from '../../src/generated/graphql'
 import { AppState } from '../../reducers'
 import moment from 'moment'
+import { NotificationsContext } from '../../context'
 
 //@ts-ignore
 function classNames(...classes) {
@@ -45,7 +46,7 @@ const Index = () => {
 
   const router = useRouter()
   const dispatch = useDispatch()
-
+  const { length, loading } = useContext(NotificationsContext)
   const handleLogout = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault()

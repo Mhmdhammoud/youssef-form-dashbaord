@@ -11,6 +11,7 @@ export type {
   IInitializeNotifications,
   NotificationsActions,
 } from './INotification'
+export type { Collections } from './Collections'
 export {
   UserRole,
   SwimmingMaterial,
