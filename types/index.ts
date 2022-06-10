@@ -1,9 +1,16 @@
-import { AuthActions } from './authTypes';
+import { AuthActions } from './authTypes'
 
-export type { AuthActions };
-export type { authState } from './authTypes';
-export type { IUser } from './IUser';
-export type { IRoute } from './IRoute';
+export type { AuthActions }
+export type { authState } from './authTypes'
+export type { IUser } from './IUser'
+export type { IRoute } from './IRoute'
+export type {
+  INotification,
+  INotificationsState,
+  IMarkReadNotifications,
+  IInitializeNotifications,
+  NotificationsActions,
+} from './INotification'
 export {
   UserRole,
   SwimmingMaterial,
@@ -12,7 +19,8 @@ export {
   SkyMaterial,
   NightMaterial,
   MonitoringMaterial,
-} from './enums';
-export * from './Signin';
+  NotificationType,
+} from './enums'
+export * from './Signin'
 
-export type AppActions = AuthActions;
+export type AppActions = AuthActions
