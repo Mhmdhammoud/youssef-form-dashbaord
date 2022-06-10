@@ -35,6 +35,7 @@ const Index = () => {
     { name: 'All Admins', href: 'all-admins', current: false },
     { name: 'Create Admin', href: 'create-admin', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
+    { name: 'Notifications', href: 'notifications', current: false },
   ])
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
@@ -143,7 +144,7 @@ const Index = () => {
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-3 relative z-10">
-                  <div>
+                  <div className="flex justify-between items-center space-x-4">
                     <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open user menu</span>
                       <Image
@@ -154,6 +155,12 @@ const Index = () => {
                         height={32}
                       />
                     </Menu.Button>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => router.push('/notifications')}
+                    >
+                      <BellIcon className="text-white h-6 w-6" />
+                    </div>
                   </div>
                   <Transition
                     as={Fragment}
