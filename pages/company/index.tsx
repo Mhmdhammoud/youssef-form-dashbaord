@@ -26,6 +26,7 @@ import {
 import Link from 'next/link'
 import { Bar } from 'react-chartjs-2'
 import { withRouter } from '../../hoc'
+import { PlusCircleIcon, XCircleIcon } from '@heroicons/react/outline'
 
 ChartJS.register(
   CategoryScale,
@@ -40,6 +41,7 @@ ChartJS.register(
 )
 const Index = () => {
   const [editMode, setEditMode] = useState<boolean>(false)
+  const [emails, setEmails] = useState('')
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
   const [companyData, setCompanyData] = useState({
     canDownload: false,
@@ -55,6 +57,7 @@ const Index = () => {
     street: '',
     title: '',
     assigned: [] as string[],
+    contact_emails: [] as string[],
   })
   const labels = [
     'Checked',
@@ -191,6 +194,7 @@ const Index = () => {
         canDownload: company?.canDownload!,
         title: company?.title,
         manufacturers: company?.manufacturers,
+        contact_emails: company?.contact_emails!,
         assigned: company.assigned
           ? company?.assigned.map((item) => item._id)
           : [],
@@ -295,6 +299,39 @@ const Index = () => {
         }, 2000)
       })
   }, [companyData, submit, refetch, company?._id])
+
+  const handleChangeContactEmails = useCallback(
+    (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+      setCompanyData((prevState) => ({
+        ...prevState,
+        contact_emails: prevState?.contact_emails?.map((item, indx) => {
+          if (index === indx) {
+            return event?.target.value
+          }
+          return item
+        }),
+      }))
+    },
+    []
+  )
+
+  const addOption = useCallback(() => {
+    setCompanyData((prevState) => ({
+      ...prevState,
+      contact_emails: [...prevState?.contact_emails, emails],
+    }))
+    setEmails('')
+  }, [emails])
+
+  const deleteEmail = useCallback((indexPlaceholder: number) => {
+    setCompanyData((prevState) => ({
+      ...prevState,
+      contact_emails: prevState?.contact_emails.filter(
+        (_, index) => index !== indexPlaceholder
+      ),
+    }))
+  }, [])
+  console.log(companyData)
 
   return (
     <React.Fragment>
@@ -504,6 +541,76 @@ const Index = () => {
                               ','}
                           </a>
                         </Link>
+                      )
+                    })}
+                  </span>
+                )}
+              </dd>
+            </div>
+
+            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-gray-500">
+                Contact Emails
+              </dt>
+              <dd className="mt-1 flex items-center text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                {editMode ? (
+                  <div className="flex flex-wrap">
+                    {companyData?.contact_emails?.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="py-2 pr-2 flex items-center flex-wrap"
+                        >
+                          <div className="relative">
+                            <input
+                              name={item}
+                              type={'email'}
+                              id={item}
+                              className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                              onChange={(event) =>
+                                handleChangeContactEmails(index, event)
+                              }
+                              // defaultChecked={Boolean(
+                              //   //@ts-ignore
+                              //   companyData?.assigned?.includes(item._id)
+                              // )}
+                              value={item}
+                            />
+                            <div
+                              className="absolute cursor-pointer top-0 right-0"
+                              onClick={() => deleteEmail(index)}
+                            >
+                              <div>
+                                <XCircleIcon className="text-red-500 h-4 w-4" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                    <div
+                      className="mt-5 cursor-pointer w-fit "
+                      onClick={addOption}
+                    >
+                      <PlusCircleIcon className="text-indigo-500 h-5 w-5 " />
+                    </div>
+                  </div>
+                ) : (
+                  <span className="flex-grow">
+                    {company?.contact_emails?.map((item, index) => {
+                      return (
+                        // <Link href={`/admin?id=${item.adminId}`} key={index}>
+                        //   <a className="pr-2 text-blue-400">
+                        //     {item.fullName}
+                        //     {company?.assigned &&
+                        //       index !== company?.assigned?.length - 1 &&
+                        //       ','}
+                        //   </a>
+                        // </Link>
+                        <React.Fragment key={index}>
+                          <span className="pr-2">{item}</span>
+                          <br />
+                        </React.Fragment>
                       )
                     })}
                   </span>

@@ -147,6 +147,7 @@ export type Company = {
   canDownload?: Maybe<Scalars['Boolean']>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
+  contact_emails?: Maybe<Array<Scalars['String']>>;
   country: Scalars['String'];
   createdAt: Scalars['DateTime'];
   manufacturers: Array<Scalars['String']>;
@@ -170,6 +171,7 @@ export type CompanyWithEmployees = {
   canDownload?: Maybe<Scalars['Boolean']>;
   companyId: Scalars['String'];
   contactPerson: ContactPerson;
+  contact_emails?: Maybe<Array<Scalars['String']>>;
   country: Scalars['String'];
   createdAt: Scalars['DateTime'];
   employees?: Maybe<Array<User>>;
@@ -226,6 +228,7 @@ export type CreateCompanyInput = {
   assigned: Array<Scalars['ID']>;
   canDownload: Scalars['Boolean'];
   contactPerson: CreateContactPersonInput;
+  contact_emails: Array<Scalars['String']>;
   country: Scalars['String'];
   manufacturers: Array<Scalars['String']>;
   postCode: Scalars['String'];
@@ -858,7 +861,7 @@ export type GetSingleCompanyQueryVariables = Exact<{
 }>;
 
 
-export type GetSingleCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, canDownload?: boolean | null, street: string, postCode: string, manufacturers: Array<string>, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, assigned?: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null } | null } | null };
+export type GetSingleCompanyQuery = { __typename?: 'Query', getCompany?: { __typename?: 'SingleCompanyResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, company?: { __typename?: 'CompanyWithEmployees', _id: string, title: string, companyId: string, createdAt: any, updatedAt: any, canDownload?: boolean | null, contact_emails?: Array<string> | null, street: string, postCode: string, manufacturers: Array<string>, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string }, employees?: Array<{ __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, role: UserRole, userId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null, assigned?: Array<{ __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any }> | null } | null } | null };
 
 export type GetOrderQueryVariables = Exact<{
   orderId: Scalars['ID'];
@@ -2054,6 +2057,7 @@ export const GetSingleCompanyDocument = gql`
       createdAt
       updatedAt
       canDownload
+      contact_emails
       contactPerson {
         fullName
         email
