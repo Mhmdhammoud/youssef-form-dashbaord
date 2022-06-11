@@ -1,3 +1,4 @@
+import { FieldValue } from 'firebase/firestore'
 import { Company, Order, PrintJob } from '../src/generated/graphql'
 import { NotificationType } from './enums'
 
@@ -5,7 +6,7 @@ export interface INotification {
   id?: string
   message: string
   type: NotificationType
-  createdAt: string
+  createdAt: FieldValue
   isRead: boolean
   order_id?: string
   print_id?: string

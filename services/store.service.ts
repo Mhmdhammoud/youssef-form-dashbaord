@@ -4,6 +4,8 @@ import {
   getDocs,
   updateDoc,
   onSnapshot,
+  query,
+  orderBy,
 } from 'firebase/firestore'
 import { storeCollections } from '../utils'
 import { INotification } from '../types'
@@ -16,7 +18,8 @@ class NotificationService {
   }
 
   async snapShotEvents(cb: (docs: INotification[]) => void) {
-    onSnapshot(this.collectionRef, (snapshot) => {
+    const q = query(this.collectionRef, orderBy('createdAt'))
+    onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map((item) => {
         return {
           id: item.id,
