@@ -8,6 +8,7 @@ import {
   useGetAllAdminsQuery,
 } from '../../src/generated/graphql'
 import { withRouter } from '../../hoc'
+import { MinusCircleIcon, PlusCircleIcon } from '@heroicons/react/outline'
 
 const Index = () => {
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
@@ -33,6 +34,7 @@ const Index = () => {
       street: '',
       title: '',
       assigned: [],
+      contact_emails: [],
     },
   })
 
@@ -220,6 +222,58 @@ const Index = () => {
           country: event.target.value,
         },
       }))
+    },
+    []
+  )
+
+  const [emails, setEmails] = useState('')
+
+  const addOption = useCallback(() => {
+    setCompany((prevState) => ({
+      ...prevState,
+      company: {
+        ...prevState.company,
+        contact_emails: [...prevState?.company?.contact_emails, emails],
+      },
+    }))
+    setEmails('')
+  }, [emails])
+
+  const handleChangeEmailList = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+      setCompany((prevState) => ({
+        ...prevState,
+        company: {
+          ...prevState.company,
+          contact_emails: prevState?.company?.contact_emails.map(
+            (item, itemIndx) => {
+              if (index === itemIndx) {
+                return event.target.value
+              }
+              return item
+            }
+          ),
+        },
+      }))
+    },
+    []
+  )
+
+  const deleteEmail = useCallback((indexPlaceholder: number) => {
+    setCompany((prevState) => ({
+      ...prevState,
+      company: {
+        ...prevState.company,
+        contact_emails: prevState?.company?.contact_emails.filter(
+          (_, index) => index !== indexPlaceholder
+        ),
+      },
+    }))
+  }, [])
+
+  const handleEmailsChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setEmails(event?.target?.value)
     },
     []
   )
@@ -489,6 +543,74 @@ const Index = () => {
                         value={company?.company?.contactPerson?.phoneNumber}
                         onChange={handleContactPersonChange}
                       />
+                    </div>
+                    <div className="col-span-6">
+                      <div className="flex items-center justify-between w-full">
+                        <div className="w-full">
+                          <label
+                            htmlFor="contact_emails"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Contact Emails
+                          </label>
+                          <input
+                            type="email"
+                            name="name"
+                            id="name"
+                            autoComplete="option-variant"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            value={emails}
+                            onChange={handleEmailsChange}
+                          />
+                        </div>
+                        {emails && (
+                          <div
+                            className="mt-5 cursor-pointer w-fit "
+                            onClick={addOption}
+                          >
+                            <PlusCircleIcon className="text-indigo-500 h-5 w-5 " />
+                          </div>
+                        )}
+                      </div>
+
+                      {company?.company?.contact_emails?.map((item, index) => {
+                        return (
+                          <React.Fragment key={index}>
+                            <div className="flex w-full items-center justify-between">
+                              <div className="w-full">
+                                <label
+                                  htmlFor="name"
+                                  className="block text-sm font-medium text-gray-700"
+                                >
+                                  Email #{index}
+                                </label>
+                                <div className="mt-1">
+                                  <input
+                                    type="email"
+                                    name="name"
+                                    id="name"
+                                    required
+                                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                    value={item}
+                                    onChange={(event) =>
+                                      handleChangeEmailList(event, index)
+                                    }
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="mt-1 flex w-full justify-between items-center space-x-1">
+                                <div
+                                  className="mt-5 cursor-pointer w-fit "
+                                  onClick={() => deleteEmail(index)}
+                                >
+                                  <MinusCircleIcon className="text-red-500 h-5 w-5 " />
+                                </div>
+                              </div>
+                            </div>
+                          </React.Fragment>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>

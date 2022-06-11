@@ -11,6 +11,7 @@ query GetSingleCompany($companyId: ID!) {
       createdAt
       updatedAt
       canDownload
+      contact_emails
       contactPerson {
         fullName
         email
