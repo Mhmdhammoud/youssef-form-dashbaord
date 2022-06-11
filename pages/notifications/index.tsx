@@ -1,4 +1,5 @@
 import { BriefcaseIcon, PrinterIcon } from '@heroicons/react/outline'
+import moment from 'moment'
 import Link from 'next/link'
 import React, { useContext, useEffect } from 'react'
 import { Wrapper, Footer, Header } from '../../components'
@@ -13,6 +14,7 @@ const Index = () => {
       notificationsService.clearNotifications(notifications)
     }
   }, [notifications])
+
   return (
     <React.Fragment>
       <Header />
@@ -43,7 +45,10 @@ const Index = () => {
                                   </Link>
                                 </h3>
                                 <p className="text-sm text-gray-500">
-                                  {item.createdAt}
+                                  {/* @ts-ignore */}
+                                  {moment(item?.createdAt?.toDate()).format(
+                                    'DD/MM/YYYY hh:mm a'
+                                  )}
                                 </p>
                               </div>
                               <div>
@@ -87,7 +92,10 @@ const Index = () => {
                                   </Link>
                                 </h3>
                                 <p className="text-sm text-gray-500">
-                                  {item.createdAt}
+                                  {/* @ts-ignore */}
+                                  {moment(item?.createdAt?.toDate()).format(
+                                    'DD/MM/YYYY hh:mm a'
+                                  )}
                                 </p>
                               </div>
                               <div>
