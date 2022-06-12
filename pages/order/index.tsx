@@ -732,27 +732,6 @@ const Index = () => {
                     {order?.material}
                   </dd>
                 </div>
-                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
-                  <dt className="text-sm font-medium text-gray-900">
-                    <span className="print:hidden">Has cord</span>
-                    <div className="hidden print:grid print:grid-cols-2">
-                      <div
-                        className={
-                          'text-sm font-medium text-gray-900 print:col-span-1'
-                        }
-                      >
-                        Has cord
-                      </div>
-                      <div className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1">
-                        {order?.hasCord ? 'Yes' : 'No'}
-                      </div>
-                    </div>
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
-                    {order?.hasCord ? 'Yes' : 'No'}
-                  </dd>
-                </div>
-
                 {order?.orderType !== OrderType.Bte &&
                   order?.orderType !== OrderType.Custom &&
                   order?.orderType !== OrderType.Ric &&
@@ -799,72 +778,76 @@ const Index = () => {
                           {order?.filter}
                         </dd>
                       </div>
-                      <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
-                        <dt className="text-sm font-medium text-gray-900">
-                          <span className="print:hidden">Cord color</span>
-                          <div className="hidden print:grid print:grid-cols-2">
-                            <div
-                              className={
-                                'text-sm font-medium text-gray-900 print:col-span-1'
-                              }
-                            >
-                              Cord color
-                            </div>
-                            <div className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1">
-                              <span className={'p-1 flex items-center'}>
-                                {order?.cordColor === '' ? (
-                                  <td className="whitespace-nowrap text-sm text-gray-500">
-                                    Has no cord
-                                  </td>
-                                ) : (
-                                  <React.Fragment>
-                                    <td className="whitespace-nowrap text-sm text-gray-500">
-                                      {order?.cordColor}
-                                    </td>
-                                    <span
-                                      style={{
-                                        backgroundColor: CordColors?.find(
-                                          (item) =>
-                                            item.label === order?.cordColor
-                                        )?.color,
-                                      }}
-                                      className={
-                                        'ml-4 p-1 w-6 h-6 rounded-full block border-[2px] border-black'
-                                      }
-                                    />
-                                  </React.Fragment>
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
-                          <span className={'p-1 flex items-center'}>
-                            {order?.cordColor === '' ? (
-                              <td className="whitespace-nowrap text-sm text-gray-500">
-                                Has no cord
-                              </td>
-                            ) : (
-                              <React.Fragment>
-                                <td className="whitespace-nowrap text-sm text-gray-500">
-                                  {order?.cordColor}
-                                </td>
-                                <span
-                                  style={{
-                                    backgroundColor: CordColors?.find(
-                                      (item) => item.label === order?.cordColor
-                                    )?.color,
-                                  }}
-                                  className={
-                                    'ml-4 p-1 w-6 h-6 rounded-full block border-[2px] border-black'
-                                  }
-                                />
-                              </React.Fragment>
-                            )}
-                          </span>
-                        </dd>
-                      </div>
                     </React.Fragment>
+                  )}
+                {order?.orderType !== OrderType.Bte &&
+                  order?.orderType !== OrderType.Custom &&
+                  order?.orderType !== OrderType.Ric && (
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
+                      <dt className="text-sm font-medium text-gray-900">
+                        <span className="print:hidden">Cord color</span>
+                        <div className="hidden print:grid print:grid-cols-2">
+                          <div
+                            className={
+                              'text-sm font-medium text-gray-900 print:col-span-1'
+                            }
+                          >
+                            Cord color
+                          </div>
+                          <div className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1">
+                            <span className={'p-1 flex items-center'}>
+                              {order?.cordColor === '' ? (
+                                <td className="whitespace-nowrap text-sm text-gray-500">
+                                  Has no cord
+                                </td>
+                              ) : (
+                                <React.Fragment>
+                                  <td className="whitespace-nowrap text-sm text-gray-500">
+                                    {order?.cordColor}
+                                  </td>
+                                  <span
+                                    style={{
+                                      backgroundColor: CordColors?.find(
+                                        (item) =>
+                                          item.label === order?.cordColor
+                                      )?.color,
+                                    }}
+                                    className={
+                                      'ml-4 p-1 w-6 h-6 rounded-full block border-[2px] border-black'
+                                    }
+                                  />
+                                </React.Fragment>
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
+                        <span className={'p-1 flex items-center'}>
+                          {order?.cordColor === '' ? (
+                            <td className="whitespace-nowrap text-sm text-gray-500">
+                              Has no cord
+                            </td>
+                          ) : (
+                            <React.Fragment>
+                              <td className="whitespace-nowrap text-sm text-gray-500">
+                                {order?.cordColor}
+                              </td>
+                              <span
+                                style={{
+                                  backgroundColor: CordColors?.find(
+                                    (item) => item.label === order?.cordColor
+                                  )?.color,
+                                }}
+                                className={
+                                  'ml-4 p-1 w-6 h-6 rounded-full block border-[2px] border-black'
+                                }
+                              />
+                            </React.Fragment>
+                          )}
+                        </span>
+                      </dd>
+                    </div>
                   )}
 
                 <div className="py-4 sm:py-5 grid grid-cols-1 sm:gap-4 sm:px-6 print:portrait:py-1 print:portrait:mt-0">
