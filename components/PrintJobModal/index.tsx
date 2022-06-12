@@ -327,26 +327,24 @@ const Index: React.FC<IProps> = ({
 
   const zipFilename = 'models.zip'
 
-  const downloadAllModelFiles = useCallback(() => {
+  const downloadAllModelFiles = useCallback(async () => {
     const urls = allColors[selectedColor].map((item) => item.model)
-
+    const names = allColors[selectedColor].map((item) => item.shellId)
     const zip = new JSZip()
-    urls.map((url, index) => {
-      const filename = `model-${index}.stl`
-      // loading a file and add it in a zip file
-      JSZipUtils.getBinaryContent(url, (err, data) => {
-        if (err) {
-          console.log(err)
-          throw err // or handle the error
-        }
-        zip.file(filename, data, { binary: true })
 
-        if (index + 1 == urls.length) {
-          zip.generateAsync({ type: 'blob' }).then((content) => {
-            saveAs(content, zipFilename)
-          })
-        }
+    const promises = await Promise.all(
+      urls.map((url) => {
+        return JSZipUtils.getBinaryContent(url)
       })
+    )
+    promises.map((item, index) => {
+      const filename = `${names[index]}.stl`
+      const what = zip.file(filename, item, { binary: true })
+      if (index === urls.length - 1) {
+        what.generateAsync({ type: 'blob' }).then((content) => {
+          saveAs(content, zipFilename)
+        })
+      }
     })
   }, [allColors, selectedColor])
 
