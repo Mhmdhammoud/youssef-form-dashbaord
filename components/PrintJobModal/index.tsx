@@ -22,7 +22,9 @@ import STLViewer from 'meritt-stl-viewer'
 import { AllPrinters } from '../../data'
 import { XIcon } from '@heroicons/react/solid'
 import { DownloadIcon } from '@heroicons/react/outline'
-
+import JSZip from 'jszip'
+import JSZipUtils from 'jszip-utils'
+import { saveAs } from 'file-saver'
 interface IProps {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -323,6 +325,31 @@ const Index: React.FC<IProps> = ({
 
   const disabledSubmit = Boolean(selectedOrders?.length === 0)
 
+  const zipFilename = 'models.zip'
+
+  const downloadAllModelFiles = useCallback(() => {
+    const urls = allColors[selectedColor].map((item) => item.model)
+
+    const zip = new JSZip()
+    urls.map((url, index) => {
+      const filename = `model-${index}.stl`
+      // loading a file and add it in a zip file
+      JSZipUtils.getBinaryContent(url, (err, data) => {
+        if (err) {
+          console.log(err)
+          throw err // or handle the error
+        }
+        zip.file(filename, data, { binary: true })
+
+        if (index + 1 == urls.length) {
+          zip.generateAsync({ type: 'blob' }).then((content) => {
+            saveAs(content, zipFilename)
+          })
+        }
+      })
+    })
+  }, [allColors, selectedColor])
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -577,6 +604,15 @@ const Index: React.FC<IProps> = ({
                         disabled={disabledSubmit}
                       >
                         Submit
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        className=" items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-fit text-center"
+                        onClick={downloadAllModelFiles}
+                      >
+                        Download all
                       </button>
                     </div>
                     <div>
