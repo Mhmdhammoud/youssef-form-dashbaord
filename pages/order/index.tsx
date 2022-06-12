@@ -247,7 +247,7 @@ const Index = () => {
         if (err?.response) console.log(err.response.data)
         else console.log(err)
       })
-  }, [submitOrderStatus, router, order?.orderId])
+  }, [order?.orderId, router, submitOrderStatus])
 
   const fixString = (str: string) => {
     return (
@@ -269,16 +269,40 @@ const Index = () => {
   )
 
   const handleSubmitModel = useCallback(() => {
-    submitUpdateOrder().then((res) => {
-      // router.push('/order?id=' + order?.orderId?.split('_')[1])
-      setNotificationToast({
-        message: 'Models updated successfully',
-        title: 'Success',
+    submitUpdateOrder()
+      .then((res) => {
+        submitOrderStatus({
+          variables: {
+            _id: order?._id!,
+            status: OrderStatus.Modeled,
+          },
+        })
+          .then((res) => {
+            router.push('/order?id=' + order?.orderId?.split('_')[1])
+            setNotificationToast({
+              message: 'Models updated successfully',
+              title: 'Success',
+            })
+            setNotificationOpen(true)
+            refetch()
+          })
+          .catch((err) => {
+            if (err?.response) console.log(err.response.data)
+            else console.log(err)
+          })
       })
-      setNotificationOpen(true)
-      refetch()
-    })
-  }, [submitUpdateOrder, refetch])
+      .catch((err) => {
+        if (err?.response) console.log(err.response.data)
+        else console.log(err)
+      })
+  }, [
+    submitUpdateOrder,
+    submitOrderStatus,
+    order?._id,
+    order?.orderId,
+    router,
+    refetch,
+  ])
 
   const [modalFiles, setModalFiles] = useState({
     left: '',
