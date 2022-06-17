@@ -93,25 +93,49 @@ const Index = () => {
     const allCompanies = AllCompaniesData?.getAllCompanies.companies
     const getDueDate = useCallback((order: Order): string | null => {
         if (order) {
-            if (order?.deliveryDetails.urgent) {
-                if (moment(order?.createdAt).day() === 4) {
-                    return moment(order?.createdAt)
-                        .add(2, 'days')
-                        .format('DD-MM-YYYY')
+            if (order?.company?.country === 'KW') {
+                if (order?.deliveryDetails.urgent) {
+                    if (moment(order?.createdAt).day() === 4) {
+                        return moment(order?.createdAt)
+                            .add(2, 'days')
+                            .format('DD-MM-YYYY')
+                    } else {
+                        return moment(order?.createdAt)
+                            .add(1, 'days')
+                            .format('DD-MM-YYYY')
+                    }
                 } else {
-                    return moment(order?.createdAt)
-                        .add(1, 'days')
-                        .format('DD-MM-YYYY')
+                    if (moment(order?.createdAt).day() - 3 <= 1) {
+                        return moment(order?.createdAt)
+                            .add(4, 'days')
+                            .format('DD-MM-YYYY')
+                    } else {
+                        return moment(order?.createdAt)
+                            .add(3, 'days')
+                            .format('DD-MM-YYYY')
+                    }
                 }
             } else {
-                if (moment(order?.createdAt).day() - 3 <= 1) {
-                    return moment(order?.createdAt)
-                        .add(4, 'days')
-                        .format('DD-MM-YYYY')
+                if (order?.deliveryDetails.urgent) {
+                    if (moment(order?.createdAt).day() === 6) {
+                        return moment(order?.createdAt)
+                            .add(2, 'days')
+                            .format('DD-MM-YYYY')
+                    } else {
+                        return moment(order?.createdAt)
+                            .add(1, 'days')
+                            .format('DD-MM-YYYY')
+                    }
                 } else {
-                    return moment(order?.createdAt)
-                        .add(3, 'days')
-                        .format('DD-MM-YYYY')
+                    if (moment(order?.createdAt).day() - 3 <= 3) {
+                        return moment(order?.createdAt)
+                            .add(4, 'days')
+                            .format('DD-MM-YYYY')
+                    } else {
+                        return moment(order?.createdAt)
+                            .add(3, 'days')
+                            .format('DD-MM-YYYY')
+                    }
                 }
             }
         } else {
