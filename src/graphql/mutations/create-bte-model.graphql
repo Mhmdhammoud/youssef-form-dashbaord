@@ -1,0 +1,19 @@
+mutation CreateBteModel($input: CreateBteInput!) {
+  createBteModel(input: $input) {
+    errors {
+      field
+      message
+    }
+    model {
+      _id
+      title
+      mould_colour
+      sound_tube_color
+      image
+      bte_id
+      createdAt
+      createdAt
+      updatedAt
+    }
+  }
+}

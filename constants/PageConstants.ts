@@ -73,5 +73,9 @@ const PageConstants: IRoute[] = [
     route: '/notifications',
     isPrivate: true,
   },
+  {
+    route: '/add-bte-model',
+    isPrivate: true,
+  },
 ]
 export default PageConstants

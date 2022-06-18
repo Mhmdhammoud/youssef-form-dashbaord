@@ -46,13 +46,14 @@ const Index = () => {
     { name: 'All Admins', href: 'all-admins', current: false },
     { name: 'Create Admin', href: 'create-admin', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
-    // { name: 'Notifications', href: 'notifications', current: false },
+    { name: 'Add Bte Model', href: 'add-bte-model', current: false },
   ])
   const [technicianNav, setTechnicianNav] = useState([
     { name: 'Dashboard', href: '/', current: true },
     { name: 'All Companies', href: 'all-companies', current: false },
     { name: 'All Orders', href: 'all-orders?page=1', current: false },
     { name: 'Print Jobs', href: 'print-jobs', current: false },
+    { name: 'Add Bte Model', href: 'add-bte-model', current: false },
   ])
 
   const router = useRouter()
