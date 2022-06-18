@@ -4,6 +4,7 @@ export type { AuthActions }
 export type { authState } from './authTypes'
 export type { IUser } from './IUser'
 export type { IRoute } from './IRoute'
+export type { IToast } from './IToast'
 export type {
   INotification,
   INotificationsState,
