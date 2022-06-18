@@ -112,6 +112,18 @@ export type BasicResponse = {
   errors: Array<FieldError>;
 };
 
+export type Bte = {
+  __typename?: 'Bte';
+  _id: Scalars['String'];
+  bte_id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  image: Scalars['String'];
+  mould_colour: Scalars['String'];
+  sound_tube_color: Scalars['String'];
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type BteEar = {
   __typename?: 'BteEar';
   canal: Scalars['String'];
@@ -132,6 +144,12 @@ export type BteEar = {
   style: Scalars['String'];
   surface: Scalars['String'];
   ventSize: Scalars['String'];
+};
+
+export type BteModelResponse = {
+  __typename?: 'BteModelResponse';
+  errors: Array<FieldError>;
+  model?: Maybe<Bte>;
 };
 
 export type ChangePasswordResponse = {
@@ -215,6 +233,13 @@ export type CreateBteEar = {
   style: Scalars['String'];
   surface: Scalars['String'];
   ventSize: Scalars['String'];
+};
+
+export type CreateBteInput = {
+  image: Scalars['String'];
+  mould_colour: Scalars['String'];
+  sound_tube_color: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type CreateCompanyAdminInput = {
@@ -357,6 +382,7 @@ export type Mutation = {
   changePassword: ChangePasswordResponse;
   /** Create a new admin account with the given email and password. Returns the created admin deactivated. */
   createAdmin: AdminResponse;
+  createBteModel: BteModelResponse;
   createCompany: SingleCompanyResponse;
   createJob: PrintResponse;
   createUser: UserResponse;
@@ -394,6 +420,11 @@ export type MutationChangePasswordArgs = {
 
 export type MutationCreateAdminArgs = {
   input: CreateAdminInput;
+};
+
+
+export type MutationCreateBteModelArgs = {
+  input: CreateBteInput;
 };
 
 
@@ -563,6 +594,7 @@ export type PrintJob = {
   print_image?: Maybe<Scalars['String']>;
   print_stl?: Maybe<Scalars['String']>;
   printer: Scalars['String'];
+  status?: Maybe<PrintStatus>;
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
@@ -740,6 +772,13 @@ export type CreateAdminMutationVariables = Exact<{
 
 
 export type CreateAdminMutation = { __typename?: 'Mutation', createAdmin: { __typename?: 'AdminResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, admin?: { __typename?: 'Admin', _id: string, fullName: string, fname: string, lname: string, email: string, role: AdminRole, adminId: string, isActive: boolean, createdAt: any, updatedAt: any } | null } };
+
+export type CreateBteModelMutationVariables = Exact<{
+  input: CreateBteInput;
+}>;
+
+
+export type CreateBteModelMutation = { __typename?: 'Mutation', createBteModel: { __typename?: 'BteModelResponse', errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, model?: { __typename?: 'Bte', _id: string, title: string, mould_colour: string, sound_tube_color: string, image: string, bte_id: string, createdAt: any, updatedAt: any } | null } };
 
 export type CreateCompanyMutationVariables = Exact<{
   admin: CreateCompanyAdminInput;
@@ -1110,6 +1149,53 @@ export function useCreateAdminMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateAdminMutationHookResult = ReturnType<typeof useCreateAdminMutation>;
 export type CreateAdminMutationResult = Apollo.MutationResult<CreateAdminMutation>;
 export type CreateAdminMutationOptions = Apollo.BaseMutationOptions<CreateAdminMutation, CreateAdminMutationVariables>;
+export const CreateBteModelDocument = gql`
+    mutation CreateBteModel($input: CreateBteInput!) {
+  createBteModel(input: $input) {
+    errors {
+      field
+      message
+    }
+    model {
+      _id
+      title
+      mould_colour
+      sound_tube_color
+      image
+      bte_id
+      createdAt
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type CreateBteModelMutationFn = Apollo.MutationFunction<CreateBteModelMutation, CreateBteModelMutationVariables>;
+
+/**
+ * __useCreateBteModelMutation__
+ *
+ * To run a mutation, you first call `useCreateBteModelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBteModelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBteModelMutation, { data, loading, error }] = useCreateBteModelMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBteModelMutation(baseOptions?: Apollo.MutationHookOptions<CreateBteModelMutation, CreateBteModelMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBteModelMutation, CreateBteModelMutationVariables>(CreateBteModelDocument, options);
+      }
+export type CreateBteModelMutationHookResult = ReturnType<typeof useCreateBteModelMutation>;
+export type CreateBteModelMutationResult = Apollo.MutationResult<CreateBteModelMutation>;
+export type CreateBteModelMutationOptions = Apollo.BaseMutationOptions<CreateBteModelMutation, CreateBteModelMutationVariables>;
 export const CreateCompanyDocument = gql`
     mutation CreateCompany($admin: CreateCompanyAdminInput!, $company: CreateCompanyInput!) {
   createCompany(admin: $admin, company: $company) {
