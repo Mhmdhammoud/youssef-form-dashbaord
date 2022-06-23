@@ -113,7 +113,7 @@ const Index = () => {
                   <div className="relative">
                     {printJob?.print_file && printJob?.print_file !== '' && (
                       <div className="flex items-center justify-between  ">
-                        <span>{printJob?.print_file.split('prints/')[1]}</span>
+                        {/* <span>{printJob?.print_file.split('prints/')[1]}</span> */}
                         <a
                           download={printJob?.print_file}
                           href={printJob?.print_file as string}
