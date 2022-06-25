@@ -252,39 +252,58 @@ const Index = () => {
                 />
               </div>
               <div className="flex items-center justify-between space-x-2">
-                <select
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  defaultValue="All"
-                  onChange={handleFilterOrdersType}
-                  value={selectedOrderType}
-                >
-                  <option value="All">All</option>
-                  {Object.keys(OrderType).map((item) => {
-                    return (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    )
-                  })}
-                </select>
-                <select
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  value={selectedCompany}
-                  onChange={handleFilterOrders}
-                >
-                  <option value="All">All</option>
-                  {allCompanies?.map((item) => {
-                    return (
-                      <option key={item._id} value={item._id}>
-                        {item.title}
-                      </option>
-                    )
-                  })}
-                </select>
+                <div className="flex flex-col items-start w-full">
+                  <label
+                    htmlFor="order-type"
+                    className="font-medium text-sm text-gray-600"
+                  >
+                    Order Type
+                  </label>
+                  <select
+                    id="order-type"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    defaultValue="All"
+                    onChange={handleFilterOrdersType}
+                    value={selectedOrderType}
+                  >
+                    <option value="All">All</option>
+                    {Object.keys(OrderType).map((item) => {
+                      return (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      )
+                    })}
+                  </select>
+                </div>
+                <div className="flex flex-col items-start w-full">
+                  <label
+                    htmlFor="company-selected"
+                    className="font-medium text-sm text-gray-600"
+                  >
+                    Company
+                  </label>
+
+                  <select
+                    id="company-selected"
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    value={selectedCompany}
+                    onChange={handleFilterOrders}
+                  >
+                    <option value="All">All</option>
+                    {allCompanies?.map((item) => {
+                      return (
+                        <option key={item._id} value={item._id}>
+                          {item.title}
+                        </option>
+                      )
+                    })}
+                  </select>
+                </div>
                 <button
                   type="submit"
                   className={
-                    'group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-indigo-600'
+                    'group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white  hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-indigo-600 mt-5'
                   }
                   onClick={handleClearOption}
                 >
@@ -305,7 +324,7 @@ const Index = () => {
                   className="shadow border-b border-gray-200 sm:rounded-lg"
                   style={{ minHeight: '70vh' }}
                 >
-                  <table className="min-w-full mdivide-y divide-gray-200">
+                  <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th
