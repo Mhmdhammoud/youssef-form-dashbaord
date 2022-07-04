@@ -406,7 +406,7 @@ const Index = () => {
                             {toUpperFirst(order?.orderType)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                            {order?.creator?.fullName}
+                            {toUpperFirst(order?.creator?.fullName)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                             {order?.company?.title}

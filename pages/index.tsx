@@ -42,7 +42,7 @@ const Home: NextPage = () => {
     'Placed',
     'Printed',
     'Printing',
-    'Shipped',
+    // 'Shipped',
   ]
 
   const allOrders = data?.getAllOrders?.orders
@@ -95,7 +95,7 @@ const Home: NextPage = () => {
           PlacedOrders,
           PrintedOrders,
           PrintingOrders,
-          ShippedOrders,
+          // ShippedOrders,
         ],
         backgroundColor: [
           'rgb(255, 99, 132)',
@@ -106,7 +106,7 @@ const Home: NextPage = () => {
           'rgb(238,130,238)',
           'rgb(255,127,80)',
           'rgb(139,0,139)',
-          'rgb(244,164,96)',
+          // 'rgb(244,164,96)',
         ],
         hoverOffset: 4,
       },
