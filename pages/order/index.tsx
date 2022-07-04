@@ -4,7 +4,6 @@ import {
   PencilIcon,
   PrinterIcon,
 } from '@heroicons/react/solid'
-import JsBarcode from 'jsbarcode'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -12,8 +11,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import STLViewer from 'meritt-stl-viewer'
 import Barcode from 'react-jsbarcode'
 
+import { UploadIcon, XIcon } from '@heroicons/react/outline'
 import {
   BTEOrderTable,
+  ConfirmationModal,
+  EditSerialModal,
   Footer,
   Header,
   IndustrialOrderTable,
@@ -23,15 +25,13 @@ import {
   NightOrderTable,
   Notification,
   OrderStepper,
+  OrderStickerModal,
   RejectModal,
   SkyOrderTable,
+  StatusModal,
   SwimmingOrderTable,
   UploadModelModal,
-  StatusModal,
   Wrapper,
-  OrderStickerModal,
-  ConfirmationModal,
-  EditSerialModal,
 } from '../../components'
 import { AllImages, CordColors } from '../../data'
 import { withRouter } from '../../hoc'
@@ -49,7 +49,6 @@ import {
   useUpdateOrderMutation,
 } from '../../src/generated/graphql'
 import { handleError, ToUpperFirst } from '../../utils'
-import { UploadIcon, XIcon } from '@heroicons/react/outline'
 
 const Index = () => {
   const router = useRouter()
@@ -616,7 +615,7 @@ const Index = () => {
                       <br />
                       Created By:{' '}
                       <span className="text-black">
-                        {order?.creator?.fullName}
+                        {ToUpperFirst(order?.creator?.fullName)}
                       </span>
                     </div>
                     <Barcode
@@ -756,12 +755,12 @@ const Index = () => {
                         Patient Name :
                       </div>
                       <div className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1">
-                        {order?.patient_name}
+                        {ToUpperFirst(order?.patient_name as string)}
                       </div>
                     </div>
                   </dt>
                   <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
-                    {order?.patient_name}
+                    {ToUpperFirst(order?.patient_name as string)}
                   </dd>
                 </div>
                 {order?.remake && (
@@ -843,13 +842,7 @@ const Index = () => {
                     </div>
                   </dt>
                   <dd className="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-1 print:hidden">
-                    {order?.deliveryDetails?.urgent
-                      ? moment(order?.createdAt)
-                          .add(1, 'days')
-                          .format('DD-MM-YYYY')
-                      : moment(order?.createdAt)
-                          .add(3, 'days')
-                          .format('DD-MM-YYYY')}
+                    {getDueDate(order as Order)}
                   </dd>
                 </div>
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6 print:portrait:py-1 print:block">
