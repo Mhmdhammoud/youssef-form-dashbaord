@@ -212,6 +212,8 @@ const Index = () => {
     fetchOrdersHelper()
   }, [fetchOrdersHelper])
 
+  console.log(filteredProducts)
+
   return (
     <React.Fragment>
       <Header />
@@ -382,7 +384,17 @@ const Index = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {filteredProducts?.map((order, index) => (
-                        <tr key={index}>
+                        <tr
+                          key={index}
+                          className={
+                            order?.deliveryDetails.urgent &&
+                            order?.status === OrderStatus.Placed
+                              ? 'bg-indigo-400'
+                              : order?.status === OrderStatus.Canceled
+                              ? 'bg-red-400'
+                              : ''
+                          }
+                        >
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
                             {order?.orderId?.split('order_')[1]!}
                           </td>
@@ -435,6 +447,7 @@ const Index = () => {
                               </a>
                             </button>
                           </td>
+                          <td />
                         </tr>
                       ))}
                     </tbody>
