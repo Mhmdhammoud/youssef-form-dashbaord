@@ -151,7 +151,6 @@ const Index = () => {
                     (item) => item?.company?._id === event.target.value
                   ) as Order[])
             )
-            console.log(allOrdersHolder)
           })
           .catch(handleError)
       }
@@ -184,7 +183,6 @@ const Index = () => {
             const hasMoreHolder = data?.getAllOrders?.hasMore
             setHasMore(!hasMoreHolder ? false : true)
             const allOrdersHolder = data?.getAllOrders.orders
-            console.log('handleFilterOrdersType', allOrdersHolder)
             setAllOrders(
               !allOrdersHolder
                 ? []
@@ -211,8 +209,6 @@ const Index = () => {
 
     fetchOrdersHelper()
   }, [fetchOrdersHelper])
-
-  console.log(filteredProducts)
 
   return (
     <React.Fragment>
