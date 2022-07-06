@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useRef } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 import { AllRejectionReasons } from '../../data'
 import { OrderStatus } from '../../src/generated/graphql'
 import Select from '../common/Select'
@@ -31,6 +31,14 @@ const Index: React.FC<IProps> = ({
   orderStatus,
 }) => {
   const cancelButtonRef = useRef(null)
+
+  useEffect(() => {
+    setRejectionType(
+      orderStatus === OrderStatus.ImpressionEvaluation
+        ? 'Impression'
+        : 'Modeling'
+    )
+  }, [orderStatus, setRejectionType])
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -81,9 +89,11 @@ const Index: React.FC<IProps> = ({
                           ? ['Impression']
                           : ['Modeling']
                       }
-                      onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      onChange={(
+                        event: React.ChangeEvent<HTMLSelectElement>
+                      ) => {
                         setRejectionType(event.target.value)
-                      }
+                      }}
                       value={rejectionType}
                       hasNoDefaultOption
                     />

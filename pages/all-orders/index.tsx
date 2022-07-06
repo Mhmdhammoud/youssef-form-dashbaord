@@ -151,7 +151,6 @@ const Index = () => {
                     (item) => item?.company?._id === event.target.value
                   ) as Order[])
             )
-            console.log(allOrdersHolder)
           })
           .catch(handleError)
       }
@@ -184,7 +183,6 @@ const Index = () => {
             const hasMoreHolder = data?.getAllOrders?.hasMore
             setHasMore(!hasMoreHolder ? false : true)
             const allOrdersHolder = data?.getAllOrders.orders
-            console.log('handleFilterOrdersType', allOrdersHolder)
             setAllOrders(
               !allOrdersHolder
                 ? []
@@ -382,7 +380,17 @@ const Index = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {filteredProducts?.map((order, index) => (
-                        <tr key={index}>
+                        <tr
+                          key={index}
+                          className={
+                            order?.deliveryDetails.urgent &&
+                            order?.status === OrderStatus.Placed
+                              ? 'bg-indigo-400'
+                              : order?.status === OrderStatus.Canceled
+                              ? 'bg-red-400'
+                              : ''
+                          }
+                        >
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
                             {order?.orderId?.split('order_')[1]!}
                           </td>
@@ -435,6 +443,7 @@ const Index = () => {
                               </a>
                             </button>
                           </td>
+                          <td />
                         </tr>
                       ))}
                     </tbody>
