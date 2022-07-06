@@ -559,8 +559,6 @@ const Index = () => {
     }
   }, [])
 
-  console.log(BTEOrder)
-
   return (
     <React.Fragment>
       <Header />
