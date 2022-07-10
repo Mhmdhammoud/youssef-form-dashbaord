@@ -219,6 +219,10 @@ const Index = () => {
               query.toLowerCase().trim() ||
             item?.product?.right?.serialNumber.toLowerCase().trim() ===
               query.toLowerCase().trim() ||
+            item?.product?.left?.ear_mould_sn?.toLowerCase().trim() ===
+              query?.toLowerCase().trim() ||
+            item?.product?.right?.ear_mould_sn?.toLowerCase().trim() ===
+              query?.toLowerCase().trim() ||
             item?.orderId.split('_')[1] === query.toLowerCase().trim()
         )
         ?.orderId?.split('_')[1]
