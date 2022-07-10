@@ -22,7 +22,7 @@ import {
 const Index = () => {
   const refScanner = useRef()
   const router = useRouter()
-  const [value, setValue] = useState()
+  const [value, setValue] = useState<string>()
   const [newPage, setNewPage] = useState<number>(0)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
   const [hasMore, setHasMore] = useState<boolean>(false)
@@ -210,6 +210,23 @@ const Index = () => {
     fetchOrdersHelper()
   }, [fetchOrdersHelper])
 
+  const handleSearchOrder = useCallback(
+    (query: string) => {
+      const serialNumberOrder = allOrders
+        ?.find(
+          (item) =>
+            item?.product?.left?.serialNumber.toLowerCase().trim() ===
+              query.toLowerCase().trim() ||
+            item?.product?.right?.serialNumber.toLowerCase().trim() ===
+              query.toLowerCase().trim() ||
+            item?.orderId.split('_')[1] === query.toLowerCase().trim()
+        )
+        ?.orderId?.split('_')[1]
+      setValue(serialNumberOrder as string)
+    },
+    [allOrders]
+  )
+
   return (
     <React.Fragment>
       <Header />
@@ -238,7 +255,8 @@ const Index = () => {
                   autoComplete="nope"
                   onChange={(e) => {
                     //@ts-ignore
-                    setValue(e.target.value)
+                    // setValue(e.target.value)
+                    handleSearchOrder(e.target.value)
                   }}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
