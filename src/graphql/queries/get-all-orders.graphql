@@ -70,6 +70,7 @@ query GetAllOrders($limit: Float!, $page: Float!) {
           soundTube
           canal
           markingDots
+          ear_mould_sn
         }
         right {
           haModel
@@ -86,6 +87,7 @@ query GetAllOrders($limit: Float!, $page: Float!) {
           soundTube
           canal
           markingDots
+          ear_mould_sn
         }
       }
 
