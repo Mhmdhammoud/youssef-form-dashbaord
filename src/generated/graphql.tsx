@@ -77,6 +77,12 @@ export type AllCompaniesResponse = {
   length: Scalars['Float'];
 };
 
+export type AllHearingAidsResponse = {
+  __typename?: 'AllHearingAidsResponse';
+  errors: Array<FieldError>;
+  hearingAids?: Maybe<Array<HearingAid>>;
+};
+
 export type AllOrdersResponse = {
   __typename?: 'AllOrdersResponse';
   errors: Array<FieldError>;
@@ -357,6 +363,26 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type HearingAid = {
+  __typename?: 'HearingAid';
+  _id: Scalars['String'];
+  code: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  hearingAidId: Scalars['String'];
+  image: Scalars['String'];
+  options?: Maybe<Array<HearingAidOption>>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type HearingAidOption = {
+  __typename?: 'HearingAidOption';
+  code?: Maybe<Scalars['String']>;
+  color: Scalars['String'];
+  image: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type Impressions = {
   __typename?: 'Impressions';
   left: Scalars['String'];
@@ -392,6 +418,7 @@ export type Mutation = {
   login: AuthResponse;
   rejectOrder: OrderResponses;
   resetPassword: AdminResponse;
+  seedPhonak: Scalars['Boolean'];
   toggleActivate: AdminResponse;
   toggleActivateUser: UserResponse;
   updateOrder: OrderResponses;
@@ -622,6 +649,7 @@ export type Query = {
   __typename?: 'Query';
   getAllAdmins: AllAdminsResponse;
   getAllCompanies: AllCompaniesResponse;
+  getAllHearingAids: AllHearingAidsResponse;
   getAllOrders: AllOrdersResponse;
   /** Get company print jobs */
   getAllPrintJobs: AllPrintJobs;
@@ -885,7 +913,7 @@ export type GetAllOrdersQueryVariables = Exact<{
 }>;
 
 
-export type GetAllOrdersQuery = { __typename?: 'Query', getAllOrders: { __typename?: 'AllOrdersResponse', hasMore: boolean, length: number, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, creator: { __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, userId: string, isActive: boolean, createdAt: any, updatedAt: any }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean } } }> | null } };
+export type GetAllOrdersQuery = { __typename?: 'Query', getAllOrders: { __typename?: 'AllOrdersResponse', hasMore: boolean, length: number, errors: Array<{ __typename?: 'FieldError', field: string, message: string }>, orders?: Array<{ __typename?: 'Order', direction: OrderDirection, _id: string, orderType: OrderType, status: OrderStatus, remake: boolean, reason: string, orderId: string, bioporShore: string, material: string, rejectionReason: string, reOrder: boolean, createdAt: any, updatedAt: any, deliveryDetails: { __typename?: 'DeliveryDetails', urgent: boolean, standard: boolean, invoiceNumber: string }, creator: { __typename?: 'User', _id: string, fullName: string, fname: string, lname: string, email: string, userId: string, isActive: boolean, createdAt: any, updatedAt: any }, company: { __typename?: 'Company', _id: string, title: string, companyId: string, street: string, postCode: string, country: string, contactPerson: { __typename?: 'ContactPerson', fullName: string, email: string, phoneNumber: string, customerAccount: string } }, extraDetails: { __typename?: 'ExtraDetails', comment: string, accessories: string }, impressions: { __typename?: 'Impressions', left: string, right: string }, logs: Array<{ __typename?: 'Logs', message: string, createdAt: any }>, product: { __typename?: 'Product', left: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean, ear_mould_sn?: string | null }, right: { __typename?: 'BteEar', haModel: string, shellId: string, serialNumber: string, style: string, canalLength: string, manufacturer: string, cymbaLength: string, ventSize: string, quantity: number, color: string, surface: string, soundTube: string, canal: string, markingDots: boolean, ear_mould_sn?: string | null } } }> | null } };
 
 export type GetAllUsersQueryVariables = Exact<{
   limit: Scalars['Float'];
@@ -1997,6 +2025,7 @@ export const GetAllOrdersDocument = gql`
           soundTube
           canal
           markingDots
+          ear_mould_sn
         }
         right {
           haModel
@@ -2013,6 +2042,7 @@ export const GetAllOrdersDocument = gql`
           soundTube
           canal
           markingDots
+          ear_mould_sn
         }
       }
       orderType
