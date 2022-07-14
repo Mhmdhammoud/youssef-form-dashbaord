@@ -23,6 +23,7 @@ const Index = () => {
   const refScanner = useRef()
   const router = useRouter()
   const [value, setValue] = useState<string>()
+  const [filterValue, setFilterValue] = useState<string>()
   const [newPage, setNewPage] = useState<number>(0)
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
   const [hasMore, setHasMore] = useState<boolean>(false)
@@ -37,7 +38,7 @@ const Index = () => {
   const indexOfLastProduct = newPage * productsPerPage
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage
 
-  useEffect(() => {
+  const filteredProductsHelper = useCallback(() => {
     setFilteredProducts(
       allOrders?.slice(indexOfFirstProduct, indexOfLastProduct)!
     )
@@ -51,6 +52,16 @@ const Index = () => {
     }
     setPageNumbers(pageNumbers)
   }, [allOrders, indexOfFirstProduct, indexOfLastProduct, productsPerPage])
+
+  useEffect(() => {
+    filteredProductsHelper()
+  }, [
+    allOrders,
+    filteredProductsHelper,
+    indexOfFirstProduct,
+    indexOfLastProduct,
+    productsPerPage,
+  ])
 
   useEffect(() => {
     setNewPage(Number(page))
@@ -211,9 +222,12 @@ const Index = () => {
   }, [fetchOrdersHelper])
 
   const handleSearchOrder = useCallback(
-    (query: string) => {
-      const serialNumberOrder = allOrders
-        ?.find(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const query = event.target.value
+      if (query === '') {
+        filteredProductsHelper()
+      } else {
+        const serialNumberOrder = allOrders?.filter(
           (item) =>
             item?.product?.left?.serialNumber.toLowerCase().trim() ===
               query.toLowerCase().trim() ||
@@ -225,10 +239,24 @@ const Index = () => {
               query?.toLowerCase().trim() ||
             item?.orderId.split('_')[1] === query.toLowerCase().trim()
         )
-        ?.orderId?.split('_')[1]
-      setValue(serialNumberOrder as string)
+        setFilteredProducts(serialNumberOrder)
+        const pageNumbers: number[] = []
+        for (
+          let i: number = 1;
+          i <= Math.ceil(filteredProducts?.length! / productsPerPage);
+          i++
+        ) {
+          pageNumbers.push(i)
+        }
+        setPageNumbers(pageNumbers)
+      }
     },
-    [allOrders]
+    [
+      allOrders,
+      filteredProducts?.length,
+      filteredProductsHelper,
+      productsPerPage,
+    ]
   )
 
   return (
@@ -259,8 +287,7 @@ const Index = () => {
                   autoComplete="nope"
                   onChange={(e) => {
                     //@ts-ignore
-                    // setValue(e.target.value)
-                    handleSearchOrder(e.target.value)
+                    setValue(e.target.value)
                   }}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
@@ -269,6 +296,20 @@ const Index = () => {
                   }}
                   className="p-2 shadow-sm text-base focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md ml-6"
                   placeholder={'Search for order'}
+                />
+              </div>
+              <div className="flex flex-col justify-start items-start">
+                <label
+                  htmlFor="search"
+                  className="font-medium text-sm text-gray-600"
+                >
+                  Search by Serial Numbers
+                </label>
+                <input
+                  id="search"
+                  placeholder={'Enter serial number'}
+                  className="p-2 w-full shadow-md text-base focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                  onChange={handleSearchOrder}
                 />
               </div>
               <div className="flex items-center justify-between space-x-2">
