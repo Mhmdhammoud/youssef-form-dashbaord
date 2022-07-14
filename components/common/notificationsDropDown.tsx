@@ -20,11 +20,8 @@ export default function Example() {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button
-          onClick={handleClearNotifications}
-          className="inline-flex justify-center rounded-md shadow-sm px-4 py-2 text-sm font-medium text-gray-700 "
-        >
+      <div onClick={handleClearNotifications}>
+        <Menu.Button className="inline-flex justify-center rounded-md shadow-sm px-4 py-2 text-sm font-medium text-gray-700 ">
           <Wrapper loading={loading} classes="relative">
             <BellIcon className="text-white h-8 w-8" />
             <div className="bg-red-500 rounded-full absolute top-0 right-0 w-4 text-center">
