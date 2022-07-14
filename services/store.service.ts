@@ -18,7 +18,7 @@ class NotificationService {
   }
 
   async snapShotEvents(cb: (docs: INotification[]) => void) {
-    const q = query(this.collectionRef, orderBy('createdAt'))
+    const q = query(this.collectionRef, orderBy('createdAt', 'desc'))
     onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map((item) => {
         return {
