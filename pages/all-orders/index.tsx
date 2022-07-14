@@ -375,6 +375,12 @@ const Index = () => {
                           scope="col"
                           className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
+                          Patient Name
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
                           Creator
                         </th>
                         <th
@@ -434,6 +440,9 @@ const Index = () => {
 
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                             {toUpperFirst(order?.orderType)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                            {toUpperFirst(order?.patient_name as string)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                             {toUpperFirst(order?.creator?.fullName)}

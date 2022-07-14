@@ -90,7 +90,7 @@ query GetAllOrders($limit: Float!, $page: Float!) {
           ear_mould_sn
         }
       }
-
+      patient_name
       orderType
       status
       remake
