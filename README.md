@@ -1,8 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
+Cancel changes
 ## Getting Started
-
-`[![Deploy](https://github.com/Mhmdhammoud/youssef-form-dashbaord/actions/workflows/deploy.yml/badge.svg)](https://github.com/Mhmdhammoud/youssef-form-dashbaord/actions/workflows/deploy.yml)`
 
 ```
 
