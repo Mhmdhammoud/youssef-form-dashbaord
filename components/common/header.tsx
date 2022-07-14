@@ -13,7 +13,7 @@ import { logout } from '../../actions'
 import { NotificationsContext } from '../../context'
 import { AppState } from '../../reducers'
 import { AdminRole, useMeQuery } from '../../src/generated/graphql'
-
+import NotficationsDropDown from './notificationsDropDown'
 //@ts-ignore
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -161,19 +161,7 @@ const Index = () => {
                         height={32}
                       />
                     </Menu.Button>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => router.push('/notifications')}
-                    >
-                      <Wrapper loading={loading} classes=" relative">
-                        <BellIcon className="text-white h-8 w-8" />
-                        <div className="bg-red-500 rounded-full absolute top-0 right-0 w-4 text-center">
-                          <p className="text-white font-bold text-sm">
-                            {length}
-                          </p>
-                        </div>
-                      </Wrapper>
-                    </div>
+                    <NotficationsDropDown />
                   </div>
                   <Transition
                     as={Fragment}

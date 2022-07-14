@@ -131,6 +131,7 @@ const Home: NextPage = () => {
       <Header />
       <Wrapper
         loading={loading}
+        full
         classes="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl pb-20 lg:max-w-7xl"
       >
         <div className="grid grid-cols-2 gap-4">
