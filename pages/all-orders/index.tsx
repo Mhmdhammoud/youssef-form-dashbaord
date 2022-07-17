@@ -291,7 +291,7 @@ const Index = () => {
                   }}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
-                      router.push(`/order?id=${value}`)
+                      router.push(`/order?id=${value?.toLowerCase().trim()}`)
                     }
                   }}
                   className="p-2 shadow-sm text-base focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md ml-6"
