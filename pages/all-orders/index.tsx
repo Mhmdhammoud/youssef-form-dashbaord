@@ -457,6 +457,10 @@ const Index = () => {
                               ? 'bg-indigo-400'
                               : order?.status === OrderStatus.Canceled
                               ? 'bg-red-400'
+                              : order?.logs?.filter((item) =>
+                                  item?.message?.includes('Order was reject')
+                                )?.length! > 0
+                              ? 'bg-amber-400'
                               : ''
                           }
                         >

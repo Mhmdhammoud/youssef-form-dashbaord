@@ -336,15 +336,15 @@ const Index: React.FC<IProps> = (props) => {
   )
 
   const [submitRejection, { data: rejectionDataResponse }] =
-    useRejectOrderMutation({
+    useRejectOrderMutation()
+
+  const handleReject = useCallback(() => {
+    submitRejection({
       variables: {
         _id: order_id as string,
         rejectionReason: rejectionReason,
       },
     })
-
-  const handleReject = useCallback(() => {
-    submitRejection()
       .then((res) => {
         setRejectionReason('')
         setNotificationOpen(true)
@@ -358,7 +358,7 @@ const Index: React.FC<IProps> = (props) => {
         if (err?.response) console.log(err?.response?.data)
         else console.log(err)
       })
-  }, [submitRejection, refetch])
+  }, [rejectionReason, submitRejection, order_id, refetch])
 
   const handleRejectionReason = useCallback(
     (
